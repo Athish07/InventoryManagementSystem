@@ -1,0 +1,63 @@
+class ProductManager: ProductService {
+
+    private var nextProductId: Int = 1
+    private let productRepository: ProductRepository
+    private let userRepository: UserRepository
+
+    init(productRepository: ProductRepository, userRepository: UserRepository) {
+        self.productRepository = productRepository
+        self.userRepository = userRepository
+    }
+
+    func addProduct(productDetails: ProductInput, supplierId: Int)  {
+
+        let product = Product(
+            productId: nextProductId,
+            name: productDetails.name,
+            supplierId: supplierId,
+            unitPrice: productDetails.unitPrice,
+            quantityInStock: productDetails.quantity,
+            category: productDetails.category
+        )
+        nextProductId += 1
+        productRepository.addProduct(product)
+
+    }
+
+    func searchProductsByCategory(category: ProductCategory?) -> [Product] {
+        if let category = category {
+            return productRepository.getProductByCategory(category)
+        } else {
+            return productRepository.getAllProducts()
+        }
+    }
+
+    func searchProductsBySupplier(supplierId: Int) -> [Product] {
+        
+        return productRepository.getProductBySupplier(supplierId)
+    }
+    
+    func updateProduct(product: Product) {
+        productRepository.addProduct(product)
+    }
+
+    func deleteProduct(productId: Int, supplierId: Int) throws {
+        
+        guard let product = productRepository.getProductById(productId) else {
+                throw ProductServiceError.productNotFound
+            }
+            
+        guard product.supplierId == supplierId else {
+            throw ProductServiceError.unauthorizedUserAccess
+            }
+        
+        productRepository.deleteProduct(productId)
+
+    }
+    
+    func getProductById(productId: Int) -> Product? {
+
+        productRepository.getProductById(productId)
+    }
+
+}
