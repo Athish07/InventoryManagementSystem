@@ -35,19 +35,15 @@ final class AppController {
             }
         }
     }
-
+    
     private func handlePublicMenu() {
-        switch view.showPublicMenu() {
-        case 1:
-            searchProduct()
-        case 2:
-            login()
-        case 3:
-            register()
-        case 4:
-            exit(0)
-        default:
-            view.showMessage("Invalid choice.")
+        let publicMenu = PublicMenu.allCases
+        let x = view.showPublicMenu(publicMenu: publicMenu)
+        
+        switch publicMenu[x-1] {
+        case .searchProducts: searchProduct()
+        case .login: login()
+        case .register: register()
         }
     }
 
@@ -80,8 +76,10 @@ final class AppController {
     private func login() {
         let email = view.readString("Email:")
         let password = view.readString("Password:")
-        let role = view.readLoginRole()
-
+        
+        let userRole = UserRole.allCases
+        let role = view.readLoginRole(userRole: userRole)
+        
         guard Validation.isValidEmail(email) else {
             view.showMessage("Invalid email format")
             return
@@ -126,75 +124,104 @@ final class AppController {
     }
 
     private func register() {
-        let commonDetails = view.readCommonUserDetails()
+        
+        let registrationMenu = RegistrationMenu.allCases
+        let input = view.showRegistrationMenu(
+            registrationMenu: registrationMenu
+        )
+        
+        switch registrationMenu[input - 1] {
+        case .customer: registerCustomer()
+        case .supplier: registerSupplier()
+        }
+        
+    }
 
-        guard Validation.isValidEmail(commonDetails.email) else {
+    private func registerCustomer() {
+        let customer = view.readCustomerDetails()
+        
+        guard Validation.isValidEmail(customer.email) else {
             view
                 .showMessage(
                     "Error: Invalid email format. Please check your input."
                 )
             return
         }
-
-        guard Validation.isValidPassword(commonDetails.password) else {
+        
+        guard Validation.isValidPassword(customer.password) else {
             view
                 .showMessage(
-                    "Error: Password must be at least 6 characters long and less than 10 characters."
+                    "Error: Password must be at least 6 characters long and must be less than 100 characters."
+                )
+            return
+        }
+        
+        guard Validation.isValidPhoneNumber(customer.phoneNumber) else {
+            view
+                .showMessage(
+                    "Error: Invalid phone number format. Please check your input."
+                )
+            return
+        }
+          
+        //        do {
+        //            try authenticationService.registerCustomer(
+        //                name: .name,
+        //                email: details.email,
+        //                password: details.password,
+        //                phoneNumber: details.phoneNumber,
+        //                shippingAddress: shippingAddress
+        //            )
+        //            view.showMessage("Customer registered successfully.")
+        //        } catch let error as RegistrationError {
+        //            view.showMessage(error.displayMessage)
+        //        } catch {
+        //            view.showMessage("Registration failed.")
+        //        }
+        
+    }
+
+    private func registerSupplier() {
+        let supplier = view.readSupplierDetails()
+        
+        guard Validation.isValidEmail(supplier.email) else {
+            view
+                .showMessage(
+                    "Error: Invalid email format. Please check your input."
+                )
+            return
+        }
+        
+        guard Validation.isValidPassword(supplier.password) else {
+            view
+                .showMessage(
+                    "Error: Password must be at least 6 characters long and must be less than 100 characters."
+                )
+            return
+        }
+        
+        guard Validation.isValidPhoneNumber(supplier.phoneNumber) else {
+            view
+                .showMessage(
+                    "Error: Invalid phone number format. Please check your input."
                 )
             return
         }
 
-        guard Validation.isValidPhoneNumber(commonDetails.phoneNumber) else {
-            view
-                .showMessage(
-                    "Error: Invalid phone number format (use 10 digits)."
-                )
-            return
-        }
-
-        switch view.showRegistrationMenu() {
-        case 1: registerSupplier(commonDetails)
-        case 2: registerCustomer(commonDetails)
-        default: view.showMessage("Invalid choice.")
-        }
-    }
-
-    private func registerCustomer(_ details: CommonUserDetails) {
-        let shippingAddress = view.readCustomerDetails()
-
-        do {
-            try authenticationService.registerCustomer(
-                name: details.name,
-                email: details.email,
-                password: details.password,
-                phoneNumber: details.phoneNumber,
-                shippingAddress: shippingAddress
-            )
-            view.showMessage("Customer registered successfully.")
-        } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
-        } catch {
-            view.showMessage("Registration failed.")
-        }
-    }
-
-    private func registerSupplier(_ details: CommonUserDetails) {
-        let supplierDetails = view.readSupplierDetails()
-
-        do {
-            try authenticationService.registerSupplier(
-                name: details.name,
-                email: details.email,
-                password: details.password,
-                phoneNumber: details.phoneNumber,
-                companyName: supplierDetails.companyName,
-                businessAddress: supplierDetails.businessAddress
-            )
-            view.showMessage("Supplier registered successfully.")
-        } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
-        } catch {
-            view.showMessage("Registration failed.")
-        }
+        //        do {
+        //            try authenticationService.registerSupplier(
+        //                name: details.name,
+        //                email: details.email,
+        //                password: details.password,
+        //                phoneNumber: details.phoneNumber,
+        //                companyName: supplierDetails.companyName,
+        //                businessAddress: supplierDetails.businessAddress
+        //            )
+        //            view.showMessage("Supplier registered successfully.")
+        //        } catch let error as RegistrationError {
+        //            view.showMessage(error.displayMessage)
+        //        } catch {
+        //            view.showMessage("Registration failed.")
+        //        }
     }
 }

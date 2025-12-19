@@ -1,4 +1,5 @@
-enum UserRole {
+enum UserRole: CaseIterable {
     case customer
     case supplier
 }
+

@@ -1,5 +1,9 @@
 protocol AuthenticationService {
-    func login(email: String, password: String, role: UserRole) throws -> Int
+    func login(
+        email: String,
+        password: String,
+        role: UserRole
+    ) throws -> Int
     func registerCustomer(
         name: String,
         email: String,

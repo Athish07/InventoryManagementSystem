@@ -4,7 +4,7 @@ final class InMemoryUserRepository: UserRepository {
     private var nextUserId: Int = 1
     
     func getNextUserId() -> Int {
-        defer { nextUserId += 1 }
+        nextUserId += 1
         return nextUserId
     }
     

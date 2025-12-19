@@ -16,7 +16,7 @@ final class MockInitializer {
         let supplier = Supplier(
             userId: userRepository.getNextUserId(),
             name: "Athish",
-            email: "abishek@gmail.com",
+            email: "athish@gmail.com",
             password: "athish",
             phoneNumber: "8148847642",
             companyName: "zoho",

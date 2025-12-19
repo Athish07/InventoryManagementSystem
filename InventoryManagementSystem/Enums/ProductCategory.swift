@@ -4,6 +4,6 @@ enum ProductCategory: String, CaseIterable {
     case accessory = "Accessory"
     case clothing = "Clothing"
     case other = "Other"
-    
 }
+
 

@@ -27,17 +27,24 @@ final class CustomerController {
 
     func handleMenu(for name: String) {
 
-        switch view.showCustomerMenu(userName: name) {
-        case 1: searchProduct()
-        case 2: addItemToCart()
-        case 3: removeItemFromCart()
-        case 4: viewCart()
-        case 5: checkout()
-        case 6: viewOrders()
-        case 7: viewProfile()
-        case 8: onLogout()
-        default:
-            view.showMessage("Invalid choice.")
+        let customerMenu = CustomerMenu.allCases
+        let selectedOption = view.showAndReadCustomerMenu(
+            userName: name,
+            customerMenu: customerMenu
+        )
+        
+        switch CustomerMenu.selectedChoice(choice: selectedOption, menu: customerMenu)
+        {
+        case .searchProduct: searchProduct()
+        case .addItemToCart: addItemToCart()
+        case .removeItemFromCart: removeItemFromCart()
+        case .viewCart: viewCart()
+        case .checkout: checkout()
+        case .viewOrders: viewOrders()
+        case .viewProfile: viewProfile()
+        case .onLogout: onLogout()
+        case .none:
+            view.showMessage("Invalid Choice.")
         }
     }
 

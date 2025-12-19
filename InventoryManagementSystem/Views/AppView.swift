@@ -2,101 +2,93 @@ import Foundation
 
 struct AppView {
     
-    func showPublicMenu() -> Int {
+    func showPublicMenu(publicMenu: [PublicMenu]) -> Int {
         print("\n--------------------------------------------")
-        print("Welcome to the Inventory Management System")
-        print("1. Search Products")
-        print("2. Login")
-        print("3. Register")
-        print("4. Exit")
+        
+        for (index,menu) in publicMenu.enumerated() {
+            print("\(index+1). \(menu)")
+        }
+        
         print("--------------------------------------------")
         return readInt("Enter a choice:")
     }
     
-    func showCustomerMenu(userName: String) -> Int {
+    func showCustomerMenu(userName: String , customerMenu: [CustomerMenu]) -> Int {
         print("\n--------------------------------------------")
         print("Welcome Customer, \(userName)")
-        print("1. View Products")
-        print("2. Add Item to Cart")
-        print("3. Remove Item from Cart")
-        print("4. View Cart")
-        print("5. Checkout")
-        print("6. View My Orders")
-        print("7. View Profile")
-        print("8. Logout")
-        print("--------------------------------------------")
-        return readInt("Enter a choice:")
+        
+        for (index,menu) in customerMenu.enumerated() {
+            print("\(index+1) \(menu)")
+        }
+        return readInt("Enter a choice: ")
     }
     
-    
-    func showSupplierMenu(userName: String) -> Int {
+    func showSupplierMenu(userName: String, supplierMeny: [SupplierMenu]) -> Int {
         print("\n--------------------------------------------")
         print("Welcome Supplier, \(userName)")
-        print("1. Add Product")
-        print("2. View My Products")
-        print("3. Update Product")
-        print("4. Delete Product")
-        print("5. View Profile")
-        print("6. Logout")
+        
+        for (index,menu) in supplierMeny.enumerated() {
+            print("\(index+1). \(menu)")
+        }
         print("--------------------------------------------")
         return readInt("Enter a choice")
     }
     
-    func showRegistrationMenu() -> Int {
-        print("1. Register as Supplier")
-        print("2. Register as Customer")
+    func showRegistrationMenu(registrationMenu: [RegistrationMenu]) -> Int {
+        
+        for (index,menu) in registrationMenu.enumerated() {
+            print("\(index+1).\(menu)")
+        }
         return readInt("Enter a choice:")
+        
     }
     
-    func readLoginRole() -> UserRole {
-        print("Login as:")
-        print("1. Customer")
-        print("2. Supplier")
+    func readLoginRole(userRole: [UserRole]) -> UserRole {
         
+        
+        for (index,role) in userRole.enumerated() {
+            print("\(index+1) \(role)")
+        }
         let choice = readInt("Enter choice:")
         
-        return choice == 1 ? .customer : .supplier
+        let selectedRole = userRole[choice-1]
+        return selectedRole
     }
     
-    func readCommonUserDetails() -> CommonUserDetails {
+    func readCustomerDetails() -> User {
         let name = readNonEmptyString(prompt: "Enter your name:")
         let email = readNonEmptyString(prompt: "Enter your email:")
         let password = readNonEmptyString(prompt: "Enter your password:")
         let phone = readNonEmptyString(prompt: "Enter your phone number:")
-        
-        return CommonUserDetails(
-            name: name,
-            email: email,
-            password: password,
-            phoneNumber: phone
+        let shippingAddress = readNonEmptyString(
+            prompt: "Enter your shipping address:"
         )
+        
+        return Customer()
     }
     
-    func readCustomerDetails() -> String {
-        readNonEmptyString(prompt: "Enter your shipping address:")
-    }
-    
-    func readSupplierDetails() -> (
-        companyName: String,
-        businessAddress: String
-    ) {
+    func readSupplierDetails() -> User {
+        let name = readNonEmptyString(prompt: "Enter your name:")
+        let email = readNonEmptyString(prompt: "Enter your email:")
+        let password = readNonEmptyString(prompt: "Enter your password:")
+        let phone = readNonEmptyString(prompt: "Enter your phone number:")
+        let shippingAddress = readNonEmptyString(
+            prompt: "Enter your shipping address:"
+        )
         let companyName = readNonEmptyString(prompt: "Enter your company name:")
         let businessAddress = readNonEmptyString(
             prompt: "Enter your business address:"
         )
-        return (companyName, businessAddress)
+        
+        return Supplier()
+        
     }
     
     func readProductDetails() -> ProductInput {
-        
         let name = readNonEmptyString(prompt: "Enter product name:")
-        
         let category = readProductCategory()
-        
         let unitPrice = readDouble("Enter unit price:")
-        
         let quantity = readInt("Enter quantity:")
-        
         
         return ProductInput(
             name: name,
@@ -104,8 +96,8 @@ struct AppView {
             unitPrice: unitPrice,
             quantity: quantity
         )
+        
     }
-    
     func readUpdateCustomerDetails(customer: Customer) -> Customer
     {
         let nameInput = readString("Name (\(customer.name)):")
@@ -131,7 +123,6 @@ struct AppView {
             shippingAddress: shippingAddress
         )
     }
-    
     func readUpdateSupplierDetails(supplier: Supplier) -> Supplier {
         
         let nameInput = readString("Name (\(supplier.name)):")
@@ -201,7 +192,13 @@ struct AppView {
             print("\(index + 1). \(category.rawValue)")
         }
         print("\(categories.count + 1). All products")
-        return readInt("Select a category:")
+        let input = readInt("Select a category:")
+        
+        if input > categories.count+1 {
+            print("Invalid category selection moving with All products option")
+        }
+        return input
+        
     }
     
     func showProducts(_ products: [Product]) {
@@ -264,7 +261,7 @@ struct AppView {
             print("\(index + 1). \(category.rawValue)")
         }
         
-        let choice = readInt("Enter a choice:")
+        let choice = readInt("Enter a choice(default category is other):")
         if choice > 0 && choice <= categories.count {
             return categories[choice - 1]
         }

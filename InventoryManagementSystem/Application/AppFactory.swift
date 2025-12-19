@@ -2,7 +2,6 @@ import Foundation
 
 final class AppFactory {
 
-   
     private let orderRepository = InMemoryOrderRepository()
     private let userRepository = InMemoryUserRepository()
     private let itemRepository = InMemoryOrderItemRepository()
@@ -14,7 +13,6 @@ final class AppFactory {
     private let userService: UserService
     private let productService: ProductService
     private let appView = AppView()
-    
     
     init()
     {
@@ -71,5 +69,6 @@ final class AppFactory {
             onLogout: onLogout
         )
     }
+    
 }
 
