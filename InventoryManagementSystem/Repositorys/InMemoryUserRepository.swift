@@ -1,4 +1,4 @@
-class InMemoryUserRepository: UserRepository {
+final class InMemoryUserRepository: UserRepository {
     
     private var users: [Int: User] = [:]
     private var nextUserId: Int = 1

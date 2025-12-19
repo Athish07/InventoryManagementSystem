@@ -1,6 +1,6 @@
 import Foundation
 
-struct AppFactory {
+final class AppFactory {
 
    
     private let orderRepository = InMemoryOrderRepository()
