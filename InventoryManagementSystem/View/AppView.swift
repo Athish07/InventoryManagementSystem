@@ -261,7 +261,7 @@ struct AppView {
         for order in orders {
             print("\n--------------------------------------------")
             print("Order ID: \(order.orderId)")
-            print("Date: \(order.dateOfPurchase)")
+            print("Date: \(order.dateOfPurchase.toIstString())")
             print("Status: \(order.status.rawValue)")
             print("Total Amount: \(order.totalAmount)")
             print("--------------------------------------------")
@@ -317,4 +317,14 @@ extension AppView {
         }
     }
 }
-
+extension Date {
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+        formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        return formatter
+    }()
+    func toIstString() -> String {
+        Date.formatter.string(from: self)
+    }
+}
