@@ -9,7 +9,7 @@ final class InMemoryUserRepository: UserRepository {
     }
     
     func saveUser(_ user: User) {
-       return users[user.userId] = user
+        return users[user.userId] = user
     }
     
     func findByEmailAndRole(

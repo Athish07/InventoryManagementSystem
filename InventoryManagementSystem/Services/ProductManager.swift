@@ -43,12 +43,12 @@ final class ProductManager: ProductService {
     func deleteProduct(productId: Int, supplierId: Int) throws {
         
         guard let product = productRepository.getProductById(productId) else {
-                throw ProductServiceError.productNotFound
-            }
+            throw ProductServiceError.productNotFound
+        }
             
         guard product.supplierId == supplierId else {
             throw ProductServiceError.unauthorizedUserAccess
-            }
+        }
         
         productRepository.deleteProduct(productId)
 

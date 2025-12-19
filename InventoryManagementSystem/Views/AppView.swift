@@ -27,7 +27,7 @@ struct AppView {
         print("--------------------------------------------")
         return readInt("Enter a choice:")
     }
-
+    
     
     func showSupplierMenu(userName: String) -> Int {
         print("\n--------------------------------------------")
@@ -41,7 +41,7 @@ struct AppView {
         print("--------------------------------------------")
         return readInt("Enter a choice")
     }
-
+    
     func showRegistrationMenu() -> Int {
         print("1. Register as Supplier")
         print("2. Register as Customer")
@@ -52,9 +52,9 @@ struct AppView {
         print("Login as:")
         print("1. Customer")
         print("2. Supplier")
-
+        
         let choice = readInt("Enter choice:")
-
+        
         return choice == 1 ? .customer : .supplier
     }
     
@@ -63,7 +63,7 @@ struct AppView {
         let email = readNonEmptyString(prompt: "Enter your email:")
         let password = readNonEmptyString(prompt: "Enter your password:")
         let phone = readNonEmptyString(prompt: "Enter your phone number:")
-
+        
         return CommonUserDetails(
             name: name,
             email: email,
@@ -71,28 +71,33 @@ struct AppView {
             phoneNumber: phone
         )
     }
-
+    
     func readCustomerDetails() -> String {
         readNonEmptyString(prompt: "Enter your shipping address:")
     }
-
-    func readSupplierDetails() -> (companyName: String, businessAddress: String) {
+    
+    func readSupplierDetails() -> (
+        companyName: String,
+        businessAddress: String
+    ) {
         let companyName = readNonEmptyString(prompt: "Enter your company name:")
-        let businessAddress = readNonEmptyString(prompt: "Enter your business address:")
+        let businessAddress = readNonEmptyString(
+            prompt: "Enter your business address:"
+        )
         return (companyName, businessAddress)
     }
-
-    func readProductDetails() -> ProductInput {
-
-        let name = readNonEmptyString(prompt: "Enter product name:")
-
-        let category = readProductCategory()
-
-        let unitPrice = readDouble("Enter unit price:")
-
-        let quantity = readInt("Enter quantity:")
     
-
+    func readProductDetails() -> ProductInput {
+        
+        let name = readNonEmptyString(prompt: "Enter product name:")
+        
+        let category = readProductCategory()
+        
+        let unitPrice = readDouble("Enter unit price:")
+        
+        let quantity = readInt("Enter quantity:")
+        
+        
         return ProductInput(
             name: name,
             category: category,
@@ -112,7 +117,9 @@ struct AppView {
         let phoneInput = readString("Phone (\(customer.phoneNumber)):")
         let phone = phoneInput.isEmpty ? customer.phoneNumber : phoneInput
         
-        let shippingAddressInput = readString("Shipping Address (\(customer.shippingAddress)):")
+        let shippingAddressInput = readString(
+            "Shipping Address (\(customer.shippingAddress)):"
+        )
         let shippingAddress = shippingAddressInput.isEmpty ? customer.shippingAddress : shippingAddressInput
         
         return Customer(
@@ -136,12 +143,16 @@ struct AppView {
         let phoneInput = readString("Phone (\(supplier.phoneNumber)):")
         let phone = phoneInput.isEmpty ? supplier.phoneNumber : phoneInput
         
-        let companyNameInput = readString("Company Name (\(supplier.companyName)")
+        let companyNameInput = readString(
+            "Company Name (\(supplier.companyName)"
+        )
         let companyName = companyNameInput.isEmpty ? supplier.companyName : companyNameInput
         
-        let businessAddressInput = readString("Business Address (\(supplier.businessAddress)):")
+        let businessAddressInput = readString(
+            "Business Address (\(supplier.businessAddress)):"
+        )
         let businessAddress = businessAddressInput.isEmpty ? supplier.businessAddress : businessAddressInput
-                                              
+        
         return Supplier(
             userId: supplier.userId,
             name: name,
@@ -155,27 +166,35 @@ struct AppView {
     
     func readUpdateProductDetails( currentProduct: Product) -> Product {
         
-          let nameInput = readString(
-               "Product Name (\(currentProduct.name)):"
-          )
-          let name = nameInput.isEmpty ? currentProduct.name : nameInput
+        let nameInput = readString(
+            "Product Name (\(currentProduct.name)):"
+        )
+        let name = nameInput.isEmpty ? currentProduct.name : nameInput
         
-          let priceInput = Double(readString("Product price (\(currentProduct.unitPrice)):"))
-          let price = priceInput == nil ? currentProduct.unitPrice : Double(priceInput!)
-
-          let quantityInput = Int(readString("Product quantity (\(currentProduct.quantityInStock)):"))
-          let quantity = quantityInput == nil ? currentProduct.quantityInStock : Int(quantityInput!)
+        let priceInput = Double(
+            readString("Product price (\(currentProduct.unitPrice)):")
+        )
+        let price = priceInput == nil ? currentProduct.unitPrice : Double(
+            priceInput!
+        )
         
-          return Product(
-              productId: currentProduct.productId,
-              name: name,
-              supplierId: currentProduct.supplierId,
-              unitPrice: price,
-              quantityInStock: quantity,
-              category: currentProduct.category
-          )
-      }
+        let quantityInput = Int(
+            readString("Product quantity (\(currentProduct.quantityInStock)):")
+        )
+        let quantity = quantityInput == nil ? currentProduct.quantityInStock : Int(
+            quantityInput!
+        )
         
+        return Product(
+            productId: currentProduct.productId,
+            name: name,
+            supplierId: currentProduct.supplierId,
+            unitPrice: price,
+            quantityInStock: quantity,
+            category: currentProduct.category
+        )
+    }
+    
     func showCategoryMenu(_ categories: [ProductCategory]) -> Int {
         print("\nSelect a product category:")
         for (index, category) in categories.enumerated() {
@@ -184,7 +203,7 @@ struct AppView {
         print("\(categories.count + 1). All products")
         return readInt("Select a category:")
     }
-
+    
     func showProducts(_ products: [Product]) {
         print("\nAvailable Products:")
         for product in products {
@@ -202,7 +221,7 @@ struct AppView {
         print("\n---------------- CART ----------------")
         
         var total = 0.0
-
+        
         for (index, item) in cart.items.enumerated() {
             print(
                 "\(index + 1)| " +
@@ -212,7 +231,7 @@ struct AppView {
             )
             total += item.itemTotal
         }
-
+        
         print("--------------------------------------")
         print("Cart Total: \(total)")
         print("--------------------------------------")
@@ -239,12 +258,12 @@ struct AppView {
     
     private func readProductCategory() -> ProductCategory {
         let categories = ProductCategory.allCases
-
+        
         print("Select category")
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
-
+        
         let choice = readInt("Enter a choice:")
         if choice > 0 && choice <= categories.count {
             return categories[choice - 1]
@@ -257,7 +276,7 @@ struct AppView {
             print("No orders found.")
             return
         }
-
+        
         for order in orders {
             print("\n--------------------------------------------")
             print("Order ID: \(order.orderId)")
@@ -287,7 +306,7 @@ extension AppView {
         }
     }
     
-  
+    
     
     private func readDouble(_ prompt: String) -> Double {
         print(prompt, terminator: " ")
@@ -300,13 +319,13 @@ extension AppView {
             print("Enter a valid number:",terminator: "")
         }
     }
-
+    
     func readString(_ prompt: String) -> String {
         print(prompt, terminator: " ")
         return (readLine() ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
+    
     private func readNonEmptyString(prompt: String) -> String {
         while true {
             let value = readString(prompt)

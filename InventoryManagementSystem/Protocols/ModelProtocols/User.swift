@@ -7,3 +7,4 @@ protocol User {
     var role: UserRole {get}
     
 }
+

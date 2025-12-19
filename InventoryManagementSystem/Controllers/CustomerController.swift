@@ -52,12 +52,16 @@ final class CustomerController {
         let products = productService.searchProductsByCategory(
             category: selectedCategory
         )
-        view.showProducts(products)
+        
+        if products.isEmpty {
+            view.showMessage("No products found.")
+        } else {
+            view.showProducts(products)
+        }
     }
 
     private func addItemToCart() {
         searchProduct()
-
         let productId = view.readInt("Enter product id:")
         let quantity = view.readInt("Enter quantity:")
 
@@ -87,11 +91,12 @@ final class CustomerController {
     private func viewCart() {
         let cart = orderService.viewCart(customerId: customerId)
        
-        guard !cart.items.isEmpty else {
+        if cart.items.isEmpty {
             view.showMessage("Your cart is empty.")
             return
+        } else {
+            view.showCart(cart)
         }
-        view.showCart(cart)
         
     }
     

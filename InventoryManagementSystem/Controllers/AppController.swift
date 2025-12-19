@@ -93,7 +93,7 @@ final class AppController {
 
         do {
             currentUserId =
-                try authenticationService
+            try authenticationService
                 .login(email: email, password: password, role: role)
             view.showMessage("Login successful.")
         } catch let error as LoginError {
@@ -112,8 +112,8 @@ final class AppController {
         let categories = ProductCategory.allCases
         let choice = view.showCategoryMenu(categories)
         let selectedCategory: ProductCategory? =
-            (choice > 0 && choice <= categories.count)
-            ? categories[choice - 1] : nil
+        (choice > 0 && choice <= categories.count)
+        ? categories[choice - 1] : nil
 
         let products = productService.searchProductsByCategory(
             category: selectedCategory
