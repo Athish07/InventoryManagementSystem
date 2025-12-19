@@ -1,6 +1,6 @@
-class ProductManager: ProductService {
+final class ProductManager: ProductService {
 
-    private var nextProductId: Int = 1
+  
     private let productRepository: ProductRepository
     private let userRepository: UserRepository
 
@@ -12,14 +12,13 @@ class ProductManager: ProductService {
     func addProduct(productDetails: ProductInput, supplierId: Int)  {
 
         let product = Product(
-            productId: nextProductId,
+            productId: productRepository.getNextProductId(),
             name: productDetails.name,
             supplierId: supplierId,
             unitPrice: productDetails.unitPrice,
             quantityInStock: productDetails.quantity,
             category: productDetails.category
         )
-        nextProductId += 1
         productRepository.addProduct(product)
 
     }

@@ -3,7 +3,7 @@ enum RegistrationError: Error{
 
     var displayMessage: String {
         switch self {
-        case .userAlreadyExists: return "Error: An account already exists with this email."
+        case .userAlreadyExists: return "Error: An account already exists."
         }
     }
 }

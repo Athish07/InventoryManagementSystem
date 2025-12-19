@@ -4,5 +4,6 @@ protocol User {
     var email: String { get set }
     var password: String { get set }
     var phoneNumber: String { get set }
+    var role: UserRole {get}
     
 }

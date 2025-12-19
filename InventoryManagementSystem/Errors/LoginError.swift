@@ -4,7 +4,7 @@ enum LoginError: Error {
     var displayMessage: String {
         switch self {
         case .invalidCredentials:
-            return "Login Failed: Invalid email or password."
+            return "Login Failed: Invalid email or password or role."
         }
     }
 }

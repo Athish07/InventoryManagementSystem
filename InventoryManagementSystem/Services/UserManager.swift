@@ -1,4 +1,4 @@
-struct UserManager: UserService {
+final class UserManager: UserService {
     
     private let userRepository: UserRepository
     

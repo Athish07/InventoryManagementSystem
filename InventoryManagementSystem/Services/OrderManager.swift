@@ -6,8 +6,6 @@ final class OrderManager: OrderService {
     private let orderRepository: InMemoryOrderRepository
     private let orderItemRepository: InMemoryOrderItemRepository
     private let productRepository: ProductRepository
-    private var nextOrderId = 1
-    private var nextOrderItemId = 1
 
     init(
         cartRepository: InMemoryCartRepository,
@@ -70,8 +68,7 @@ final class OrderManager: OrderService {
             throw OrderServiceError.cartEmpty
         }
 
-        let orderId = nextOrderId
-        nextOrderId += 1
+        let orderId = orderRepository.getNextOrderId()
 
         var totalAmount = 0.0
 
@@ -89,15 +86,13 @@ final class OrderManager: OrderService {
             productRepository.addProduct(product)
 
             let orderItem = OrderItem(
-                orderItemId: nextOrderItemId,
+                orderItemId: orderItemRepository.getNextOrderItemId(),
                 orderId: orderId,
                 productId: cartItem.productId,
                 quantity: cartItem.quantity,
                 unitPrice: cartItem.unitPrice,
                 itemTotal: cartItem.itemTotal
             )
-
-            nextOrderItemId += 1
             orderItemRepository.save(orderItem)
 
             totalAmount += cartItem.itemTotal

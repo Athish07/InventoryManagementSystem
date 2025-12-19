@@ -1,23 +1,25 @@
 import Foundation
 
-struct SupplierController {
+final class SupplierController {
     
     private let view: AppView
     private let productService: ProductService
     private let userService: UserService
-    
+    private let onLogout: () -> Void
     private let supplierId: Int
 
     init(
         view: AppView,
         productService: ProductService,
         supplierId: Int,
-        userService: UserService
+        userService: UserService,
+        onLogout: @escaping () -> Void
     ) {
         self.view = view
         self.productService = productService
         self.supplierId = supplierId
         self.userService = userService
+        self.onLogout = onLogout
     }
 
     func handleMenu(for name: String) {
@@ -27,7 +29,7 @@ struct SupplierController {
         case 3: updateProduct()
         case 4: deleteProduct()
         case 5: viewProfile()
-        case 6: return
+        case 6: onLogout()
         default: view.showMessage("Invalid choice.")
         }
     }

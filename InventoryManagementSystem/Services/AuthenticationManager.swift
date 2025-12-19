@@ -1,16 +1,15 @@
-class AuthenticationManager: AuthenticationService {
+final class AuthenticationManager: AuthenticationService {
 
     private let userRepository: UserRepository
-    private static var nextUserId: Int = 1
 
     init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }
 
-    func login(email: String, password: String) throws -> Int {
-        
-        guard let user = userRepository.findByEmail(email),
-              user.password == password
+    func login(email: String, password: String, role: UserRole) throws -> Int {
+
+        guard let user = userRepository.findByEmailAndRole(email: email,role: role),
+            user.password == password
         else {
             throw LoginError.invalidCredentials
         }
@@ -24,13 +23,13 @@ class AuthenticationManager: AuthenticationService {
         phoneNumber: String,
         shippingAddress: String
     ) throws {
-        
-        guard userRepository.findByEmail(email) == nil else{
+
+        guard userRepository.findByEmailAndRole(email:email, role: .customer) == nil else {
             throw RegistrationError.userAlreadyExists
         }
-        
+
         let customer = Customer(
-            userId: AuthenticationManager.nextUserId,
+            userId: userRepository.getNextUserId(),
             name: name,
             email: email,
             password: password,
@@ -38,7 +37,6 @@ class AuthenticationManager: AuthenticationService {
             shippingAddress: shippingAddress
         )
         userRepository.saveUser(customer)
-        AuthenticationManager.nextUserId += 1
 
     }
 
@@ -50,13 +48,13 @@ class AuthenticationManager: AuthenticationService {
         companyName: String,
         businessAddress: String
     ) throws {
-        
-        guard userRepository.findByEmail(email) == nil else{
+
+        guard userRepository.findByEmailAndRole(email:email,role: .supplier) == nil else {
             throw RegistrationError.userAlreadyExists
         }
-        
+
         let supplier = Supplier(
-            userId: AuthenticationManager.nextUserId,
+            userId: userRepository.getNextUserId(),
             name: name,
             email: email,
             password: password,
@@ -65,7 +63,6 @@ class AuthenticationManager: AuthenticationService {
             businessAddress: businessAddress
         )
         userRepository.saveUser(supplier)
-        AuthenticationManager.nextUserId += 1
     }
 
 }

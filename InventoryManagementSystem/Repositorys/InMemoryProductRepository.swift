@@ -1,7 +1,13 @@
 final class InMemoryProductRepository: ProductRepository {
   
     private var products: [Int: Product] = [:]
-
+    private var nextProductId: Int = 1
+    
+    func getNextProductId() -> Int {
+        defer { nextProductId += 1 }
+        return nextProductId
+    }
+    
     func addProduct(_ product: Product) {
         products[product.productId] = product
     }

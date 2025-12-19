@@ -4,7 +4,7 @@ struct Customer: User {
     var email: String
     var password: String
     var phoneNumber: String
-    
+    let role: UserRole = .customer
     var shippingAddress: String
     
 }

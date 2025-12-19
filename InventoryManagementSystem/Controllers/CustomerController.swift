@@ -1,25 +1,28 @@
 import Foundation
 
-struct CustomerController {
+final class CustomerController {
 
     private let view: AppView
     private let orderService: OrderService
     private let productService: ProductService
     private let userService: UserService
     private let customerId: Int
-
+    private let onLogout: () -> Void
+    
     init(
         view: AppView,
         orderService: OrderService,
         productService: ProductService,
         userService: UserService,
-        customerId: Int
+        customerId: Int,
+        onLogout: @escaping () -> Void
     ) {
         self.view = view
         self.orderService = orderService
         self.productService = productService
         self.userService = userService
         self.customerId = customerId
+        self.onLogout = onLogout
     }
 
     func handleMenu(for name: String) {
@@ -32,7 +35,7 @@ struct CustomerController {
         case 5: checkout()
         case 6: viewOrders()
         case 7: viewProfile()
-        case 8: return
+        case 8: onLogout()
         default:
             view.showMessage("Invalid choice.")
         }
@@ -65,8 +68,10 @@ struct CustomerController {
                 quantity: quantity
             )
             view.showMessage("Item added to cart.")
+        } catch let error as OrderServiceError {
+            view.showMessage(error.displayMessage)
         } catch {
-            view.showMessage("Unable to add item.")
+            view.showMessage(error.localizedDescription)
         }
     }
     
@@ -81,17 +86,23 @@ struct CustomerController {
     
     private func viewCart() {
         let cart = orderService.viewCart(customerId: customerId)
-        view.showCart(cart)
-    }
-    
-    private func removeItemFromCart() {
-        let cart = orderService.viewCart(customerId: customerId)
-        view.showCart(cart)
-
+       
         guard !cart.items.isEmpty else {
             view.showMessage("Your cart is empty.")
             return
         }
+        view.showCart(cart)
+        
+    }
+    
+    private func removeItemFromCart() {
+        let cart = orderService.viewCart(customerId: customerId)
+        
+        guard !cart.items.isEmpty else {
+            view.showMessage("Your cart is empty.")
+            return
+        }
+        view.showCart(cart)
 
         let index = view.readInt("Enter the index of the item to remove:")
 
@@ -119,7 +130,10 @@ struct CustomerController {
         
         do {
             let order = try orderService.checkout(customerId: customerId)
-            view.showMessage("Order placed successfully. Total: \(order.totalAmount)")
+            view
+                .showMessage(
+                    "Order placed successfully. Total: \(order.totalAmount)"
+                )
         } catch let error as OrderServiceError{
             view.showMessage(error.displayMessage)
         } catch {

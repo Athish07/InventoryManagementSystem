@@ -10,7 +10,7 @@ struct AppView {
         print("3. Register")
         print("4. Exit")
         print("--------------------------------------------")
-        return readInt("Enter a choice: ")
+        return readInt("Enter a choice:")
     }
     
     func showCustomerMenu(userName: String) -> Int {
@@ -46,6 +46,16 @@ struct AppView {
         print("1. Register as Supplier")
         print("2. Register as Customer")
         return readInt("Enter a choice:")
+    }
+    
+    func readLoginRole() -> UserRole {
+        print("Login as:")
+        print("1. Customer")
+        print("2. Supplier")
+
+        let choice = readInt("Enter choice:")
+
+        return choice == 1 ? .customer : .supplier
     }
     
     func readCommonUserDetails() -> CommonUserDetails {
@@ -171,7 +181,7 @@ struct AppView {
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
-        print("\(categories.count + 1). Show All")
+        print("\(categories.count + 1). All products")
         return readInt("Select a category:")
     }
 
@@ -179,7 +189,7 @@ struct AppView {
         print("\nAvailable Products:")
         for product in products {
             print(
-                "ID: \(product.productId) | " +
+                "\(product.productId) | " +
                 "\(product.name) | " +
                 "\(product.category.rawValue) | " +
                 "Price: \(product.unitPrice) | " +
@@ -190,17 +200,12 @@ struct AppView {
     
     func showCart(_ cart: Cart) {
         print("\n---------------- CART ----------------")
-
-        if cart.items.isEmpty {
-            print("Your cart is empty.")
-            return
-        }
-
+        
         var total = 0.0
 
         for (index, item) in cart.items.enumerated() {
             print(
-                "\(index + 1). Product ID: \(item.productId) | " +
+                "\(index + 1)| " +
                 "Qty: \(item.quantity) | " +
                 "Price: \(item.unitPrice) | " +
                 "Total: \(item.itemTotal)"
@@ -239,7 +244,6 @@ struct AppView {
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
-        print("\(categories.count + 1). Other")
 
         let choice = readInt("Enter a choice:")
         if choice > 0 && choice <= categories.count {
@@ -279,7 +283,7 @@ extension AppView {
                value > 0 {
                 return value
             }
-            print("Enter a valid number:")
+            print("Enter a valid number:", terminator: "")
         }
     }
     

@@ -7,6 +7,7 @@ protocol ProductRepository {
     func getProductByCategory(_ category: ProductCategory) -> [Product]
     func getProductById(_ productId: Int) -> Product?
     func deleteProduct(_ id: Int)
+    func getNextProductId() -> Int
     
 }
 

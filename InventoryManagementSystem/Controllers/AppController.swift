@@ -1,26 +1,29 @@
 import Foundation
 
 final class AppController {
-    
+
     private let view: AppView
     private let authenticationService: AuthenticationService
     private let orderService: OrderService
     private let productService: ProductService
     private let userService: UserService
     private var currentUserId: Int?
+    private let appFactory: AppFactory
 
     init(
         appView: AppView,
         authenticationService: AuthenticationService,
         orderService: OrderService,
         productService: ProductService,
-        userService: UserService
+        userService: UserService,
+        appFactory: AppFactory
     ) {
         self.view = appView
         self.authenticationService = authenticationService
         self.orderService = orderService
         self.productService = productService
         self.userService = userService
+        self.appFactory = appFactory
     }
 
     func start() {
@@ -49,51 +52,49 @@ final class AppController {
     }
 
     private func handlePrivateNavigation(for userId: Int) {
-        
-        guard let user = userService.getUser(by:userId) else {
+        guard let user = userService.getUser(by: userId) else {
             logout()
             return
         }
-        
+
         if let customer = user as? Customer {
-            let customerController = CustomerController(
-                view: view,
-                orderService: orderService,
-                productService: productService,
-                userService: userService,
-                customerId: customer.userId
-            )
-            customerController.handleMenu(for: customer.name)
+            appFactory
+                .makeCustomerController(
+                    customerId: customer.userId,
+                    onLogout: { [weak self] in self?.logout()
+                    }
+                )
+                .handleMenu(for: customer.name)
+
         } else if let supplier = user as? Supplier {
-            let supplierController = SupplierController(
-                view: view,
-                productService: productService,
-                supplierId: supplier.userId,
-                userService: userService
-            )
-            supplierController.handleMenu(for: supplier.name)
-        } else {
-            view.showMessage("Unknown user type.")
-            logout()
+            appFactory
+                .makeSupplierController(
+                    supplierId: supplier.userId,
+                    onLogout: {
+                        [weak self] in self?.logout()
+                    }
+                )
+                .handleMenu(for: supplier.name)
         }
     }
-
     private func login() {
         let email = view.readString("Email:")
         let password = view.readString("Password:")
-        
+        let role = view.readLoginRole()
+
         guard Validation.isValidEmail(email) else {
-            view.showMessage("Invalid email")
+            view.showMessage("Invalid email format")
             return
         }
         guard Validation.isValidPassword(password) else {
             view.showMessage("Invalid password")
             return
         }
-        
+
         do {
-            currentUserId = try authenticationService
-                .login(email: email, password: password)
+            currentUserId =
+                try authenticationService
+                .login(email: email, password: password, role: role)
             view.showMessage("Login successful.")
         } catch let error as LoginError {
             view.showMessage(error.displayMessage)
@@ -106,11 +107,13 @@ final class AppController {
         currentUserId = nil
         view.showMessage("Logged out successfully.")
     }
-    
+
     private func searchProduct() {
         let categories = ProductCategory.allCases
         let choice = view.showCategoryMenu(categories)
-        let selectedCategory: ProductCategory? = (choice > 0 && choice <= categories.count) ? categories[choice - 1] : nil
+        let selectedCategory: ProductCategory? =
+            (choice > 0 && choice <= categories.count)
+            ? categories[choice - 1] : nil
 
         let products = productService.searchProductsByCategory(
             category: selectedCategory
@@ -124,22 +127,31 @@ final class AppController {
 
     private func register() {
         let commonDetails = view.readCommonUserDetails()
-        
+
         guard Validation.isValidEmail(commonDetails.email) else {
-            view.showMessage("Error: Invalid email format. Please check your input.")
+            view
+                .showMessage(
+                    "Error: Invalid email format. Please check your input."
+                )
             return
         }
-        
+
         guard Validation.isValidPassword(commonDetails.password) else {
-            view.showMessage("Error: Password must be at least 6 characters long and less than 10 characters.")
+            view
+                .showMessage(
+                    "Error: Password must be at least 6 characters long and less than 10 characters."
+                )
             return
         }
 
         guard Validation.isValidPhoneNumber(commonDetails.phoneNumber) else {
-            view.showMessage("Error: Invalid phone number format (use 10 digits).")
+            view
+                .showMessage(
+                    "Error: Invalid phone number format (use 10 digits)."
+                )
             return
         }
-        
+
         switch view.showRegistrationMenu() {
         case 1: registerSupplier(commonDetails)
         case 2: registerCustomer(commonDetails)
@@ -149,11 +161,14 @@ final class AppController {
 
     private func registerCustomer(_ details: CommonUserDetails) {
         let shippingAddress = view.readCustomerDetails()
-        
+
         do {
             try authenticationService.registerCustomer(
-                name: details.name, email: details.email, password: details.password,
-                phoneNumber: details.phoneNumber, shippingAddress: shippingAddress
+                name: details.name,
+                email: details.email,
+                password: details.password,
+                phoneNumber: details.phoneNumber,
+                shippingAddress: shippingAddress
             )
             view.showMessage("Customer registered successfully.")
         } catch let error as RegistrationError {
@@ -165,11 +180,14 @@ final class AppController {
 
     private func registerSupplier(_ details: CommonUserDetails) {
         let supplierDetails = view.readSupplierDetails()
-        
+
         do {
             try authenticationService.registerSupplier(
-                name: details.name, email: details.email, password: details.password,
-                phoneNumber: details.phoneNumber, companyName: supplierDetails.companyName,
+                name: details.name,
+                email: details.email,
+                password: details.password,
+                phoneNumber: details.phoneNumber,
+                companyName: supplierDetails.companyName,
                 businessAddress: supplierDetails.businessAddress
             )
             view.showMessage("Supplier registered successfully.")
