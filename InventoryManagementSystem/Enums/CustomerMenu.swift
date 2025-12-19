@@ -1,18 +1,11 @@
-enum CustomerMenu: String,CaseIterable {
-    
-    case searchProduct
-    case addItemToCart
-    case removeItemFromCart
-    case viewCart
-    case checkout
-    case viewOrders
-    case viewProfile
-    case onLogout
-//   static func selectedChoice(choice: Int, menu: [CustomerMenu]) -> CustomerMenu? {
-//        guard choice > 0 && choice <= menu.count else {
-//            return nil
-//        }
-//        return menu[choice - 1]
-//    }
+enum CustomerMenu: String, CaseIterable {
+    case searchProduct = "Serach Product"
+    case addItemToCart = "Add Item to Cart"
+    case removeItemFromCart = "Remove Item  From Cart"
+    case viewCart = "View Cart"
+    case checkout = "CheckOut"
+    case viewOrders = "View Orders"
+    case viewProfile = "View Profile"
+    case onLogout = "Logout"
     
 }

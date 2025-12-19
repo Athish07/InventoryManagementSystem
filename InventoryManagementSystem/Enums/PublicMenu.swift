@@ -1,5 +1,5 @@
-enum PublicMenu: CaseIterable {
-    case searchProducts
-    case login
-    case register
+enum PublicMenu: String, CaseIterable {
+    case searchProducts = "Search Products"
+    case login = "Login"
+    case register = "Register"
 }

@@ -1,5 +1,5 @@
-enum RegistrationMenu: CaseIterable {
-    case customer
-    case supplier
-    
+enum RegistrationMenu: String, CaseIterable {
+    case customer = "Customer"
+    case supplier = "Supplier"
+
 }

@@ -28,7 +28,7 @@ final class CustomerController {
     func handleMenu(for name: String) {
 
         let customerMenu = CustomerMenu.allCases
-        let selectedOption = view.showAndReadCustomerMenu(
+        let selectedOption = view.showCustomerMenu(
             userName: name,
             customerMenu: customerMenu
         )

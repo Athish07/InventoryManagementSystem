@@ -1,5 +1,4 @@
-enum UserRole: CaseIterable {
-    case customer
-    case supplier
+enum UserRole: String, CaseIterable {
+    case customer = "Customer"
+    case supplier = "Supplier"
 }
-
