@@ -1,6 +1,6 @@
 struct SupplierView {
     
-    func showSupplierMenu(userName: String, supplierMenu: [SupplierMenu]) -> Int {
+    func showSupplierMenu(userName: String, supplierMenu: [SupplierMenu]) {
         print("\n--------------------------------------------")
         print("Welcome Supplier, \(userName)")
         
@@ -8,61 +8,45 @@ struct SupplierView {
             print("\(index+1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
-        return readInt("Enter a choice")
+        print("Enter a choice:")
     }
     
-    func readSupplierDetails() -> User {
-        let name = readNonEmptyString(prompt: "Enter your name:")
-        let email = readNonEmptyString(prompt: "Enter your email:")
-        let password = readNonEmptyString(prompt: "Enter your password:")
-        let phone = readNonEmptyString(prompt: "Enter your phone number:")
-        let shippingAddress = readNonEmptyString(
-            prompt: "Enter your shipping address:"
-        )
-        let companyName = readNonEmptyString(prompt: "Enter your company name:")
-        let businessAddress = readNonEmptyString(
-            prompt: "Enter your business address:"
-        )
-        
-        return Supplier()
-        
+    func getSupplierMenuInput() -> SupplierMenu {
+        while true {
+            let choice = ConsoleInputUtils.readInt("Enter a choice:")
+            if let menu = SupplierMenu.fromChoice(choice) {
+                return menu
+            }
+            print("Invalid choice. Please try again.")
+        }
     }
     
-    func readProductDetails() -> ProductInput {
-        let name = readNonEmptyString(prompt: "Enter product name:")
-        let category = readProductCategory()
-        let unitPrice = readDouble("Enter unit price:")
-        let quantity = readInt("Enter quantity:")
-        
-        return ProductInput(
-            name: name,
-            category: category,
-            unitPrice: unitPrice,
-            quantity: quantity
-        )
-        
-    }
+//    func readProductDetails() -> ProductInput {
+//        let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
+//        let category = readProductCategory()
+//        let unitPrice = ConsoleInputUtils.readDouble("Enter unit price:")
+//        let quantity = ConsoleInputUtils.readInt("Enter quantity:")
+//        
+//        return ProductInput(
+//            name: name,
+//            category: category,
+//            unitPrice: unitPrice,
+//            quantity: quantity
+//        )
+//        
+//    }
     
     func readUpdateSupplierDetails(supplier: Supplier) -> Supplier {
         
-        let nameInput = readString("Name (\(supplier.name)):")
-        let name = nameInput.isEmpty ? supplier.name : nameInput
+        let name = ConsoleInputUtils.readOptionalString("Name (\(supplier.name)):") ?? supplier.name
         
-        let emailInput = readString("Email (\(supplier.email)):")
-        let email = emailInput.isEmpty ? supplier.email: emailInput
+        let email = ConsoleInputUtils.readOptionalString("Email (\(supplier.email)):") ?? supplier.email
         
-        let phoneInput = readString("Phone (\(supplier.phoneNumber)):")
-        let phone = phoneInput.isEmpty ? supplier.phoneNumber : phoneInput
+        let phone = ConsoleInputUtils.readOptionalString("Phone (\(supplier.phoneNumber)):") ?? supplier.phoneNumber
         
-        let companyNameInput = readString(
-            "Company Name (\(supplier.companyName)"
-        )
-        let companyName = companyNameInput.isEmpty ? supplier.companyName : companyNameInput
+        let companyName = ConsoleInputUtils.readOptionalString("Company Name (\(supplier.companyName)") ?? supplier.companyName
         
-        let businessAddressInput = readString(
-            "Business Address (\(supplier.businessAddress)):"
-        )
-        let businessAddress = businessAddressInput.isEmpty ? supplier.businessAddress : businessAddressInput
+        let businessAddress = ConsoleInputUtils.readOptionalString("Business Address (\(supplier.businessAddress)):") ?? supplier.businessAddress
         
         return Supplier(
             userId: supplier.userId,
@@ -77,24 +61,11 @@ struct SupplierView {
     
     func readUpdateProductDetails( currentProduct: Product) -> Product {
         
-        let nameInput = readString(
-            "Product Name (\(currentProduct.name)):"
-        )
-        let name = nameInput.isEmpty ? currentProduct.name : nameInput
+        let name = ConsoleInputUtils.readOptionalString("Product Name (\(currentProduct.name)):") ?? currentProduct.name
         
-        let priceInput = Double(
-            readString("Product price (\(currentProduct.unitPrice)):")
-        )
-        let price = priceInput == nil ? currentProduct.unitPrice : Double(
-            priceInput!
-        )
+        let price = ConsoleInputUtils.readOptionalDouble("Product price (\(currentProduct.unitPrice)):") ?? currentProduct.unitPrice
         
-        let quantityInput = Int(
-            readString("Product quantity (\(currentProduct.quantityInStock)):")
-        )
-        let quantity = quantityInput == nil ? currentProduct.quantityInStock : Int(
-            quantityInput!
-        )
+        let quantity = ConsoleInputUtils.readOptionalInt("Product quantity (\(currentProduct.quantityInStock)):") ?? currentProduct.quantityInStock
         
         return Product(
             productId: currentProduct.productId,
@@ -116,19 +87,19 @@ struct SupplierView {
         print("--------------------------------------------")
     }
     
-    private func readProductCategory() -> ProductCategory {
+    private func readProductCategory() {
         let categories = ProductCategory.allCases
         
         print("Select category")
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
+        print("Enter a choice(default category is other):")
         
-        let choice = readInt("Enter a choice(default category is other):")
-        if choice > 0 && choice <= categories.count {
-            return categories[choice - 1]
-        }
-        return .other
+    }
+    
+    func showMessage(_ message: String) {
+        print(message)
     }
     
 }

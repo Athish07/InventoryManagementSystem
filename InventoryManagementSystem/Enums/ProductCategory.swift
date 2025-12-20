@@ -6,4 +6,14 @@ enum ProductCategory: String, CaseIterable {
     case other = "Other"
 }
 
+extension ProductCategory {
+    
+    static func fromChoice(_ choice: Int) -> ProductCategory? {
+            let index = choice - 1
+            guard index >= 0 && index < allCases.count else {
+                return nil
+            }
+            return allCases[index]
+        }
+}
 

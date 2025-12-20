@@ -38,9 +38,10 @@ final class AppController {
     
     private func handlePublicMenu() {
         let publicMenu = PublicMenu.allCases
-        let x = view.showPublicMenu(publicMenu: publicMenu)
+        view.showPublicMenu(publicMenu: publicMenu)
+        let menu = view.getPublicMenuInput()
         
-        switch publicMenu[x-1] {
+        switch menu {
         case .searchProducts: searchProduct()
         case .login: login()
         case .register: register()
@@ -74,11 +75,11 @@ final class AppController {
         }
     }
     private func login() {
-        let email = view.readString("Email:")
-        let password = view.readString("Password:")
+        let email = ConsoleInputUtils.readNonEmptyString("Email:")
+        let password = ConsoleInputUtils.readNonEmptyString("Password:")
         
-        let userRole = UserRole.allCases
-        let role = view.readLoginRole(userRole: userRole)
+        view.readLoginRole(userRole: UserRole.allCases)
+        let role = view.getLoginRoleInput()
         
         guard Validation.isValidEmail(email) else {
             view.showMessage("Invalid email format")
@@ -108,11 +109,9 @@ final class AppController {
 
     private func searchProduct() {
         let categories = ProductCategory.allCases
-        let choice = view.showCategoryMenu(categories)
-        let selectedCategory: ProductCategory? =
-        (choice > 0 && choice <= categories.count)
-        ? categories[choice - 1] : nil
-
+        view.showCategoryMenu(categories)
+        let selectedCategory = view.getCategoryMenuInput(categories: categories)
+        
         let products = productService.searchProductsByCategory(
             category: selectedCategory
         )
@@ -126,11 +125,10 @@ final class AppController {
     private func register() {
         
         let registrationMenu = RegistrationMenu.allCases
-        let input = view.showRegistrationMenu(
-            registrationMenu: registrationMenu
-        )
+        view.showRegistrationMenu(registrationMenu: registrationMenu)
+        let menu = view.getRegistrationMenuInput()
         
-        switch registrationMenu[input - 1] {
+        switch menu {
         case .customer: registerCustomer()
         case .supplier: registerSupplier()
         }
@@ -138,7 +136,7 @@ final class AppController {
     }
 
     private func registerCustomer() {
-        let customer = view.readCustomerDetails()
+        
         
         guard Validation.isValidEmail(customer.email) else {
             view
@@ -164,25 +162,24 @@ final class AppController {
             return
         }
           
-        //        do {
-        //            try authenticationService.registerCustomer(
-        //                name: .name,
-        //                email: details.email,
-        //                password: details.password,
-        //                phoneNumber: details.phoneNumber,
-        //                shippingAddress: shippingAddress
-        //            )
-        //            view.showMessage("Customer registered successfully.")
-        //        } catch let error as RegistrationError {
-        //            view.showMessage(error.displayMessage)
-        //        } catch {
-        //            view.showMessage("Registration failed.")
-        //        }
+                do {
+                    try authenticationService.registerCustomer(
+                        name: .name,
+                        email: details.email,
+                        password: details.password,
+                        phoneNumber: details.phoneNumber,
+                        shippingAddress: shippingAddress
+                    )
+                    view.showMessage("Customer registered successfully.")
+                } catch let error as RegistrationError {
+                    view.showMessage(error.displayMessage)
+                } catch {
+                    view.showMessage("Registration failed.")
+                }
         
     }
 
     private func registerSupplier() {
-        let supplier = view.readSupplierDetails()
         
         guard Validation.isValidEmail(supplier.email) else {
             view
@@ -208,20 +205,20 @@ final class AppController {
             return
         }
 
-        //        do {
-        //            try authenticationService.registerSupplier(
-        //                name: details.name,
-        //                email: details.email,
-        //                password: details.password,
-        //                phoneNumber: details.phoneNumber,
-        //                companyName: supplierDetails.companyName,
-        //                businessAddress: supplierDetails.businessAddress
-        //            )
-        //            view.showMessage("Supplier registered successfully.")
-        //        } catch let error as RegistrationError {
-        //            view.showMessage(error.displayMessage)
-        //        } catch {
-        //            view.showMessage("Registration failed.")
-        //        }
+                do {
+                    try authenticationService.registerSupplier(
+                        name: details.name,
+                        email: details.email,
+                        password: details.password,
+                        phoneNumber: details.phoneNumber,
+                        companyName: supplierDetails.companyName,
+                        businessAddress: supplierDetails.businessAddress
+                    )
+                    view.showMessage("Supplier registered successfully.")
+                } catch let error as RegistrationError {
+                    view.showMessage(error.displayMessage)
+                } catch {
+                    view.showMessage("Registration failed.")
+                }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 
 final class CustomerController {
 
-    private let view: AppView
+    private let view: CustomerView
     private let orderService: OrderService
     private let productService: ProductService
     private let userService: UserService
@@ -10,7 +10,7 @@ final class CustomerController {
     private let onLogout: () -> Void
     
     init(
-        view: AppView,
+        view: CustomerView,
         orderService: OrderService,
         productService: ProductService,
         userService: UserService,
@@ -28,13 +28,12 @@ final class CustomerController {
     func handleMenu(for name: String) {
 
         let customerMenu = CustomerMenu.allCases
-        let selectedOption = view.showCustomerMenu(
+        view.showCustomerMenu(
             userName: name,
-            customerMenu: customerMenu
+            menus: customerMenu
         )
         
-        switch CustomerMenu.selectedChoice(choice: selectedOption, menu: customerMenu)
-        {
+        switch view.getCustomerMenuInput() {
         case .searchProduct: searchProduct()
         case .addItemToCart: addItemToCart()
         case .removeItemFromCart: removeItemFromCart()
@@ -43,8 +42,6 @@ final class CustomerController {
         case .viewOrders: viewOrders()
         case .viewProfile: viewProfile()
         case .onLogout: onLogout()
-        case .none:
-            view.showMessage("Invalid Choice.")
         }
     }
 
@@ -68,10 +65,10 @@ final class CustomerController {
     }
 
     private func addItemToCart() {
-        searchProduct()
-        let productId = view.readInt("Enter product id:")
-        let quantity = view.readInt("Enter quantity:")
-
+       // searchProduct()
+        let productId = ConsoleInputUtils.readInt(prompt:"Enter product id:")
+        let quantity = ConsoleInputUtils.readInt(prompt:"Enter quantity:")
+        
         do {
             try orderService.addItemToCart(
                 customerId: customerId,
@@ -91,7 +88,7 @@ final class CustomerController {
             view.showMessage("Unauthorized access, please login again.")
             return
         }
-        let updatedCustomer = view.readUpdateCustomerDetails(customer: customer)
+        let updatedCustomer = view.readUpdateCustomer(customer)
         userService.updateUser(updatedCustomer)
     }
     
@@ -116,7 +113,7 @@ final class CustomerController {
         }
         view.showCart(cart)
 
-        let index = view.readInt("Enter the index of the item to remove:")
+        let index = ConsoleInputUtils.readInt(prompt:"Enter the index of the item to remove:")
 
         guard index > 0 && index <= cart.items.count else {
             view.showMessage("Invalid item index.")

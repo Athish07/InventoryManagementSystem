@@ -2,14 +2,14 @@ import Foundation
 
 final class SupplierController {
 
-    private let view: AppView
+    private let view: SupplierView
     private let productService: ProductService
     private let userService: UserService
     private let onLogout: () -> Void
     private let supplierId: Int
 
     init(
-        view: AppView,
+        view: SupplierView,
         productService: ProductService,
         supplierId: Int,
         userService: UserService,
@@ -25,15 +25,14 @@ final class SupplierController {
     func handleMenu(for name: String) {
 
         let supplierMenu = SupplierMenu.allCases
-        let menuChoice = view.showSupplierMenu(userName: name, supplierMenu: supplierMenu)
-        switch supplierMenu[menuChoice - 1] {
+        view.showSupplierMenu(userName: name, supplierMenu: supplierMenu)
+        switch view.getSupplierMenuInput() {
         case .addProduct: addProduct()
         case .viewMyProducts: viewMyProducts()
         case .updateProduct: updateProduct()
         case .deleteProduct: deleteProduct()
         case .viewProfile: viewProfile()
         case .onLogout: onLogout()
-            
         }
     }
 
@@ -79,7 +78,7 @@ final class SupplierController {
 
     private func updateProduct() {
         viewMyProducts()
-        let productId = view.readInt("Provide the Id of the product to update:")
+        let productId = ConsoleInputUtils.readInt("Provide the Id of the product to update:")
 
         guard let product = productService.getProductById(productId: productId)
         else {
@@ -93,7 +92,7 @@ final class SupplierController {
 
     private func deleteProduct() {
         viewMyProducts()
-        let productId = view.readInt("Provide the Id of the product to delete:")
+        let productId = ConsoleInputUtils.readInt("Provide the Id of the product to delete:")
 
         do {
             try productService

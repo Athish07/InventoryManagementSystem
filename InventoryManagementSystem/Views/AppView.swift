@@ -2,111 +2,143 @@ import Foundation
 
 struct AppView {
     
-    func showPublicMenu(publicMenu: [PublicMenu]) -> Int {
+    func showPublicMenu(publicMenu: [PublicMenu]) {
         print("\n--------------------------------------------")
         
         for (index,menu) in publicMenu.enumerated() {
             print("\(index+1). \(menu.rawValue)")
         }
-        
         print("--------------------------------------------")
-        return readInt("Enter a choice:")
+      
     }
     
-    func showRegistrationMenu(registrationMenu: [RegistrationMenu]) -> Int {
+    func getPublicMenuInput() -> PublicMenu {
+        while true {
+            print("Enter a choice:", terminator: "")
+            let choice = ConsoleInputUtils.readInt()
+
+            if let menu = PublicMenu.fromChoice(choice) {
+                return menu
+            }
+
+            print("Invalid choice. Please try again.")
+        }
+    }
+    
+    func showRegistrationMenu(registrationMenu: [RegistrationMenu]) {
         
         for (index,menu) in registrationMenu.enumerated() {
             print("\(index+1).\(menu.rawValue)")
         }
-        return readInt("Enter a choice:")
         
     }
     
-    func readLoginRole(userRole: [UserRole]) -> UserRole {
+    func getRegistrationMenuInput() -> RegistrationMenu {
+        while true {
+            print("Enter a choice:", terminator: "")
+            let choice = ConsoleInputUtils.readInt()
+            
+            if let menu = RegistrationMenu.fromChoice(choice) {
+                return menu
+            }
+            print("Invalid choice. Please try again.")
+        }
+    }
+    
+    func readNewCustomer() -> CustomerInput {
+        let name = ConsoleInputUtils.readNonEmptyString("Name:")
+        let email = ConsoleInputUtils.readNonEmptyString("Email:")
+        let password = ConsoleInputUtils.readNonEmptyString("Password:")
+        let phone = ConsoleInputUtils.readNonEmptyString("Phone:")
+        let address = ConsoleInputUtils.readNonEmptyString("Shipping Address:")
+
+        return CustomerInput(
+            name: name,
+            email: email,
+            password: password,
+            phoneNumber: phone,
+            shippingAddress: address
+        )
+    }
+    
+    func readSupplierDetails() -> User {
+        let name = ConsoleInputUtils.readNonEmptyString("Enter your name:")
+        let email = ConsoleInputUtils.readNonEmptyString("Enter your email:")
+        let password = ConsoleInputUtils.readNonEmptyString("Enter your password:")
+        let phone = ConsoleInputUtils.readNonEmptyString("Enter your phone number:")
+        let shippingAddress = ConsoleInputUtils.readNonEmptyString("Enter your shipping address:")
+        let companyName = ConsoleInputUtils.readNonEmptyString("Enter your company name:")
+        let businessAddress = ConsoleInputUtils.readNonEmptyString("Enter your business address:")
+        return Supplier()
+        
+    }
+    
+    func readLoginRole(userRole: [UserRole]) {
         for (index,role) in userRole.enumerated() {
             print("\(index+1) \(role.rawValue)")
         }
-        let choice = readInt("Enter choice:")
         
-        let selectedRole = userRole[choice-1]
-        return selectedRole
     }
     
-    func showCategoryMenu(_ categories: [ProductCategory]) -> Int {
+    func getLoginRoleInput() -> UserRole {
+        
+        while true {
+            print("Enter choice:", terminator: "")
+            let choice = ConsoleInputUtils.readInt()
+            
+            if let menu = UserRole.fromChoice(choice) {
+                return menu
+            }
+            print("Invalid choice. Please try again.")
+        }
+    }
+    
+    func showCategoryMenu(_ categories: [ProductCategory]) {
         print("\nSelect a product category:")
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
         print("\(categories.count + 1). All products")
-        let input = readInt("Select a category:")
-        
-        if input > categories.count+1 {
-            print("Invalid category selection moving with All products option")
-        }
-        return input
-        
+        print("Select a category:")
+
     }
     
-    func showProducts(_ products: [Product]) {
-        print("\nAvailable Products:")
-        for product in products {
-            print(
-                "\(product.productId) | " +
-                "\(product.name) | " +
-                "\(product.category.rawValue) | " +
-                "Price: \(product.unitPrice) | " +
-                "Stock: \(product.quantityInStock)"
-            )
+    func getCategoryMenuInput(
+        categories: [ProductCategory]
+    ) -> ProductCategory? {
+
+        while true {
+            let choice = ConsoleInputUtils.readInt(prompt: "Enter a choice:")
+            
+            if choice == categories.count + 1 {
+                return nil
+            }
+
+            if let category = ProductCategory.fromChoice(choice) {
+                return category
+            }
+
+            print("Invalid choice. Please try again.")
         }
     }
+    
+//    func showProducts(_ products: [Product]) {
+//        print("\nAvailable Products:")
+//        for product in products {
+//            print(
+//                "\(product.productId) | " +
+//                "\(product.name) | " +
+//                "\(product.category.rawValue) | " +
+//                "Price: \(product.unitPrice) | " +
+//                "Stock: \(product.quantityInStock)"
+//            )
+//        }
+//    }
     
     func showMessage(_ message: String) {
         print(message)
     }
     
-}
-
-extension AppView {
-    
-    func readInt(_ prompt: String) -> Int {
-        print(prompt, terminator: " ")
-        while true {
-            if let input = readLine(),
-               let value = Int(input),
-               value > 0 {
-                return value
-            }
-            print("Enter a valid number:", terminator: "")
-        }
-    }
-    
-    private func readDouble(_ prompt: String) -> Double {
-        print(prompt, terminator: " ")
-        while true {
-            if let input = readLine(),
-               let value = Double(input),
-               value > 0 {
-                return value
-            }
-            print("Enter a valid number:",terminator: "")
-        }
-    }
-    
-    func readString(_ prompt: String) -> String {
-        print(prompt, terminator: " ")
-        return (readLine() ?? "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    private func readNonEmptyString(prompt: String) -> String {
-        while true {
-            let value = readString(prompt)
-            if !value.isEmpty {
-                return value
-            }
-            print("Input cannot be empty.")
-        }
-    }
 }
 
 extension Date {

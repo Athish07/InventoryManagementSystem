@@ -13,6 +13,8 @@ final class AppFactory {
     private let userService: UserService
     private let productService: ProductService
     private let appView = AppView()
+    private let customerView = CustomerView()
+    private let supplierView = SupplierView()
     
     init()
     {
@@ -51,7 +53,7 @@ final class AppFactory {
     
     func makeCustomerController(customerId: Int,onLogout: @escaping () -> Void) -> CustomerController {
         CustomerController(
-            view: appView,
+            view: customerView,
             orderService: orderService,
             productService: productService,
             userService: userService,
@@ -62,7 +64,7 @@ final class AppFactory {
 
     func makeSupplierController(supplierId: Int,onLogout: @escaping () -> Void) -> SupplierController {
         SupplierController(
-            view: appView,
+            view: supplierView,
             productService: productService,
             supplierId: supplierId,
             userService: userService,
