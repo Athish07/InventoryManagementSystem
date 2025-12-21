@@ -2,14 +2,13 @@ final class ProductManager: ProductService {
 
   
     private let productRepository: ProductRepository
-    private let userRepository: UserRepository
+    
 
-    init(productRepository: ProductRepository, userRepository: UserRepository) {
+    init(productRepository: ProductRepository) {
         self.productRepository = productRepository
-        self.userRepository = userRepository
     }
 
-    func addProduct(productDetails: ProductInput, supplierId: Int)  {
+    func addProduct(productDetails: ProductDTO.Create, supplierId: Int)  {
 
         let product = Product(
             productId: productRepository.getNextProductId(),

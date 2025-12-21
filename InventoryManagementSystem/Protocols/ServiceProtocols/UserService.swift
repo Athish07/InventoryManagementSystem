@@ -1,5 +1,6 @@
 protocol UserService {
     
     func getUser(by id: Int) -> User?
-    func updateUser(_ user: User)
+    func updateCustomer(userId: Int, update: UserDTO.CustomerUpdate)
+    func updateSupplier(userId: Int, update: UserDTO.SupplierUpdate)
 }

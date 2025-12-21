@@ -29,8 +29,7 @@ final class AppFactory {
         )
         self.userService = UserManager(userRepository: userRepository)
         self.productService = ProductManager(
-            productRepository: productRepository,
-            userRepository: userRepository
+            productRepository: productRepository
         )
         
         let mockInitializer = MockInitializer(

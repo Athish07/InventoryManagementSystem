@@ -19,53 +19,40 @@ final class AuthenticationManager: AuthenticationService {
         return user.userId
     }
 
-    func registerCustomer(
-        name: String,
-        email: String,
-        password: String,
-        phoneNumber: String,
-        shippingAddress: String
-    ) throws {
+    func registerCustomer(input: AuthDTO.CustomerRegistration) throws {
 
         guard userRepository
-            .findByEmailAndRole(email:email, role: .customer) == nil else {
+            .findByEmailAndRole(email:input.email, role: .customer) == nil else {
             throw RegistrationError.userAlreadyExists
         }
 
         let customer = Customer(
             userId: userRepository.getNextUserId(),
-            name: name,
-            email: email,
-            password: password,
-            phoneNumber: phoneNumber,
-            shippingAddress: shippingAddress
+            name: input.name,
+            email: input.email,
+            password: input.password,
+            phoneNumber: input.phoneNumber,
+            shippingAddress: input.shippingAddress
         )
         userRepository.saveUser(customer)
 
     }
 
-    func registerSupplier(
-        name: String,
-        email: String,
-        password: String,
-        phoneNumber: String,
-        companyName: String,
-        businessAddress: String
-    ) throws {
+    func registerSupplier(input: AuthDTO.SupplierRegistration) throws {
 
         guard userRepository
-            .findByEmailAndRole(email:email,role: .supplier) == nil else {
+            .findByEmailAndRole(email:input.email,role: .supplier) == nil else {
             throw RegistrationError.userAlreadyExists
         }
 
         let supplier = Supplier(
             userId: userRepository.getNextUserId(),
-            name: name,
-            email: email,
-            password: password,
-            phoneNumber: phoneNumber,
-            companyName: companyName,
-            businessAddress: businessAddress
+            name: input.name,
+            email: input.email,
+            password: input.password,
+            phoneNumber: input.phoneNumber,
+            companyName: input.companyName,
+            businessAddress: input.businessAddress
         )
         userRepository.saveUser(supplier)
     }

@@ -46,7 +46,7 @@ final class SupplierController {
     }
 
     private func addProduct() {
-        let input = view.readProductDetails()
+        let input = view.readProductCreateInput()
 
         productService.addProduct(productDetails: input, supplierId: supplierId)
         view.showMessage("Product added successfully.")

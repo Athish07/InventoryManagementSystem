@@ -21,59 +21,64 @@ struct SupplierView {
         }
     }
     
-//    func readProductDetails() -> ProductInput {
-//        let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
-//        let category = readProductCategory()
-//        let unitPrice = ConsoleInputUtils.readDouble("Enter unit price:")
-//        let quantity = ConsoleInputUtils.readInt("Enter quantity:")
-//        
-//        return ProductInput(
-//            name: name,
-//            category: category,
-//            unitPrice: unitPrice,
-//            quantity: quantity
-//        )
-//        
-//    }
-    
-    func readUpdateSupplierDetails(supplier: Supplier) -> Supplier {
+    func readProductCreateInput() -> ProductDTO.Create {
         
-        let name = ConsoleInputUtils.readOptionalString("Name (\(supplier.name)):") ?? supplier.name
+        let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
+        let category = readProductCategory()
+        let unitPrice = ConsoleInputUtils.readDouble("Enter unit price:")
+        let quantity = ConsoleInputUtils.readInt("Enter quantity:")
         
-        let email = ConsoleInputUtils.readOptionalString("Email (\(supplier.email)):") ?? supplier.email
-        
-        let phone = ConsoleInputUtils.readOptionalString("Phone (\(supplier.phoneNumber)):") ?? supplier.phoneNumber
-        
-        let companyName = ConsoleInputUtils.readOptionalString("Company Name (\(supplier.companyName)") ?? supplier.companyName
-        
-        let businessAddress = ConsoleInputUtils.readOptionalString("Business Address (\(supplier.businessAddress)):") ?? supplier.businessAddress
-        
-        return Supplier(
-            userId: supplier.userId,
+        return ProductDTO.Create(
             name: name,
-            email: email,
-            password: supplier.password,
-            phoneNumber: phone,
-            companyName: companyName,
-            businessAddress: businessAddress
+            category: category,
+            unitPrice: unitPrice,
+            quantity: quantity
         )
+        
     }
     
-    func readUpdateProductDetails( currentProduct: Product) -> Product {
+    func readUpdateSupplierDetails(supplier: Supplier) -> UserDTO.SupplierUpdate {
         
-        let name = ConsoleInputUtils.readOptionalString("Product Name (\(currentProduct.name)):") ?? currentProduct.name
+        let name = ConsoleInputUtils.readOptionalString(
+                    "Name (\(supplier.name)):"
+                )
+
+                let email = ConsoleInputUtils.readOptionalString(
+                    "Email (\(supplier.email)):"
+                )
+
+                let phone = ConsoleInputUtils.readOptionalString(
+                    "Phone (\(supplier.phoneNumber)):"
+                )
+
+                let companyName = ConsoleInputUtils.readOptionalString(
+                    "Company Name (\(supplier.companyName)):"
+                )
+
+                let businessAddress = ConsoleInputUtils.readOptionalString(
+                    "Business Address (\(supplier.businessAddress)):"
+                )
+
+                return UserDTO.SupplierUpdate(
+                    name: name,
+                    email: email,
+                    phoneNumber: phone,
+                    companyName: companyName,
+                    businessAddress: businessAddress
+                )
+    }
+    
+    func readUpdateProductDetails( currentProduct: Product) -> ProductDTO.Update {
         
-        let price = ConsoleInputUtils.readOptionalDouble("Product price (\(currentProduct.unitPrice)):") ?? currentProduct.unitPrice
+        let name = ConsoleInputUtils.readOptionalString("Product Name (\(currentProduct.name)):")
+        let price = ConsoleInputUtils.readOptionalDouble("Product price (\(currentProduct.unitPrice)):")
+        let quantity = ConsoleInputUtils.readOptionalInt("Product quantity (\(currentProduct.quantityInStock)):")
         
-        let quantity = ConsoleInputUtils.readOptionalInt("Product quantity (\(currentProduct.quantityInStock)):") ?? currentProduct.quantityInStock
-        
-        return Product(
+        return ProductDTO.Update(
             productId: currentProduct.productId,
             name: name,
-            supplierId: currentProduct.supplierId,
             unitPrice: price,
-            quantityInStock: quantity,
-            category: currentProduct.category
+            quantity: quantity,
         )
     }
     
@@ -87,16 +92,16 @@ struct SupplierView {
         print("--------------------------------------------")
     }
     
-    private func readProductCategory() {
-        let categories = ProductCategory.allCases
-        
-        print("Select category")
-        for (index, category) in categories.enumerated() {
-            print("\(index + 1). \(category.rawValue)")
-        }
-        print("Enter a choice(default category is other):")
-        
-    }
+//    private func readProductCategory() -> ProductCategory {
+//        let categories = ProductCategory.allCases
+//        
+//        print("Select category")
+//        for (index, category) in categories.enumerated() {
+//            print("\(index + 1). \(category.rawValue)")
+//        }
+//        print("Enter a choice(default category is other):")
+//        
+//    }
     
     func showMessage(_ message: String) {
         print(message)

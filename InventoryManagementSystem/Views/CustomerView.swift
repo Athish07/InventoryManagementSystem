@@ -1,7 +1,7 @@
 import Foundation
 
 struct CustomerView {
-    
+
     func showCustomerMenu(userName: String, menus: [CustomerMenu]) {
         print("\n--------------------------------------------")
         print("Welcome Customer, \(userName)")
@@ -20,37 +20,35 @@ struct CustomerView {
             print("Invalid choice. Please try again.")
         }
     }
-    
-    func readUpdateCustomer(_ customer: Customer) -> CustomerUpdateInput {
 
-        let name = ConsoleInputUtils.readOptionalString(
-            "Name (\(customer.name)):"
-        ) ?? customer.name
-
-        let phone = ConsoleInputUtils.readOptionalString(
-            "Phone (\(customer.phoneNumber)):"
-        ) ?? customer.phoneNumber
-
-        let address = ConsoleInputUtils.readOptionalString(
-            "Shipping Address (\(customer.shippingAddress)):"
-        ) ?? customer.shippingAddress
-
-        return CustomerUpdateInput(
-            name: name,
-            phoneNumber: phone,
-            shippingAddress: address
+    func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
+        .init(
+            name:
+                ConsoleInputUtils
+                .readOptionalString(
+                    "Name (\(customer.name)):"
+                ) ?? customer.name,
+            phoneNumber:
+                ConsoleInputUtils
+                .readOptionalString(
+                    "Phone (\(customer.phoneNumber)):"
+                ) ?? customer.phoneNumber,
+            shippingAddress:
+                ConsoleInputUtils
+                .readOptionalString(
+                    "Address (\(customer.shippingAddress)):"
+                ) ?? customer.shippingAddress
         )
     }
-    
+
     func showCart(_ cart: Cart) {
         print("\n---------------- CART ----------------")
 
         var total = 0.0
         for (index, item) in cart.items.enumerated() {
             print(
-                "\(index + 1). Qty: \(item.quantity) | " +
-                "Price: \(item.unitPrice) | " +
-                "Total: \(item.itemTotal)"
+                "\(index + 1). Qty: \(item.quantity) | "
+                    + "Price: \(item.unitPrice) | " + "Total: \(item.itemTotal)"
             )
             total += item.itemTotal
         }
@@ -59,7 +57,7 @@ struct CustomerView {
         print("Cart Total: \(total)")
         print("--------------------------------------")
     }
-    
+
     func showCustomerProfile(_ customer: Customer) {
         print("\n--------------------------------------------")
         print("Name: \(customer.name)")
@@ -68,7 +66,7 @@ struct CustomerView {
         print("Shipping Address: \(customer.shippingAddress)")
         print("--------------------------------------------")
     }
-    
+
     func showOrders(_ orders: [Order]) {
         if orders.isEmpty {
             print("No orders found.")
@@ -84,9 +82,8 @@ struct CustomerView {
             print("--------------------------------------------")
         }
     }
-    
+
     func showMessage(_ message: String) {
         print(message)
     }
 }
-

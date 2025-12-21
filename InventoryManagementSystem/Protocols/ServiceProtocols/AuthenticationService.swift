@@ -4,19 +4,6 @@ protocol AuthenticationService {
         password: String,
         role: UserRole
     ) throws -> Int
-    func registerCustomer(
-        name: String,
-        email: String,
-        password: String,
-        phoneNumber: String,
-        shippingAddress: String
-    ) throws
-    func registerSupplier(
-        name: String,
-        email: String,
-        password: String,
-        phoneNumber: String,
-        companyName: String,
-        businessAddress: String
-    ) throws
+    func registerCustomer(input: AuthDTO.CustomerRegistration) throws
+    func registerSupplier(input: AuthDTO.SupplierRegistration) throws
 }

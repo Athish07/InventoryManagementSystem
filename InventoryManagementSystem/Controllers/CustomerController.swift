@@ -45,29 +45,26 @@ final class CustomerController {
         }
     }
 
-    private func searchProduct() {
-        let categories = ProductCategory.allCases
-        let choice = view.showCategoryMenu(categories)
-        let selectedCategory =
-        (choice > 0 && choice <= categories.count)
-        ? categories[choice - 1]
-        : nil
-
-        let products = productService.searchProductsByCategory(
-            category: selectedCategory
-        )
-        
-        if products.isEmpty {
-            view.showMessage("No products found.")
-        } else {
-            view.showProducts(products)
-        }
-    }
+//    private func searchProduct() {
+//        let categories = ProductCategory.allCases
+//        view.showCategoryMenu(categories)
+//        let category = view.getCategoryMenuInput(categories: categories)
+//        
+//        let products = productService.searchProductsByCategory(
+//            category: selectedCategory
+//        )
+//        
+//        if products.isEmpty {
+//            view.showMessage("No products found.")
+//        } else {
+//            view.showProducts(products)
+//        }
+//    }
 
     private func addItemToCart() {
        // searchProduct()
-        let productId = ConsoleInputUtils.readInt(prompt:"Enter product id:")
-        let quantity = ConsoleInputUtils.readInt(prompt:"Enter quantity:")
+        let productId = ConsoleInputUtils.readInt("Enter product id:")
+        let quantity = ConsoleInputUtils.readInt("Enter quantity:")
         
         do {
             try orderService.addItemToCart(
@@ -89,7 +86,8 @@ final class CustomerController {
             return
         }
         let updatedCustomer = view.readUpdateCustomer(customer)
-        userService.updateUser(updatedCustomer)
+        userService.updateCustomer(userId: customerId, update:updatedCustomer)
+        
     }
     
     private func viewCart() {
@@ -113,7 +111,7 @@ final class CustomerController {
         }
         view.showCart(cart)
 
-        let index = ConsoleInputUtils.readInt(prompt:"Enter the index of the item to remove:")
+        let index = ConsoleInputUtils.readInt("Enter the index of the item to remove:")
 
         guard index > 0 && index <= cart.items.count else {
             view.showMessage("Invalid item index.")

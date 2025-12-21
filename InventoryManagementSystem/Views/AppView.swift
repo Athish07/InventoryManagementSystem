@@ -45,32 +45,28 @@ struct AppView {
         }
     }
     
-    func readNewCustomer() -> CustomerInput {
-        let name = ConsoleInputUtils.readNonEmptyString("Name:")
-        let email = ConsoleInputUtils.readNonEmptyString("Email:")
-        let password = ConsoleInputUtils.readNonEmptyString("Password:")
-        let phone = ConsoleInputUtils.readNonEmptyString("Phone:")
-        let address = ConsoleInputUtils.readNonEmptyString("Shipping Address:")
-
-        return CustomerInput(
-            name: name,
-            email: email,
-            password: password,
-            phoneNumber: phone,
-            shippingAddress: address
+    func readCustomerRegistration() -> AuthDTO.CustomerRegistration {
+        .init(
+            name: ConsoleInputUtils.readNonEmptyString("Name:"),
+            email: ConsoleInputUtils.readNonEmptyString("Email:"),
+            password: ConsoleInputUtils.readNonEmptyString("Password:"),
+            phoneNumber: ConsoleInputUtils.readNonEmptyString("Phone:"),
+            shippingAddress:
+                ConsoleInputUtils
+                .readNonEmptyString("Shipping Address:")
         )
     }
     
-    func readSupplierDetails() -> User {
-        let name = ConsoleInputUtils.readNonEmptyString("Enter your name:")
-        let email = ConsoleInputUtils.readNonEmptyString("Enter your email:")
-        let password = ConsoleInputUtils.readNonEmptyString("Enter your password:")
-        let phone = ConsoleInputUtils.readNonEmptyString("Enter your phone number:")
-        let shippingAddress = ConsoleInputUtils.readNonEmptyString("Enter your shipping address:")
-        let companyName = ConsoleInputUtils.readNonEmptyString("Enter your company name:")
-        let businessAddress = ConsoleInputUtils.readNonEmptyString("Enter your business address:")
-        return Supplier()
-        
+    func readSupplierRegistration() -> AuthDTO.SupplierRegistration {
+        .init(
+            name: ConsoleInputUtils.readNonEmptyString("Name:"),
+            email: ConsoleInputUtils.readNonEmptyString("Email:"),
+            password: ConsoleInputUtils.readNonEmptyString("Password:"),
+            phoneNumber: ConsoleInputUtils.readNonEmptyString("Phone:"),
+            companyName: ConsoleInputUtils.readNonEmptyString("Company Name:"),
+            businessAddress: ConsoleInputUtils
+                .readNonEmptyString("Business Address:")
+        )
     }
     
     func readLoginRole(userRole: [UserRole]) {
@@ -108,7 +104,7 @@ struct AppView {
     ) -> ProductCategory? {
 
         while true {
-            let choice = ConsoleInputUtils.readInt(prompt: "Enter a choice:")
+            let choice = ConsoleInputUtils.readInt("Enter a choice:")
             
             if choice == categories.count + 1 {
                 return nil
@@ -122,18 +118,18 @@ struct AppView {
         }
     }
     
-//    func showProducts(_ products: [Product]) {
-//        print("\nAvailable Products:")
-//        for product in products {
-//            print(
-//                "\(product.productId) | " +
-//                "\(product.name) | " +
-//                "\(product.category.rawValue) | " +
-//                "Price: \(product.unitPrice) | " +
-//                "Stock: \(product.quantityInStock)"
-//            )
-//        }
-//    }
+    func showProducts(_ products: [Product]) {
+        print("\nAvailable Products:")
+        for product in products {
+            print(
+                "\(product.productId) | " +
+                "\(product.name) | " +
+                "\(product.category.rawValue) | " +
+                "Price: \(product.unitPrice) | " +
+                "Stock: \(product.quantityInStock)"
+            )
+        }
+    }
     
     func showMessage(_ message: String) {
         print(message)
