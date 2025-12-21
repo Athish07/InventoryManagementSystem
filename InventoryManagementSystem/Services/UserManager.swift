@@ -16,10 +16,18 @@ final class UserManager: UserService {
         guard var customer = userRepository.findById(userId) as? Customer else {
             return
         }
-        customer.name = update.name
-        customer.phoneNumber = update.phoneNumber
-        customer.shippingAddress = update.shippingAddress
-
+        
+        if let name = update.name {
+            customer.name = name
+        }
+        
+        if let phoneNumber = update.phoneNumber {
+            customer.phoneNumber = phoneNumber
+        }
+        
+        if let shippingAddress = update.shippingAddress {
+            customer.shippingAddress = shippingAddress
+        }
         userRepository.saveUser(customer)
     }
     
@@ -28,11 +36,23 @@ final class UserManager: UserService {
         guard var supplier = userRepository.findById(userId) as? Supplier else {
             return
         }
-        supplier.name = update.name
-        supplier.phoneNumber = update.phoneNumber
-        supplier.companyName = update.companyName
-        supplier.businessAddress = update.businessAddress
-
+        
+        if let name = update.name {
+            supplier.name = name
+        }
+        
+        if let phoneNumber = update.phoneNumber {
+            supplier.phoneNumber = phoneNumber
+        }
+        
+        if let companyName = update.companyName {
+            supplier.companyName = companyName
+        }
+        
+        if let businessAddress = update.businessAddress {
+            supplier.businessAddress = businessAddress
+        }
+        
         userRepository.saveUser(supplier)
     }
     

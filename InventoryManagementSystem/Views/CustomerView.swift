@@ -22,23 +22,21 @@ struct CustomerView {
     }
 
     func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
-        .init(
-            name:
-                ConsoleInputUtils
-                .readOptionalString(
+       
+        return UserDTO.CustomerUpdate(
+                name: ConsoleInputUtils.readOptionalString(
                     "Name (\(customer.name)):"
-                ) ?? customer.name,
-            phoneNumber:
-                ConsoleInputUtils
-                .readOptionalString(
+                ),
+                email: ConsoleInputUtils.readOptionalString(
+                    "Name (\(customer.email)):"
+                ),
+                phoneNumber: ConsoleInputUtils.readOptionalString(
                     "Phone (\(customer.phoneNumber)):"
-                ) ?? customer.phoneNumber,
-            shippingAddress:
-                ConsoleInputUtils
-                .readOptionalString(
+                ),
+                shippingAddress: ConsoleInputUtils.readOptionalString(
                     "Address (\(customer.shippingAddress)):"
-                ) ?? customer.shippingAddress
-        )
+                )
+            )
     }
 
     func showCart(_ cart: Cart) {

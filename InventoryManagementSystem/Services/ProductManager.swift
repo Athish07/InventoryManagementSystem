@@ -35,8 +35,32 @@ final class ProductManager: ProductService {
         return productRepository.getProductBySupplier(supplierId)
     }
     
-    func updateProduct(product: Product) {
+    func updateProduct(update: ProductDTO.Update, supplierId: Int) throws {
+        
+        guard var product = productRepository.getProductById(
+            update.productId
+        ) else {
+            throw ProductServiceError.productNotFound
+        }
+        
+        guard product.supplierId == supplierId else {
+            throw ProductServiceError.unauthorizedUserAccess
+        }
+
+        if let name = update.name {
+            product.name = name
+        }
+
+        if let price = update.unitPrice {
+            product.unitPrice = price
+        }
+
+        if let quantity = update.quantity {
+            product.quantityInStock = quantity
+        }
+
         productRepository.addProduct(product)
+        
     }
 
     func deleteProduct(productId: Int, supplierId: Int) throws {

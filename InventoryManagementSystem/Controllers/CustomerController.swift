@@ -62,7 +62,7 @@ final class CustomerController {
 //    }
 
     private func addItemToCart() {
-       // searchProduct()
+        searchProduct()
         let productId = ConsoleInputUtils.readInt("Enter product id:")
         let quantity = ConsoleInputUtils.readInt("Enter quantity:")
         

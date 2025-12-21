@@ -60,7 +60,7 @@ final class SupplierController {
         }
 
         let updatedSupplier = view.readUpdateSupplierDetails(supplier: supplier)
-        userService.updateUser(updatedSupplier)
+        userService.updateSupplier(userId: supplierId, update: updatedSupplier)
     }
 
     private func viewMyProducts() {
@@ -86,8 +86,14 @@ final class SupplierController {
             return
         }
         let input = view.readUpdateProductDetails(currentProduct: product)
-        productService.updateProduct(product: input)
-        view.showMessage("Product Updated Successfully")
+        do {
+            try productService.updateProduct(update: input, supplierId: supplierId)
+            view.showMessage("Product Updated Successfully")
+        } catch let error as ProductServiceError {
+            view.showMessage(error.displayMessage)
+        } catch {
+            view.showMessage(error.localizedDescription)
+        }
     }
 
     private func deleteProduct() {
