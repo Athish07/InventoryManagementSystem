@@ -79,7 +79,9 @@ final class SupplierController {
 
     private func updateProduct() {
         viewMyProducts()
-        let productId = ConsoleInputUtils.readInt("Provide the Id of the product to update:")
+        let productId = ConsoleInputUtils.readInt(
+            "Provide the Id of the product to update:"
+        )
 
         guard let product = productService.getProductById(productId: productId)
         else {
@@ -88,7 +90,8 @@ final class SupplierController {
         }
         let input = view.readUpdateProductDetails(currentProduct: product)
         do {
-            try productService.updateProduct(update: input, supplierId: supplierId)
+            try productService
+                .updateProduct(update: input, supplierId: supplierId)
             view.showMessage("Product Updated Successfully")
         } catch let error as ProductServiceError {
             view.showMessage(error.displayMessage)
@@ -99,7 +102,9 @@ final class SupplierController {
 
     private func deleteProduct() {
         viewMyProducts()
-        let productId = ConsoleInputUtils.readInt("Provide the Id of the product to delete:")
+        let productId = ConsoleInputUtils.readInt(
+            "Provide the Id of the product to delete:"
+        )
 
         do {
             try productService

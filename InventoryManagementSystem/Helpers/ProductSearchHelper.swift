@@ -1,4 +1,4 @@
-struct ProductSearchHelper {
+enum ProductSearchHelper {
 
     static func search(
         productService: ProductService,

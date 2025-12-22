@@ -106,7 +106,9 @@ final class CustomerController {
         }
         view.showCart(cart)
 
-        let index = ConsoleInputUtils.readInt("Enter the index of the item to remove:")
+        let index = ConsoleInputUtils.readInt(
+            "Enter the index of the item to remove:"
+        )
 
         guard index > 0 && index <= cart.items.count else {
             view.showMessage("Invalid item index.")

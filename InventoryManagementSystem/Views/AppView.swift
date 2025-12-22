@@ -125,14 +125,3 @@ struct AppView {
     
 }
 
-extension Date {
-    private static let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-        formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
-        return formatter
-    }()
-    func toIstString() -> String {
-        Date.formatter.string(from: self)
-    }
-}

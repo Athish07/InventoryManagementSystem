@@ -2,6 +2,7 @@ enum RegistrationMenu: String, CaseIterable {
     case customer = "Customer"
     case supplier = "Supplier"
     
+    //CR: Check from choice logic
     static func fromChoice(_ choice:Int) -> RegistrationMenu? {
         let index = choice - 1
         

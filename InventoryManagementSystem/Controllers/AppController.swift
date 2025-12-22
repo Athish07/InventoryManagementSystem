@@ -81,7 +81,7 @@ final class AppController {
     private func login() {
         let email = ConsoleInputUtils.readNonEmptyString("Email:")
         let password = ConsoleInputUtils.readNonEmptyString("Password:")
-
+        
         view.readLoginRole(userRole: UserRole.allCases)
         let role = view.getLoginRoleInput()
 
@@ -89,6 +89,7 @@ final class AppController {
             view.showMessage("Invalid email format")
             return
         }
+        
         guard Validation.isValidPassword(password) else {
             view.showMessage("Invalid password")
             return
@@ -120,7 +121,7 @@ final class AppController {
 
     private func register() {
 
-        let registrationMenu = RegistrationMenu.allCases
+        let registrationMenu: [RegistrationMenu] = [.customer]
         view.showRegistrationMenu(registrationMenu: registrationMenu)
         let menu = view.getRegistrationMenuInput()
 

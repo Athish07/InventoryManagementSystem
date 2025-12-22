@@ -9,6 +9,7 @@ struct CustomerView {
             print("\(index + 1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
+        
     }
 
     func getCustomerMenuInput() -> CustomerMenu {
@@ -19,24 +20,26 @@ struct CustomerView {
             }
             print("Invalid choice. Please try again.")
         }
+        
     }
 
     func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
        
         return UserDTO.CustomerUpdate(
-                name: ConsoleInputUtils.readOptionalString(
-                    "Name (\(customer.name)):"
-                ),
-                email: ConsoleInputUtils.readOptionalString(
-                    "Email (\(customer.email)):"
-                ),
-                phoneNumber: ConsoleInputUtils.readOptionalString(
-                    "Phone (\(customer.phoneNumber)):"
-                ),
-                shippingAddress: ConsoleInputUtils.readOptionalString(
-                    "Address (\(customer.shippingAddress)):"
-                )
+            name: ConsoleInputUtils.readOptionalString(
+                "Name (\(customer.name)):"
+            ),
+            email: ConsoleInputUtils.readOptionalString(
+                "Email (\(customer.email)):"
+            ),
+            phoneNumber: ConsoleInputUtils.readOptionalString(
+                "Phone (\(customer.phoneNumber)):"
+            ),
+            shippingAddress: ConsoleInputUtils.readOptionalString(
+                "Address (\(customer.shippingAddress)):"
             )
+        )
+        
     }
 
     func showCart(_ cart: Cart) {
@@ -46,7 +49,7 @@ struct CustomerView {
         for (index, item) in cart.items.enumerated() {
             print(
                 "\(index + 1). Qty: \(item.quantity) | "
-                    + "Price: \(item.unitPrice) | " + "Total: \(item.itemTotal)"
+                + "Price: \(item.unitPrice) | " + "Total: \(item.itemTotal)"
             )
             total += item.itemTotal
         }
@@ -54,6 +57,7 @@ struct CustomerView {
         print("--------------------------------------")
         print("Cart Total: \(total)")
         print("--------------------------------------")
+        
     }
 
     func showCustomerProfile(_ customer: Customer) {
@@ -63,6 +67,7 @@ struct CustomerView {
         print("Phone: \(customer.phoneNumber)")
         print("Shipping Address: \(customer.shippingAddress)")
         print("--------------------------------------------")
+        
     }
 
     func showOrders(_ orders: [Order]) {
@@ -79,9 +84,24 @@ struct CustomerView {
             print("Total Amount: \(order.totalAmount)")
             print("--------------------------------------------")
         }
+        
     }
 
     func showMessage(_ message: String) {
         print(message)
+        
+    }
+    
+}
+
+extension Date {
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+        formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        return formatter
+    }()
+    func toIstString() -> String {
+        Date.formatter.string(from: self)
     }
 }

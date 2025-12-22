@@ -1,6 +1,6 @@
 import Foundation
 
-struct ConsoleInputUtils {
+enum ConsoleInputUtils {
     
     static func readInt(_ prompt: String = "") -> Int {
         while true {
@@ -13,7 +13,7 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            print("Please enter a valid number.")
+            print("Please enter a valid number.", terminator: "")
         }
     }
     
@@ -28,10 +28,11 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            print("Please enter a valid number.")
+            print("Please enter a valid number.", terminator: "")
         }
     }
     
+    //CR: Something wrong with this functions
     static func readNonEmptyString(_ prompt: String) -> String {
         while true {
             print(prompt, terminator: " ")
