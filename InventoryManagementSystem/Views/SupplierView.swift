@@ -11,6 +11,30 @@ struct SupplierView {
         print("Enter a choice:")
     }
     
+    func showMyProducts(_ products: [Product]) {
+        for product in products {
+            print("""
+            -----------------------------------
+            ID: \(product.productId)
+            Name: \(product.name)
+            Price: \(product.unitPrice)
+            Stock: \(product.quantityInStock)
+            Category: \(product.category.rawValue)
+            -----------------------------------
+            """)
+        }
+    }
+    
+    func showSupplierProfile(_ supplier: Supplier) {
+        print("\n--------------------------------------------")
+        print("Name: \(supplier.name)")
+        print("Email: \(supplier.email)")
+        print("Phone: \(supplier.phoneNumber)")
+        print("Company: \(supplier.companyName)")
+        print("Business Address: \(supplier.businessAddress)")
+        print("--------------------------------------------")
+    }
+    
     func readProductCreateInput() -> ProductDTO.Create {
         
         let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
@@ -27,19 +51,32 @@ struct SupplierView {
         
     }
     
+    func readSupplierMenu(name: String,supplierMenu: [SupplierMenu]) -> SupplierMenu {
+        
+        while true {
+            showSupplierMenu(userName: name, supplierMenu: supplierMenu)
+            
+            let choice = ConsoleInputUtils.getMenuChoice()
+            
+            if let selected = MenuSelectionHelper.select(userChoice: choice, options: supplierMenu) {
+                return selected
+            }
+            
+            MessagePrinter.errorMessage("Invalid input , try again.")
+        }
+        
+    }
+    
+    
     func readUpdateSupplierDetails(supplier: Supplier) -> UserDTO.SupplierUpdate {
         
         let name = ConsoleInputUtils.readOptionalString(
             "Name (\(supplier.name)):"
         )
 
-        let email = ConsoleInputUtils.readOptionalString(
-            "Email (\(supplier.email)):"
-        )
+        let email = ConsoleInputUtils.readOptionalValidEmail(current: supplier.email)
 
-        let phone = ConsoleInputUtils.readOptionalString(
-            "Phone (\(supplier.phoneNumber)):"
-        )
+        let phone = ConsoleInputUtils.readOptionalValidPhone(current: supplier.phoneNumber)
 
         let companyName = ConsoleInputUtils.readOptionalString(
             "Company Name (\(supplier.companyName)):"
@@ -76,30 +113,6 @@ struct SupplierView {
             unitPrice: price,
             quantity: quantity,
         )
-    }
-    
-    func showMyProducts(_ products: [Product]) {
-        for product in products {
-            print("""
-            -----------------------------------
-            ID: \(product.productId)
-            Name: \(product.name)
-            Price: \(product.unitPrice)
-            Stock: \(product.quantityInStock)
-            Category: \(product.category.rawValue)
-            -----------------------------------
-            """)
-        }
-    }
-    
-    func showSupplierProfile(_ supplier: Supplier) {
-        print("\n--------------------------------------------")
-        print("Name: \(supplier.name)")
-        print("Email: \(supplier.email)")
-        print("Phone: \(supplier.phoneNumber)")
-        print("Company: \(supplier.companyName)")
-        print("Business Address: \(supplier.businessAddress)")
-        print("--------------------------------------------")
     }
     
     private func readProductCategory() -> ProductCategory {

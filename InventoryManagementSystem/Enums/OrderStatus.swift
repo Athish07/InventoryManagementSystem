@@ -1,4 +1,4 @@
 enum OrderStatus: String {
-    case paid
+    case paid = "Paid"
 }
 

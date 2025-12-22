@@ -5,15 +5,7 @@ struct ProductSearchHelper {
         view: ProductSearchView
     ) {
         let productCategories = ProductCategory.allCases
-        
-        view.showCategoryMenu(categories: productCategories)
-        
-        let choice = ConsoleInputUtils.getMenuChoice()
-        
-        let category = MenuSelectionHelper.select(
-            userChoice: choice,
-            options: productCategories
-        )
+        let category = view.readCategoryMenu(productCategories: productCategories)
         
         let products = productService.searchProductsByCategory(
             category: category

@@ -8,11 +8,12 @@ final class AuthenticationManager: AuthenticationService {
 
     func login(email: String, password: String, role: UserRole) throws -> Int {
 
-        guard let user = userRepository.findByEmailAndRole(
-            email: email,
-            role: role
-        ),
-              user.password == password
+        guard
+            let user = userRepository.findByEmailAndRole(
+                email: email,
+                role: role
+            ),
+            user.password == password
         else {
             throw LoginError.invalidCredentials
         }
@@ -21,8 +22,10 @@ final class AuthenticationManager: AuthenticationService {
 
     func registerCustomer(input: AuthDTO.CustomerRegistration) throws {
 
-        guard userRepository
-            .findByEmailAndRole(email:input.email, role: .customer) == nil else {
+        guard
+            userRepository
+                .findByEmailAndRole(email: input.email, role: .customer) == nil
+        else {
             throw RegistrationError.userAlreadyExists
         }
 
@@ -40,8 +43,10 @@ final class AuthenticationManager: AuthenticationService {
 
     func registerSupplier(input: AuthDTO.SupplierRegistration) throws {
 
-        guard userRepository
-            .findByEmailAndRole(email:input.email,role: .supplier) == nil else {
+        guard
+            userRepository
+                .findByEmailAndRole(email: input.email, role: .supplier) == nil
+        else {
             throw RegistrationError.userAlreadyExists
         }
 

@@ -1,14 +1,12 @@
 final class ProductManager: ProductService {
 
-  
     private let productRepository: ProductRepository
-    
 
     init(productRepository: ProductRepository) {
         self.productRepository = productRepository
     }
 
-    func addProduct(productDetails: ProductDTO.Create, supplierId: Int)  {
+    func addProduct(productDetails: ProductDTO.Create, supplierId: Int) {
 
         let product = Product(
             productId: productRepository.getNextProductId(),
@@ -31,18 +29,20 @@ final class ProductManager: ProductService {
     }
 
     func searchProductsBySupplier(supplierId: Int) -> [Product] {
-        
+
         return productRepository.getProductBySupplier(supplierId)
     }
-    
+
     func updateProduct(update: ProductDTO.Update, supplierId: Int) throws {
-        
-        guard var product = productRepository.getProductById(
-            update.productId
-        ) else {
+
+        guard
+            var product = productRepository.getProductById(
+                update.productId
+            )
+        else {
             throw ProductServiceError.productNotFound
         }
-        
+
         guard product.supplierId == supplierId else {
             throw ProductServiceError.unauthorizedUserAccess
         }
@@ -60,23 +60,23 @@ final class ProductManager: ProductService {
         }
 
         productRepository.addProduct(product)
-        
+
     }
 
     func deleteProduct(productId: Int, supplierId: Int) throws {
-        
+
         guard let product = productRepository.getProductById(productId) else {
             throw ProductServiceError.productNotFound
         }
-            
+
         guard product.supplierId == supplierId else {
             throw ProductServiceError.unauthorizedUserAccess
         }
-        
+
         productRepository.deleteProduct(productId)
 
     }
-    
+
     func getProductById(productId: Int) -> Product? {
 
         productRepository.getProductById(productId)

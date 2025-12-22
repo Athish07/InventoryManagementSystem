@@ -18,7 +18,7 @@ final class OrderManager: OrderService {
         self.orderItemRepository = orderItemRepository
         self.productRepository = productRepository
     }
-    
+
     func addItemToCart(
         customerId: Int,
         productId: Int,
@@ -44,22 +44,22 @@ final class OrderManager: OrderService {
         cart.items.append(item)
         cartRepository.saveCart(cart)
     }
-    
+
     func removeItemFromCart(customerId: Int, productId: Int) throws {
         var cart = cartRepository.getCart(customerId: customerId)
-        
+
         guard !cart.items.isEmpty else {
             throw OrderServiceError.cartEmpty
         }
         cart.items.removeAll { $0.productId == productId }
         cartRepository.saveCart(cart)
-        
+
     }
-    
+
     func viewCart(customerId: Int) -> Cart {
         cartRepository.getCart(customerId: customerId)
     }
-    
+
     func checkout(customerId: Int) throws -> Order {
 
         let cart = cartRepository.getCart(customerId: customerId)
@@ -74,7 +74,11 @@ final class OrderManager: OrderService {
 
         for cartItem in cart.items {
 
-            guard var product = productRepository.getProductById(cartItem.productId) else {
+            guard
+                var product = productRepository.getProductById(
+                    cartItem.productId
+                )
+            else {
                 throw OrderServiceError.productNotFound
             }
 
@@ -116,4 +120,3 @@ final class OrderManager: OrderService {
         orderRepository.getByCustomer(customerId: customerId)
     }
 }
-

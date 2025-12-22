@@ -25,13 +25,7 @@ final class SupplierController {
     func handleMenu(for name: String) {
 
         let supplierMenu = SupplierMenu.allCases
-        view.showSupplierMenu(userName: name, supplierMenu: supplierMenu)
-        let choice = ConsoleInputUtils.getMenuChoice()
-        
-        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: supplierMenu) else {
-            MessagePrinter.errorMessage("Invalid Choice, try again.")
-            return
-        }
+        let menu = view.readSupplierMenu(name: name, supplierMenu: supplierMenu)
         
         switch menu {
         case .addProduct: addProduct()
@@ -54,9 +48,9 @@ final class SupplierController {
     }
 
     private func addProduct() {
-        let category = ProductCategory.allCases
+        
         let input = view.readProductCreateInput()
-
+        
         productService.addProduct(productDetails: input, supplierId: supplierId)
         MessagePrinter.successMessage("Product added successfully.")
     }

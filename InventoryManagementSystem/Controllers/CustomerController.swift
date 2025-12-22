@@ -9,7 +9,7 @@ final class CustomerController {
     private let userService: UserService
     private let customerId: Int
     private let onLogout: () -> Void
-    
+
     init(
         view: CustomerView,
         productSearchView: ProductSearchView,
@@ -31,15 +31,8 @@ final class CustomerController {
     func handleMenu(for name: String) {
 
         let customerMenu = CustomerMenu.allCases
-        view.showCustomerMenu(
-            userName: name,
-            menus: customerMenu
-        )
-        let choice = ConsoleInputUtils.getMenuChoice()
-        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: customerMenu) else {
-            MessagePrinter.errorMessage("Invalid Choice, please try again.")
-            return
-        }
+        
+        let menu = view.readCustomerMenu(name: name, customerMenu: customerMenu)
 
         switch menu {
         case .searchProduct: searchProduct()
@@ -63,14 +56,12 @@ final class CustomerController {
 
     private func addItemToCart() {
         searchProduct()
-        let productId = ConsoleInputUtils.readInt("Enter product id:")
-        let quantity = ConsoleInputUtils.readInt("Enter quantity:")
-        
+        let input = view.readAddToCartInput()
         do {
             try orderService.addItemToCart(
                 customerId: customerId,
-                productId: productId,
-                quantity: quantity
+                productId: input.productId,
+                quantity: input.quantity
             )
             MessagePrinter.infoMessage("Item added to cart.")
         } catch let error as OrderServiceError {
@@ -78,90 +69,91 @@ final class CustomerController {
         } catch {
             MessagePrinter.errorMessage(error.localizedDescription)
         }
+        
     }
-    
+
     private func updateProfile() {
-        guard let customer = userService.getUser(by: customerId)as? Customer else {
-            MessagePrinter.errorMessage("Unauthorized access, please login again.")
+        guard let customer = userService.getUser(by: customerId) as? Customer
+        else {
+            MessagePrinter.errorMessage(
+                "Unauthorized access, please login again."
+            )
             return
         }
         let updatedCustomer = view.readUpdateCustomer(customer)
-        userService.updateCustomer(userId: customerId, update:updatedCustomer)
+        userService.updateCustomer(userId: customerId, update: updatedCustomer)
         
     }
-    
+
     private func viewCart() {
         let cart = orderService.viewCart(customerId: customerId)
-       
+
         if cart.items.isEmpty {
             MessagePrinter.infoMessage("Your cart is empty.")
             return
         } else {
             view.showCart(cart)
         }
-        
+
     }
-    
+
     private func removeItemFromCart() {
         let cart = orderService.viewCart(customerId: customerId)
-        
+
         guard !cart.items.isEmpty else {
-            MessagePrinter.infoMessage("Your cart is empty.")
+            MessagePrinter.errorMessage("Your cart is empty.")
             return
         }
-        view.showCart(cart)
-
-        let index = ConsoleInputUtils.readInt(
-            "Enter the index of the item to remove:"
-        )
-
-        guard index > 0 && index <= cart.items.count else {
-            MessagePrinter.errorMessage("Invalid item index.")
-            return
-        }
-
+        let index = view.readRemoveItemInput(cart: cart)
         let productId = cart.items[index - 1].productId
 
         do {
             try orderService.removeItemFromCart(
                 customerId: customerId,
                 productId: productId
-            ) } catch let error as OrderServiceError{
-                MessagePrinter.errorMessage(error.displayMessage)
-            } catch {
-                MessagePrinter.errorMessage(error.localizedDescription)
-            }
+            )
+        } catch let error as OrderServiceError {
+            MessagePrinter.errorMessage(error.displayMessage)
+        } catch {
+            MessagePrinter.errorMessage(error.localizedDescription)
+        }
 
-       MessagePrinter.successMessage("Item removed from cart.")
+        MessagePrinter.successMessage("Item removed from cart.")
+
     }
-    
+
     private func checkout() {
-        
+
         do {
             let order = try orderService.checkout(customerId: customerId)
             MessagePrinter
                 .successMessage(
                     "Order placed successfully. Total: \(order.totalAmount)"
                 )
-        } catch let error as OrderServiceError{
+        } catch let error as OrderServiceError {
             MessagePrinter.errorMessage(error.displayMessage)
         } catch {
             MessagePrinter.errorMessage(error.localizedDescription)
         }
+
     }
 
     private func viewOrders() {
         let orders = orderService.viewOrders(customerId: customerId)
         view.showOrders(orders)
+
     }
 
     private func viewProfile() {
-        
-        guard let customer = userService.getUser(by: customerId) as? Customer else {
-            MessagePrinter.errorMessage("Unauthorized access, please login again.")
+
+        guard let customer = userService.getUser(by: customerId) as? Customer
+        else {
+            MessagePrinter.errorMessage(
+                "Unauthorized access, please login again."
+            )
             return
         }
         view.showCustomerProfile(customer)
+
     }
 }
-

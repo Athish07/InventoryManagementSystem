@@ -11,26 +11,7 @@ struct CustomerView {
         print("--------------------------------------------")
         
     }
-
-    func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
-       
-        return UserDTO.CustomerUpdate(
-            name: ConsoleInputUtils.readOptionalString(
-                "Name (\(customer.name)):"
-            ),
-            email: ConsoleInputUtils.readOptionalString(
-                "Email (\(customer.email)):"
-            ),
-            phoneNumber: ConsoleInputUtils.readOptionalString(
-                "Phone (\(customer.phoneNumber)):"
-            ),
-            shippingAddress: ConsoleInputUtils.readOptionalString(
-                "Address (\(customer.shippingAddress)):"
-            )
-        )
-        
-    }
-
+    
     func showCart(_ cart: Cart) {
         print("\n---------------- CART ----------------")
 
@@ -74,6 +55,65 @@ struct CustomerView {
             print("--------------------------------------------")
         }
         
+    }
+    
+    func readCustomerMenu(name: String,customerMenu: [CustomerMenu]) -> CustomerMenu {
+        while true {
+            
+            showCustomerMenu(userName: name, menus: customerMenu)
+            let choice = ConsoleInputUtils.getMenuChoice()
+            
+            if let selected = MenuSelectionHelper.select(userChoice: choice, options: customerMenu) {
+                return selected
+            }
+            
+            MessagePrinter.errorMessage("Invalid input , try again.")
+        }
+    }
+    
+    func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
+       
+        let name =  ConsoleInputUtils.readOptionalString(
+            "Name (\(customer.name)):"
+        )
+        let email =  ConsoleInputUtils.readOptionalValidEmail(
+            current: customer.email
+        )
+        let phoneNumber = ConsoleInputUtils.readOptionalValidPhone(
+            current: customer.phoneNumber
+        )
+        let shippingAddress = ConsoleInputUtils.readOptionalString(
+            "Address (\(customer.shippingAddress)):"
+        )
+        
+        return UserDTO.CustomerUpdate(
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber,
+            shippingAddress: shippingAddress
+        )
+        
+    }
+    
+    func readRemoveItemInput(cart: Cart) -> Int {
+        showCart(cart)
+        
+        let selected = ConsoleInputUtils.readIntInRange(min: 1, max: cart.items.count )
+        
+        return selected
+    }
+    
+    func readAddToCartInput() -> (productId: Int, quantity: Int) {
+
+        let productId = ConsoleInputUtils.readInt(
+            "Enter product id:"
+        )
+
+        let quantity = ConsoleInputUtils.readInt(
+            "Enter quantity:"
+        )
+
+        return (productId, quantity)
     }
     
 }

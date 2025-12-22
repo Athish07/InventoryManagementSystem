@@ -11,7 +11,6 @@ final class AppController {
     private var currentUserId: Int?
     private let appFactory: AppFactory
     
-
     init(
         appView: AppView,
         authenticationService: AuthenticationService,
@@ -42,14 +41,9 @@ final class AppController {
 
     private func handlePublicMenu() {
         let publicMenu = PublicMenu.allCases
-        view.showPublicMenu(publicMenu: publicMenu)
-        let choice = ConsoleInputUtils.getMenuChoice()
-
-        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: publicMenu) else {
-            MessagePrinter.errorMessage("Invalid Choice. Please try again.")
-            return
-        }
-                
+        
+        let menu = view.readPublicMenuChoice(publicMenu: publicMenu)
+        
         switch menu {
         case .searchProducts: searchProduct()
         case .login: login()
@@ -86,18 +80,13 @@ final class AppController {
     
     private func login() {
         let userRoles = UserRole.allCases
-        view.showLoginRole(userRole: userRoles)
-        let choice = ConsoleInputUtils.getMenuChoice()
         
-        guard let role = MenuSelectionHelper.select(userChoice: choice, options: userRoles) else {
-            MessagePrinter.infoMessage("Invalid choice,try again.")
-            return
-        }
-        
+        let role = view.readLoginRole(userRoles: userRoles)
         let input = view.readUserLogin()
         
         do {
-            currentUserId = try authenticationService.login(email: input.email, password: input.password, role: role)
+            currentUserId = try authenticationService
+                .login(email: input.email, password: input.password, role: role)
             MessagePrinter.successMessage("Login successful.")
         } catch let error as LoginError {
             MessagePrinter.errorMessage(error.displayMessage)
@@ -120,15 +109,8 @@ final class AppController {
 
     private func register() {
 
-        let registrationMenu: [RegistrationMenu] = [.customer, .supplier]
-        view.showRegistrationMenu(registrationMenu: registrationMenu)
-        let choice = ConsoleInputUtils.getMenuChoice()
-        
-        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: registrationMenu) else {
-            MessagePrinter.infoMessage("Invalid Choice. Please try again.")
-            return
-        }
-        
+        let registrationMenu = RegistrationMenu.allCases
+        let menu = view.readRegistrationMenu(registrationMenu: registrationMenu)
         
         switch menu {
         case .customer: registerCustomer()
@@ -140,31 +122,7 @@ final class AppController {
     private func registerCustomer() {
 
         let customer = view.readCustomerRegistration()
-
-        guard Validation.isValidEmail(customer.email) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Invalid email format. Please check your input."
-                )
-            return
-        }
-
-        guard Validation.isValidPassword(customer.password) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Password must be at least 6 characters long and must be less than 100 characters."
-                )
-            return
-        }
-
-        guard Validation.isValidPhoneNumber(customer.phoneNumber) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Invalid phone number format. Please check your input."
-                )
-            return
-        }
-
+        
         do {
             try authenticationService.registerCustomer(input: customer)
             MessagePrinter.successMessage("Customer registered successfully.")
@@ -178,31 +136,7 @@ final class AppController {
 
     private func registerSupplier() {
         let supplier = view.readSupplierRegistration()
-
-        guard Validation.isValidEmail(supplier.email) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Invalid email format. Please check your input."
-                )
-            return
-        }
-
-        guard Validation.isValidPassword(supplier.password) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Password must be at least 6 characters long and must be less than 100 characters."
-                )
-            return
-        }
-
-        guard Validation.isValidPhoneNumber(supplier.phoneNumber) else {
-            MessagePrinter
-                .errorMessage(
-                    "Error: Invalid phone number format. Please check your input."
-                )
-            return
-        }
-
+        
         do {
             try authenticationService.registerSupplier(input: supplier)
             MessagePrinter.successMessage("Supplier registered successfully.")

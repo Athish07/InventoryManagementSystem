@@ -43,7 +43,8 @@ struct ConsoleInputUtils {
             print(prompt, terminator: " ")
 
             guard let input = readLine(),
-               !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else{
+                  !input
+                .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else{
                 print("This field cannot be empty.")
                 continue
             }
@@ -66,20 +67,20 @@ struct ConsoleInputUtils {
     }
     
     static func readOptionalInt(_ prompt: String) -> Int? {
-            print(prompt, terminator: " ")
+        print(prompt, terminator: " ")
 
-            guard let input = readLine() else {
-                return nil
-            }
-
-            let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
-
-            if trimmed.isEmpty {
-                return nil
-            }
-            return Int(trimmed)
-        
+        guard let input = readLine() else {
+            return nil
         }
+
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if trimmed.isEmpty {
+            return nil
+        }
+        return Int(trimmed)
+        
+    }
 
     static func readOptionalDouble(_ prompt: String) -> Double? {
         print(prompt, terminator: " ")
@@ -96,5 +97,96 @@ struct ConsoleInputUtils {
         return Double(trimmed)
         
     }
+    
+    static func readIntInRange(min: Int , max: Int) -> Int {
+        while true {
+            
+            let choice = getMenuChoice()
+            
+            if choice >= min && choice <= max {
+                return choice
+            }
+            
+            MessagePrinter.errorMessage("Invalid Input, try again.")
+        }
+        
+    }
+    
+    static func readValidEmail() -> String
+    {
+        while true
+        {
+            let email = readNonEmptyString("Email:")
+            if Validation.isValidEmail(email) {
+                return email
+            }
+            MessagePrinter.errorMessage("Invalid email format.")
+        }
+        
+    }
+    
+    static func readValidPassword() -> String
+    {
+        while true {
+            let password = readNonEmptyString("Password:")
+            if Validation.isValidPassword(password) {
+                return password
+            }
+            MessagePrinter.errorMessage(
+                "Password must be at least 6 characters and less than 10 characters."
+            )
+        }
+        
+    }
+    
+    static func readValidPhoneNumber() -> String
+    {
+        while true {
+            let phone = readNonEmptyString("Phone:")
+            if Validation.isValidPhoneNumber(phone) {
+                return phone
+            }
+            MessagePrinter.errorMessage("Invalid phone number format.")
+        }
+    }
+    
+    static func readOptionalValidEmail(current: String) -> String? {
+        while true {
+            let input = readOptionalString(
+                "Email (\(current)):"
+            )
+            
+            guard let input else {
+                return nil
+            }
+
+            if Validation.isValidEmail(input) {
+                return input
+            }
+
+            MessagePrinter.errorMessage("Invalid email format.")
+        }
+    }
+    
+    static func readOptionalValidPhone(
+        current: String
+    ) -> String? {
+        while true {
+            let input = readOptionalString(
+                "Phone (\(current)):"
+            )
+
+            guard let input else {
+                return nil
+            }
+
+            if Validation.isValidPhoneNumber(input) {
+                return input
+            }
+
+            MessagePrinter.errorMessage("Invalid phone number.")
+        }
+    }
+    
 }
 
