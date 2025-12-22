@@ -19,7 +19,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DCC1BDD72EF036020056DA66 /* InventoryManagementSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = InventoryManagementSystem; path = "/Users/athish-pt8049/Desktop/InventoryManagementSystem/build/Debug/InventoryManagementSystem"; sourceTree = "<absolute>"; };
+		DCEA68742EF9097800E6E1A9 /* InventoryManagementSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = InventoryManagementSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC1BDD92EF036020056DA66 /* InventoryManagementSystem */,
+				DCEA68742EF9097800E6E1A9 /* InventoryManagementSystem */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,7 +71,7 @@
 			packageProductDependencies = (
 			);
 			productName = InventoryManagementSystem;
-			productReference = DCC1BDD72EF036020056DA66 /* InventoryManagementSystem */;
+			productReference = DCEA68742EF9097800E6E1A9 /* InventoryManagementSystem */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

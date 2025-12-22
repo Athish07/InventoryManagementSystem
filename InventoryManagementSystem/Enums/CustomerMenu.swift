@@ -9,13 +9,4 @@ enum CustomerMenu: String, CaseIterable {
     case updateProfile = "Update Profile"
     case onLogout = "Logout"
     
-    static func fromChoice(_ choice: Int) -> CustomerMenu? {
-        let index = choice - 1
-        
-        if index >= 0 && index < CustomerMenu.allCases.count {
-            return CustomerMenu.allCases[index]
-        }
-        return nil
-    }
-
 }

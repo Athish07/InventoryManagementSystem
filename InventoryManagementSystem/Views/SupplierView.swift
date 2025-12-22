@@ -11,16 +11,6 @@ struct SupplierView {
         print("Enter a choice:")
     }
     
-    func getSupplierMenuInput() -> SupplierMenu {
-        while true {
-            let choice = ConsoleInputUtils.readInt("Enter a choice:")
-            if let menu = SupplierMenu.fromChoice(choice) {
-                return menu
-            }
-            print("Invalid choice. Please try again.")
-        }
-    }
-    
     func readProductCreateInput() -> ProductDTO.Create {
         
         let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
@@ -119,16 +109,19 @@ struct SupplierView {
         for (index, category) in categories.enumerated() {
             print("\(index + 1). \(category.rawValue)")
         }
+        print("Press ENTER to select default: Other")
 
-        let choice = ConsoleInputUtils.readOptionalInt(
-            "Enter choice (default: Other):"
-        )
+        let choice = ConsoleInputUtils.readOptionalInt("Enter choice:")
+        
+        guard let choice,
+              let category = MenuSelectionHelper.select(
+                  userChoice: choice,
+                  options: categories
+              ) else {
+            return .other
+        }
 
-        return ProductCategory.fromChoiceOrDefault(choice)
-    }
-    
-    func showMessage(_ message: String) {
-        print(message)
+        return category
     }
     
 }

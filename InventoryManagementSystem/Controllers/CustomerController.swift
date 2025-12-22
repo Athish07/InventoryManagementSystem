@@ -35,8 +35,13 @@ final class CustomerController {
             userName: name,
             menus: customerMenu
         )
-        
-        switch view.getCustomerMenuInput() {
+        let choice = ConsoleInputUtils.getMenuChoice()
+        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: customerMenu) else {
+            MessagePrinter.errorMessage("Invalid Choice, please try again.")
+            return
+        }
+
+        switch menu {
         case .searchProduct: searchProduct()
         case .addItemToCart: addItemToCart()
         case .removeItemFromCart: removeItemFromCart()
@@ -67,17 +72,17 @@ final class CustomerController {
                 productId: productId,
                 quantity: quantity
             )
-            view.showMessage("Item added to cart.")
+            MessagePrinter.infoMessage("Item added to cart.")
         } catch let error as OrderServiceError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            MessagePrinter.errorMessage(error.localizedDescription)
         }
     }
     
     private func updateProfile() {
         guard let customer = userService.getUser(by: customerId)as? Customer else {
-            view.showMessage("Unauthorized access, please login again.")
+            MessagePrinter.errorMessage("Unauthorized access, please login again.")
             return
         }
         let updatedCustomer = view.readUpdateCustomer(customer)
@@ -89,7 +94,7 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
        
         if cart.items.isEmpty {
-            view.showMessage("Your cart is empty.")
+            MessagePrinter.infoMessage("Your cart is empty.")
             return
         } else {
             view.showCart(cart)
@@ -101,7 +106,7 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
         
         guard !cart.items.isEmpty else {
-            view.showMessage("Your cart is empty.")
+            MessagePrinter.infoMessage("Your cart is empty.")
             return
         }
         view.showCart(cart)
@@ -111,7 +116,7 @@ final class CustomerController {
         )
 
         guard index > 0 && index <= cart.items.count else {
-            view.showMessage("Invalid item index.")
+            MessagePrinter.errorMessage("Invalid item index.")
             return
         }
 
@@ -122,26 +127,26 @@ final class CustomerController {
                 customerId: customerId,
                 productId: productId
             ) } catch let error as OrderServiceError{
-                view.showMessage(error.displayMessage)
+                MessagePrinter.errorMessage(error.displayMessage)
             } catch {
-                view.showMessage(error.localizedDescription)
+                MessagePrinter.errorMessage(error.localizedDescription)
             }
 
-        view.showMessage("Item removed from cart.")
+       MessagePrinter.successMessage("Item removed from cart.")
     }
     
     private func checkout() {
         
         do {
             let order = try orderService.checkout(customerId: customerId)
-            view
-                .showMessage(
+            MessagePrinter
+                .successMessage(
                     "Order placed successfully. Total: \(order.totalAmount)"
                 )
         } catch let error as OrderServiceError{
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            MessagePrinter.errorMessage(error.localizedDescription)
         }
     }
 
@@ -153,7 +158,7 @@ final class CustomerController {
     private func viewProfile() {
         
         guard let customer = userService.getUser(by: customerId) as? Customer else {
-            view.showMessage("Unauthorized access, please login again.")
+            MessagePrinter.errorMessage("Unauthorized access, please login again.")
             return
         }
         view.showCustomerProfile(customer)

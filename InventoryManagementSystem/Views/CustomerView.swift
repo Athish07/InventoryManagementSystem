@@ -12,17 +12,6 @@ struct CustomerView {
         
     }
 
-    func getCustomerMenuInput() -> CustomerMenu {
-        while true {
-            let choice = ConsoleInputUtils.readInt("Enter a choice:")
-            if let menu = CustomerMenu.fromChoice(choice) {
-                return menu
-            }
-            print("Invalid choice. Please try again.")
-        }
-        
-    }
-
     func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
        
         return UserDTO.CustomerUpdate(
@@ -79,16 +68,11 @@ struct CustomerView {
         for order in orders {
             print("\n--------------------------------------------")
             print("Order ID: \(order.orderId)")
-            print("Date: \(order.dateOfPurchase.toIstString())")
+            print("Date: \(order.dateOfPurchase.toISTString())")
             print("Status: \(order.status.rawValue)")
             print("Total Amount: \(order.totalAmount)")
             print("--------------------------------------------")
         }
-        
-    }
-
-    func showMessage(_ message: String) {
-        print(message)
         
     }
     
@@ -96,13 +80,12 @@ struct CustomerView {
 
 extension Date {
     // CR: Reduce complexity.
-    private static let formatter: DateFormatter = {
+    func toISTString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
-        return formatter
-    }()
-    func toIstString() -> String {
-        Date.formatter.string(from: self)
+        
+        return formatter.string(from: self)
+        
     }
 }

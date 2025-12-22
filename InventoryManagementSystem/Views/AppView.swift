@@ -13,19 +13,6 @@ struct AppView {
       
     }
     
-    func getPublicMenuInput() -> PublicMenu {
-        while true {
-            print("Enter a choice:", terminator: "")
-            let choice = ConsoleInputUtils.readInt()
-
-            if let menu = PublicMenu.fromChoice(choice) {
-                return menu
-            }
-
-            print("Invalid choice. Please try again.")
-        }
-    }
-    
     func showRegistrationMenu(registrationMenu: [RegistrationMenu]) {
         
         for (index,menu) in registrationMenu.enumerated() {
@@ -34,16 +21,28 @@ struct AppView {
         
     }
     
-    func getRegistrationMenuInput() -> RegistrationMenu {
-        while true {
-            print("Enter a choice:", terminator: "")
-            let choice = ConsoleInputUtils.readInt()
-            
-            if let menu = RegistrationMenu.fromChoice(choice) {
-                return menu
-            }
-            print("Invalid choice. Please try again.")
+    func showLoginRole(userRole: [UserRole]) {
+        for (index,role) in userRole.enumerated() {
+            print("\(index+1) \(role.rawValue)")
         }
+        
+    }
+    
+    func readUserLogin() -> (email:String, password: String) {
+       let email = ConsoleInputUtils.readNonEmptyString("")
+       let password = ConsoleInputUtils.readNonEmptyString("")
+        
+        return (email,password)
+    }
+    
+    func showCategoryMenu(_ categories: [ProductCategory]) {
+        print("\nSelect a product category:")
+        for (index, category) in categories.enumerated() {
+            print("\(index + 1). \(category.rawValue)")
+        }
+        print("\(categories.count + 1). All products")
+        print("Select a category:")
+
     }
     
     func readCustomerRegistration() -> AuthDTO.CustomerRegistration {
@@ -68,59 +67,6 @@ struct AppView {
             businessAddress: ConsoleInputUtils
                 .readNonEmptyString("Business Address:")
         )
-    }
-    
-    func readLoginRole(userRole: [UserRole]) {
-        for (index,role) in userRole.enumerated() {
-            print("\(index+1) \(role.rawValue)")
-        }
-        
-    }
-    
-    func getLoginRoleInput() -> UserRole {
-        
-        while true {
-            print("Enter choice:", terminator: "")
-            let choice = ConsoleInputUtils.readInt()
-            
-            if let menu = UserRole.fromChoice(choice) {
-                return menu
-            }
-            print("Invalid choice. Please try again.")
-        }
-    }
-    
-    func showCategoryMenu(_ categories: [ProductCategory]) {
-        print("\nSelect a product category:")
-        for (index, category) in categories.enumerated() {
-            print("\(index + 1). \(category.rawValue)")
-        }
-        print("\(categories.count + 1). All products")
-        print("Select a category:")
-
-    }
-    
-    func getCategoryMenuInput(
-        categories: [ProductCategory]
-    ) -> ProductCategory? {
-
-        while true {
-            let choice = ConsoleInputUtils.readInt("Enter a choice:")
-            
-            if choice == categories.count + 1 {
-                return nil
-            }
-
-            if let category = ProductCategory.fromChoice(choice) {
-                return category
-            }
-
-            print("Invalid choice. Please try again.")
-        }
-    }
-    
-    func showMessage(_ message: String) {
-        print(message)
     }
     
 }

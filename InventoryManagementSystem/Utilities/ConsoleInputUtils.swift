@@ -1,6 +1,11 @@
 import Foundation
 
-enum ConsoleInputUtils {
+struct ConsoleInputUtils {
+    
+    static func getMenuChoice() -> Int {
+        print("Enter a choice:", terminator: "")
+        return ConsoleInputUtils.readInt()
+    }
     
     static func readInt(_ prompt: String = "") -> Int {
         while true {
@@ -30,20 +35,22 @@ enum ConsoleInputUtils {
 
             print("Please enter a valid number.", terminator: "")
         }
+        
     }
     
-    //CR: Something wrong with this functions
     static func readNonEmptyString(_ prompt: String) -> String {
         while true {
             print(prompt, terminator: " ")
 
-            if let input = readLine(),
-               !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                return input
+            guard let input = readLine(),
+               !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else{
+                print("This field cannot be empty.")
+                continue
             }
-
-            print("This field cannot be empty.")
+            return input
+           
         }
+        
     }
     
     static func readOptionalString(_ prompt: String) -> String? {
@@ -55,6 +62,7 @@ enum ConsoleInputUtils {
 
         let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
+        
     }
     
     static func readOptionalInt(_ prompt: String) -> Int? {

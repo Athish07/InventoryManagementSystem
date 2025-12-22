@@ -43,8 +43,13 @@ final class AppController {
     private func handlePublicMenu() {
         let publicMenu = PublicMenu.allCases
         view.showPublicMenu(publicMenu: publicMenu)
-        let menu = view.getPublicMenuInput()
+        let choice = ConsoleInputUtils.getMenuChoice()
 
+        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: publicMenu) else {
+            MessagePrinter.errorMessage("Invalid Choice. Please try again.")
+            return
+        }
+                
         switch menu {
         case .searchProducts: searchProduct()
         case .login: login()
@@ -78,38 +83,32 @@ final class AppController {
                 .handleMenu(for: supplier.name)
         }
     }
+    
     private func login() {
-        let email = ConsoleInputUtils.readNonEmptyString("Email:")
-        let password = ConsoleInputUtils.readNonEmptyString("Password:")
+        let userRoles = UserRole.allCases
+        view.showLoginRole(userRole: userRoles)
+        let choice = ConsoleInputUtils.getMenuChoice()
         
-        view.readLoginRole(userRole: UserRole.allCases)
-        let role = view.getLoginRoleInput()
-
-        guard Validation.isValidEmail(email) else {
-            view.showMessage("Invalid email format")
+        guard let role = MenuSelectionHelper.select(userChoice: choice, options: userRoles) else {
+            MessagePrinter.infoMessage("Invalid choice,try again.")
             return
         }
         
-        guard Validation.isValidPassword(password) else {
-            view.showMessage("Invalid password")
-            return
-        }
-
+        let input = view.readUserLogin()
+        
         do {
-            currentUserId =
-            try authenticationService
-                .login(email: email, password: password, role: role)
-            view.showMessage("Login successful.")
+            currentUserId = try authenticationService.login(email: input.email, password: input.password, role: role)
+            MessagePrinter.successMessage("Login successful.")
         } catch let error as LoginError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage("Unexpected error during login.")
+            MessagePrinter.errorMessage("Unexpected error during login.")
         }
     }
 
     private func logout() {
         currentUserId = nil
-        view.showMessage("Logged out successfully.")
+        MessagePrinter.successMessage("Logged out successfully.")
     }
 
     private func searchProduct() {
@@ -123,8 +122,14 @@ final class AppController {
 
         let registrationMenu: [RegistrationMenu] = [.customer, .supplier]
         view.showRegistrationMenu(registrationMenu: registrationMenu)
-        let menu = view.getRegistrationMenuInput()
-
+        let choice = ConsoleInputUtils.getMenuChoice()
+        
+        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: registrationMenu) else {
+            MessagePrinter.infoMessage("Invalid Choice. Please try again.")
+            return
+        }
+        
+        
         switch menu {
         case .customer: registerCustomer()
         case .supplier: registerSupplier()
@@ -137,24 +142,24 @@ final class AppController {
         let customer = view.readCustomerRegistration()
 
         guard Validation.isValidEmail(customer.email) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Invalid email format. Please check your input."
                 )
             return
         }
 
         guard Validation.isValidPassword(customer.password) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Password must be at least 6 characters long and must be less than 100 characters."
                 )
             return
         }
 
         guard Validation.isValidPhoneNumber(customer.phoneNumber) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Invalid phone number format. Please check your input."
                 )
             return
@@ -162,11 +167,11 @@ final class AppController {
 
         do {
             try authenticationService.registerCustomer(input: customer)
-            view.showMessage("Customer registered successfully.")
+            MessagePrinter.successMessage("Customer registered successfully.")
         } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage("Registration failed.")
+            MessagePrinter.errorMessage("Registration failed.")
         }
 
     }
@@ -175,24 +180,24 @@ final class AppController {
         let supplier = view.readSupplierRegistration()
 
         guard Validation.isValidEmail(supplier.email) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Invalid email format. Please check your input."
                 )
             return
         }
 
         guard Validation.isValidPassword(supplier.password) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Password must be at least 6 characters long and must be less than 100 characters."
                 )
             return
         }
 
         guard Validation.isValidPhoneNumber(supplier.phoneNumber) else {
-            view
-                .showMessage(
+            MessagePrinter
+                .errorMessage(
                     "Error: Invalid phone number format. Please check your input."
                 )
             return
@@ -200,11 +205,11 @@ final class AppController {
 
         do {
             try authenticationService.registerSupplier(input: supplier)
-            view.showMessage("Supplier registered successfully.")
+            MessagePrinter.successMessage("Supplier registered successfully.")
         } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage("Registration failed.")
+            MessagePrinter.errorMessage("Registration failed.")
         }
     }
 }

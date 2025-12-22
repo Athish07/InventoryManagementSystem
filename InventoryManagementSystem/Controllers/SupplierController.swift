@@ -26,7 +26,14 @@ final class SupplierController {
 
         let supplierMenu = SupplierMenu.allCases
         view.showSupplierMenu(userName: name, supplierMenu: supplierMenu)
-        switch view.getSupplierMenuInput() {
+        let choice = ConsoleInputUtils.getMenuChoice()
+        
+        guard let menu = MenuSelectionHelper.select(userChoice: choice, options: supplierMenu) else {
+            MessagePrinter.errorMessage("Invalid Choice, try again.")
+            return
+        }
+        
+        switch menu {
         case .addProduct: addProduct()
         case .viewMyProducts: viewMyProducts()
         case .updateProduct: updateProduct()
@@ -40,23 +47,24 @@ final class SupplierController {
     private func viewProfile() {
         guard let customer = userService.getUser(by: supplierId) as? Supplier
         else {
-            view.showMessage("Unauthorized access.please login again.")
+            MessagePrinter.errorMessage("Unauthorized access.please login again.")
             return
         }
         view.showSupplierProfile(customer)
     }
 
     private func addProduct() {
+        let category = ProductCategory.allCases
         let input = view.readProductCreateInput()
 
         productService.addProduct(productDetails: input, supplierId: supplierId)
-        view.showMessage("Product added successfully.")
+        MessagePrinter.successMessage("Product added successfully.")
     }
 
     private func updateProfile() {
         guard let supplier = userService.getUser(by: supplierId) as? Supplier
         else {
-            view.showMessage("Unauthorized access, please login again.")
+            MessagePrinter.errorMessage("Unauthorized access, please login again.")
             return
         }
 
@@ -71,7 +79,7 @@ final class SupplierController {
         )
 
         if products.isEmpty {
-            view.showMessage("No products found.")
+            MessagePrinter.infoMessage("No products found.")
         } else {
             view.showMyProducts(products)
         }
@@ -85,18 +93,18 @@ final class SupplierController {
 
         guard let product = productService.getProductById(productId: productId)
         else {
-            view.showMessage("No such product found.")
+            MessagePrinter.infoMessage("No such product found.")
             return
         }
         let input = view.readUpdateProductDetails(currentProduct: product)
         do {
             try productService
                 .updateProduct(update: input, supplierId: supplierId)
-            view.showMessage("Product Updated Successfully")
+            MessagePrinter.successMessage("Product Updated Successfully")
         } catch let error as ProductServiceError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            MessagePrinter.errorMessage(error.localizedDescription)
         }
     }
 
@@ -109,11 +117,11 @@ final class SupplierController {
         do {
             try productService
                 .deleteProduct(productId: productId, supplierId: supplierId)
-            view.showMessage("Product deleted successfully.")
+            MessagePrinter.successMessage("Product deleted successfully.")
         } catch let error as ProductServiceError {
-            view.showMessage(error.displayMessage)
+            MessagePrinter.errorMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            MessagePrinter.errorMessage(error.localizedDescription)
         }
 
     }

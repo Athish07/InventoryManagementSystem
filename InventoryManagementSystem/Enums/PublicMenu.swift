@@ -3,12 +3,4 @@ enum PublicMenu: String, CaseIterable {
     case login = "Login"
     case register = "Register"
     
-    static func fromChoice(_ choice: Int) -> PublicMenu? {
-        let index = choice - 1
-        
-        if index >= 0 && index < PublicMenu.allCases.count {
-             return PublicMenu.allCases[index]
-        }
-        return nil
-    }
 }
