@@ -1,5 +1,6 @@
 struct ProductSearchView {
 
+    //CR: Separate functionalities - show and read
     func showCategoryMenu(
         categories: [ProductCategory]
     ) -> ProductCategory? {

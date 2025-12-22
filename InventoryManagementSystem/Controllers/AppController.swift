@@ -121,7 +121,7 @@ final class AppController {
 
     private func register() {
 
-        let registrationMenu: [RegistrationMenu] = [.customer]
+        let registrationMenu: [RegistrationMenu] = [.customer, .supplier]
         view.showRegistrationMenu(registrationMenu: registrationMenu)
         let menu = view.getRegistrationMenuInput()
 

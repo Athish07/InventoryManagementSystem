@@ -95,6 +95,7 @@ struct CustomerView {
 }
 
 extension Date {
+    // CR: Reduce complexity.
     private static let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
