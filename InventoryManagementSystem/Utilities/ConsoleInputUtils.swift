@@ -4,7 +4,7 @@ struct ConsoleInputUtils {
     
     static func getMenuChoice() -> Int {
         print("Enter a choice:", terminator: "")
-        return ConsoleInputUtils.readInt()
+        return readInt()
     }
     
     static func readInt(_ prompt: String = "") -> Int {
@@ -18,7 +18,7 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            print("Please enter a valid number.", terminator: "")
+            MessagePrinter.infoMessage("Please enter a valid number.")
         }
     }
     
@@ -33,7 +33,7 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            print("Please enter a valid number.", terminator: "")
+            MessagePrinter.infoMessage("Please enter a valid number.")
         }
         
     }
@@ -42,14 +42,11 @@ struct ConsoleInputUtils {
         while true {
             print(prompt, terminator: " ")
 
-            guard let input = readLine(),
-                  !input
-                .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else{
-                print("This field cannot be empty.")
-                continue
+            if let input = readLine(), !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return input
             }
-            return input
-           
+            MessagePrinter.infoMessage("This field cannot be empty.")
+            
         }
         
     }

@@ -11,11 +11,11 @@ struct ProductSearchHelper {
             category: category
         )
 
-        guard !products.isEmpty else {
+        if products.isEmpty {
             MessagePrinter.infoMessage("No products found.")
             return
         }
-
+        
         view.showProducts(products)
     }
 }

@@ -57,6 +57,7 @@ final class CustomerController {
     private func addItemToCart() {
         searchProduct()
         let input = view.readAddToCartInput()
+        
         do {
             try orderService.addItemToCart(
                 customerId: customerId,

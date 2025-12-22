@@ -81,15 +81,15 @@ final class SupplierController {
 
     private func updateProduct() {
         viewMyProducts()
-        let productId = ConsoleInputUtils.readInt(
-            "Provide the Id of the product to update:"
-        )
-
+        
+        let productId = view.readProductId(prompt: "Select the product to update")
+        
         guard let product = productService.getProductById(productId: productId)
         else {
             MessagePrinter.infoMessage("No such product found.")
             return
         }
+        
         let input = view.readUpdateProductDetails(currentProduct: product)
         do {
             try productService
@@ -104,10 +104,7 @@ final class SupplierController {
 
     private func deleteProduct() {
         viewMyProducts()
-        let productId = ConsoleInputUtils.readInt(
-            "Provide the Id of the product to delete:"
-        )
-
+        let productId = view.readProductId(prompt: "Select the product to delete")
         do {
             try productService
                 .deleteProduct(productId: productId, supplierId: supplierId)

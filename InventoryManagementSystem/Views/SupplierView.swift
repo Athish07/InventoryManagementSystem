@@ -115,6 +115,10 @@ struct SupplierView {
         )
     }
     
+    func readProductId(prompt: String) -> Int {
+        return ConsoleInputUtils.readInt(prompt)
+    }
+    
     private func readProductCategory() -> ProductCategory {
         let categories = ProductCategory.allCases
 

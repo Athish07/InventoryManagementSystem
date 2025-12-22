@@ -63,7 +63,10 @@ struct CustomerView {
             showCustomerMenu(userName: name, menus: customerMenu)
             let choice = ConsoleInputUtils.getMenuChoice()
             
-            if let selected = MenuSelectionHelper.select(userChoice: choice, options: customerMenu) {
+            if let selected = MenuSelectionHelper.select(
+                userChoice: choice,
+                options: customerMenu
+            ) {
                 return selected
             }
             
@@ -98,7 +101,10 @@ struct CustomerView {
     func readRemoveItemInput(cart: Cart) -> Int {
         showCart(cart)
         
-        let selected = ConsoleInputUtils.readIntInRange(min: 1, max: cart.items.count )
+        let selected = ConsoleInputUtils.readIntInRange(
+            min: 1,
+            max: cart.items.count
+        )
         
         return selected
     }
