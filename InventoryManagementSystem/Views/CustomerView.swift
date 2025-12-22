@@ -28,7 +28,7 @@ struct CustomerView {
                     "Name (\(customer.name)):"
                 ),
                 email: ConsoleInputUtils.readOptionalString(
-                    "Name (\(customer.email)):"
+                    "Email (\(customer.email)):"
                 ),
                 phoneNumber: ConsoleInputUtils.readOptionalString(
                     "Phone (\(customer.phoneNumber)):"

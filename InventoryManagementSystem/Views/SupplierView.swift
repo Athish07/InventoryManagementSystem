@@ -88,6 +88,20 @@ struct SupplierView {
         )
     }
     
+    func showMyProducts(_ products: [Product]) {
+        for product in products {
+            print("""
+            -----------------------------------
+            ID: \(product.productId)
+            Name: \(product.name)
+            Price: \(product.unitPrice)
+            Stock: \(product.quantityInStock)
+            Category: \(product.category.rawValue)
+            -----------------------------------
+            """)
+        }
+    }
+    
     func showSupplierProfile(_ supplier: Supplier) {
         print("\n--------------------------------------------")
         print("Name: \(supplier.name)")
@@ -98,16 +112,20 @@ struct SupplierView {
         print("--------------------------------------------")
     }
     
-    //    private func readProductCategory() -> ProductCategory {
-    //        let categories = ProductCategory.allCases
-    //        
-    //        print("Select category")
-    //        for (index, category) in categories.enumerated() {
-    //            print("\(index + 1). \(category.rawValue)")
-    //        }
-    //        print("Enter a choice(default category is other):")
-    //        
-    //    }
+    private func readProductCategory() -> ProductCategory {
+        let categories = ProductCategory.allCases
+
+        print("\nSelect Category:")
+        for (index, category) in categories.enumerated() {
+            print("\(index + 1). \(category.rawValue)")
+        }
+
+        let choice = ConsoleInputUtils.readOptionalInt(
+            "Enter choice (default: Other):"
+        )
+
+        return ProductCategory.fromChoiceOrDefault(choice)
+    }
     
     func showMessage(_ message: String) {
         print(message)

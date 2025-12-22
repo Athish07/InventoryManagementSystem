@@ -3,6 +3,7 @@ import Foundation
 struct AppView {
     
     func showPublicMenu(publicMenu: [PublicMenu]) {
+        print("Welocome to Inventory Management System")
         print("\n--------------------------------------------")
         
         for (index,menu) in publicMenu.enumerated() {
@@ -115,19 +116,6 @@ struct AppView {
             }
 
             print("Invalid choice. Please try again.")
-        }
-    }
-    
-    func showProducts(_ products: [Product]) {
-        print("\nAvailable Products:")
-        for product in products {
-            print(
-                "\(product.productId) | " +
-                "\(product.name) | " +
-                "\(product.category.rawValue) | " +
-                "Price: \(product.unitPrice) | " +
-                "Stock: \(product.quantityInStock)"
-            )
         }
     }
     

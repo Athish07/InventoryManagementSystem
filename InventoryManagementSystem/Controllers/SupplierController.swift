@@ -32,6 +32,7 @@ final class SupplierController {
         case .updateProduct: updateProduct()
         case .deleteProduct: deleteProduct()
         case .viewProfile: viewProfile()
+        case .updateProfile: updateProfile()
         case .onLogout: onLogout()
         }
     }
@@ -72,7 +73,7 @@ final class SupplierController {
         if products.isEmpty {
             view.showMessage("No products found.")
         } else {
-            view.showProducts(products)
+            view.showMyProducts(products)
         }
     }
 

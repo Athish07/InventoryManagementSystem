@@ -4,10 +4,8 @@ enum SupplierMenu: String, CaseIterable {
     case updateProduct = "Update Product"
     case deleteProduct = "Delete Product"
     case viewProfile = "View Profile"
+    case updateProfile = "Update Profile"
     case onLogout = "Logout"
-}
-
-extension SupplierMenu {
     
     static func fromChoice(_ choice: Int) -> SupplierMenu? {
         let index = choice - 1

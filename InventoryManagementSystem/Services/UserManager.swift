@@ -21,6 +21,10 @@ final class UserManager: UserService {
             customer.name = name
         }
         
+        if let email = update.email {
+            customer.email = email
+        }
+        
         if let phoneNumber = update.phoneNumber {
             customer.phoneNumber = phoneNumber
         }
@@ -39,6 +43,10 @@ final class UserManager: UserService {
         
         if let name = update.name {
             supplier.name = name
+        }
+        
+        if let email = update.email {
+            supplier.email = email
         }
         
         if let phoneNumber = update.phoneNumber {

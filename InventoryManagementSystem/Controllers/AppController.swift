@@ -3,12 +3,14 @@ import Foundation
 final class AppController {
 
     private let view: AppView
+    private let productSearchView: ProductSearchView
     private let authenticationService: AuthenticationService
     private let orderService: OrderService
     private let productService: ProductService
     private let userService: UserService
     private var currentUserId: Int?
     private let appFactory: AppFactory
+    
 
     init(
         appView: AppView,
@@ -16,6 +18,7 @@ final class AppController {
         orderService: OrderService,
         productService: ProductService,
         userService: UserService,
+        productSearchView: ProductSearchView,
         appFactory: AppFactory
     ) {
         self.view = appView
@@ -24,6 +27,7 @@ final class AppController {
         self.productService = productService
         self.userService = userService
         self.appFactory = appFactory
+        self.productSearchView = productSearchView
     }
 
     func start() {
@@ -92,7 +96,7 @@ final class AppController {
 
         do {
             currentUserId =
-                try authenticationService
+            try authenticationService
                 .login(email: email, password: password, role: role)
             view.showMessage("Login successful.")
         } catch let error as LoginError {
@@ -108,18 +112,10 @@ final class AppController {
     }
 
     private func searchProduct() {
-        let categories = ProductCategory.allCases
-        view.showCategoryMenu(categories)
-        let selectedCategory = view.getCategoryMenuInput(categories: categories)
-
-        let products = productService.searchProductsByCategory(
-            category: selectedCategory
+        ProductSearchHelper.search(
+            productService: productService,
+            view: productSearchView
         )
-        if products.isEmpty {
-            view.showMessage("No products found.")
-        } else {
-            view.showProducts(products)
-        }
     }
 
     private func register() {

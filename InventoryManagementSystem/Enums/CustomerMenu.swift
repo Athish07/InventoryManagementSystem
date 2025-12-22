@@ -6,11 +6,8 @@ enum CustomerMenu: String, CaseIterable {
     case checkout = "CheckOut"
     case viewOrders = "View Orders"
     case viewProfile = "View Profile"
+    case updateProfile = "Update Profile"
     case onLogout = "Logout"
-    
-}
-
-extension CustomerMenu {
     
     static func fromChoice(_ choice: Int) -> CustomerMenu? {
         let index = choice - 1

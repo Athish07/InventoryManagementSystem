@@ -1,10 +1,6 @@
 enum RegistrationMenu: String, CaseIterable {
     case customer = "Customer"
     case supplier = "Supplier"
-
-}
-
-extension RegistrationMenu {
     
     static func fromChoice(_ choice:Int) -> RegistrationMenu? {
         let index = choice - 1

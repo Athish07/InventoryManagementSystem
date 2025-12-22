@@ -3,6 +3,7 @@ import Foundation
 final class CustomerController {
 
     private let view: CustomerView
+    private let productSearchView: ProductSearchView
     private let orderService: OrderService
     private let productService: ProductService
     private let userService: UserService
@@ -11,6 +12,7 @@ final class CustomerController {
     
     init(
         view: CustomerView,
+        productSearchView: ProductSearchView,
         orderService: OrderService,
         productService: ProductService,
         userService: UserService,
@@ -18,6 +20,7 @@ final class CustomerController {
         onLogout: @escaping () -> Void
     ) {
         self.view = view
+        self.productSearchView = productSearchView
         self.orderService = orderService
         self.productService = productService
         self.userService = userService
@@ -41,25 +44,17 @@ final class CustomerController {
         case .checkout: checkout()
         case .viewOrders: viewOrders()
         case .viewProfile: viewProfile()
+        case .updateProfile: updateProfile()
         case .onLogout: onLogout()
         }
     }
 
-//    private func searchProduct() {
-//        let categories = ProductCategory.allCases
-//        view.showCategoryMenu(categories)
-//        let category = view.getCategoryMenuInput(categories: categories)
-//        
-//        let products = productService.searchProductsByCategory(
-//            category: selectedCategory
-//        )
-//        
-//        if products.isEmpty {
-//            view.showMessage("No products found.")
-//        } else {
-//            view.showProducts(products)
-//        }
-//    }
+    private func searchProduct() {
+        ProductSearchHelper.search(
+            productService: productService,
+            view: productSearchView
+        )
+    }
 
     private func addItemToCart() {
         searchProduct()

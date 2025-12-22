@@ -19,7 +19,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DCC1BDD72EF036020056DA66 /* InventoryManagementSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = InventoryManagementSystem; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC1BDD72EF036020056DA66 /* InventoryManagementSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = InventoryManagementSystem; path = "/Users/athish-pt8049/Desktop/InventoryManagementSystem/build/Debug/InventoryManagementSystem"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,16 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC1BDD92EF036020056DA66 /* InventoryManagementSystem */,
-				DCC1BDD82EF036020056DA66 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		DCC1BDD82EF036020056DA66 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DCC1BDD72EF036020056DA66 /* InventoryManagementSystem */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,7 +98,7 @@
 			mainGroup = DCC1BDCE2EF036020056DA66;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = DCC1BDD82EF036020056DA66 /* Products */;
+			productRefGroup = DCC1BDCE2EF036020056DA66;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

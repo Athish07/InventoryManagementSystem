@@ -7,7 +7,6 @@ final class AppFactory {
     private let itemRepository = InMemoryOrderItemRepository()
     private let productRepository = InMemoryProductRepository()
     private let cartRepository = InMemoryCartRepository()
-    
     private let orderService: OrderService
     private let authenticationService: AuthenticationService
     private let userService: UserService
@@ -15,6 +14,7 @@ final class AppFactory {
     private let appView = AppView()
     private let customerView = CustomerView()
     private let supplierView = SupplierView()
+    private let productSearchView = ProductSearchView()
     
     init()
     {
@@ -46,6 +46,7 @@ final class AppFactory {
             orderService: orderService,
             productService: productService,
             userService: userService,
+            productSearchView: productSearchView,
             appFactory: self
         )
     }
@@ -53,6 +54,7 @@ final class AppFactory {
     func makeCustomerController(customerId: Int,onLogout: @escaping () -> Void) -> CustomerController {
         CustomerController(
             view: customerView,
+            productSearchView: productSearchView,
             orderService: orderService,
             productService: productService,
             userService: userService,
