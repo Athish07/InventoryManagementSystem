@@ -32,10 +32,23 @@ final class CustomerController {
 
         let customerMenu = CustomerMenu.allCases
         
-        let menu = view.readCustomerMenu(name: name, customerMenu: customerMenu)
+        var menu: CustomerMenu?
+        
+        while menu == nil {
+            
+            view.showCustomerMenu(userName: name, menus: customerMenu)
+            menu = view.readCustomerMenu(customerMenu: customerMenu)
+            if menu == nil {
+                view.showMessage("Invalid choice. Please try again.")
+            }
+        }
+        
+        guard let selectedMenu = menu else {
+            return
+        }
 
-        switch menu {
-        case .searchProduct: searchProduct()
+        switch selectedMenu {
+        case .searchProduct: searchAndShowProducts()
         case .addItemToCart: addItemToCart()
         case .removeItemFromCart: removeItemFromCart()
         case .viewCart: viewCart()
@@ -46,31 +59,28 @@ final class CustomerController {
         case .onLogout: onLogout()
         }
     }
-
-    private func searchProduct() {
-        
+    
+    @discardableResult
+    private func searchAndShowProducts() -> [Product]? {
         guard let products = ProductSearchHelper.search(
             productService: productService,
             view: productSearchView
         ) else {
-            return
+            return nil
         }
+
         productSearchView.showProducts(products)
-        
+        return products
     }
+
 
     private func addItemToCart() {
         
-        guard let products = ProductSearchHelper.search(
-            productService: productService,
-            view: productSearchView
-        ) else {
+        guard let products = searchAndShowProducts() else {
             return
         }
-        
-        productSearchView.showProducts(products)
-        
-        let input = view.readAddToCartInput()
+
+        let input = view.readAddToCartInput(from: products)
         
         do {
             try orderService.addItemToCart(
@@ -78,11 +88,11 @@ final class CustomerController {
                 productId: input.productId,
                 quantity: input.quantity
             )
-            MessagePrinter.infoMessage("Item added to cart.")
+            view.showMessage("Item added to cart.")
         } catch let error as OrderServiceError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage(error.localizedDescription)
+            view.showMessage(error.localizedDescription)
         }
         
     }
@@ -92,7 +102,7 @@ final class CustomerController {
               let customer = user.customerProfile
               
         else {
-            MessagePrinter.errorMessage(
+            view.showMessage(
                 "Unauthorized access, please login again."
             )
             return
@@ -109,7 +119,7 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
 
         if cart.items.isEmpty {
-            MessagePrinter.infoMessage("Your cart is empty.")
+            view.showMessage("Your cart is empty.")
             return
         } else {
             view.showCart(cart)
@@ -121,9 +131,10 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
 
         guard !cart.items.isEmpty else {
-            MessagePrinter.errorMessage("Your cart is empty.")
+            view.showMessage("Your cart is empty.")
             return
         }
+        view.showCart(cart)
         let index = view.readRemoveItemInput(cart: cart)
         let productId = cart.items[index].productId
 
@@ -133,12 +144,12 @@ final class CustomerController {
                 productId: productId
             )
         } catch let error as OrderServiceError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage(error.localizedDescription)
+            view.showMessage(error.localizedDescription)
         }
 
-        MessagePrinter.successMessage("Item removed from cart.")
+        view.showMessage("Item removed from cart.")
 
     }
 
@@ -146,14 +157,13 @@ final class CustomerController {
 
         do {
             let order = try orderService.checkout(customerId: customerId)
-            MessagePrinter
-                .successMessage(
+            view.showMessage(
                     "Order placed successfully. Total: \(order.totalAmount)"
                 )
         } catch let error as OrderServiceError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage(error.localizedDescription)
+            view.showMessage(error.localizedDescription)
         }
 
     }
@@ -162,7 +172,7 @@ final class CustomerController {
         let orders = orderService.viewOrders(customerId: customerId)
         
         if orders.isEmpty {
-            MessagePrinter.errorMessage("No order found.")
+            view.showMessage("No order found.")
         }
         
         view.showOrders(orders)
@@ -175,7 +185,7 @@ final class CustomerController {
               let customer = user.customerProfile
               
         else {
-            MessagePrinter.errorMessage(
+            view.showMessage(
                 "Unauthorized access, please login again."
             )
             return

@@ -17,9 +17,19 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            MessagePrinter.infoMessage("Please enter a valid number.")
+            print("Please enter a valid number.")
         }
         
+    }
+    
+    static func readUInt(_ prompt: String) -> Int {
+        while true {
+            let value = readInt(prompt)
+            if value > 0 {
+                return value
+            }
+            print("Value must be greater than zero.")
+        }
     }
     
     static func readDouble(_ prompt: String = "") -> Double {
@@ -33,7 +43,7 @@ struct ConsoleInputUtils {
                 return value
             }
 
-            MessagePrinter.infoMessage("Please enter a valid number.")
+            print("Please enter a valid number.")
         }
         
     }
@@ -47,7 +57,7 @@ struct ConsoleInputUtils {
                 
                 return input
             }
-            MessagePrinter.infoMessage("This field cannot be empty.")
+            print("This field cannot be empty.")
             
         }
         
@@ -106,7 +116,7 @@ struct ConsoleInputUtils {
                 return choice
             }
             
-            MessagePrinter.errorMessage("Invalid Input, try again.")
+            print("Invalid Input, try again.")
         }
         
     }
@@ -119,7 +129,7 @@ struct ConsoleInputUtils {
             if Validation.isValidEmail(email) {
                 return email
             }
-            MessagePrinter.errorMessage("Invalid email format.")
+            print("Invalid email format.")
         }
         
     }
@@ -131,9 +141,7 @@ struct ConsoleInputUtils {
             if Validation.isValidPassword(password) {
                 return password
             }
-            MessagePrinter.errorMessage(
-                "Password must be at least 6 characters and less than 10 characters."
-            )
+            print("Password must be at least 6 characters and less than 10 characters.")
         }
         
     }
@@ -145,7 +153,7 @@ struct ConsoleInputUtils {
             if Validation.isValidPhoneNumber(phone) {
                 return phone
             }
-            MessagePrinter.errorMessage("Invalid phone number format.")
+            print("Invalid phone number format.")
         }
     }
     
@@ -162,8 +170,7 @@ struct ConsoleInputUtils {
             if Validation.isValidEmail(input) {
                 return input
             }
-
-            MessagePrinter.errorMessage("Invalid email format.")
+            print("Invalid email format.")
         }
     }
     
@@ -183,7 +190,7 @@ struct ConsoleInputUtils {
                 return input
             }
 
-            MessagePrinter.errorMessage("Invalid phone number.")
+            print("Invalid phone number.")
         }
     }
     

@@ -1,6 +1,6 @@
 import Foundation
 
-struct CustomerView {
+struct CustomerView: ConsoleView {
 
     func showCustomerMenu(userName: String, menus: [CustomerMenu]) {
         print("\n--------------------------------------------")
@@ -53,21 +53,17 @@ struct CustomerView {
         
     }
     
-    func readCustomerMenu(name: String,customerMenu: [CustomerMenu]) -> CustomerMenu {
-        while true {
+    func readCustomerMenu(customerMenu: [CustomerMenu]) -> CustomerMenu? {
+        
+        let choice = ConsoleInputUtils.getMenuChoice()
             
-            showCustomerMenu(userName: name, menus: customerMenu)
-            let choice = ConsoleInputUtils.getMenuChoice()
-            
-            if let selected = MenuSelectionHelper.select(
-                userChoice: choice,
-                options: customerMenu
-            ) {
-                return selected
-            }
-            
-            MessagePrinter.errorMessage("Invalid input , try again.")
+        if let selected = MenuSelectionHelper.select(
+            userChoice: choice,
+            options: customerMenu
+        ) {
+            return selected
         }
+        return nil
     }
     
     func readUpdateCustomer(user: User, customer: Customer) -> UserDTO.CustomerUpdate {
@@ -95,30 +91,53 @@ struct CustomerView {
     }
     
     func readRemoveItemInput(cart: Cart) -> Int {
-        showCart(cart)
+        while true {
+            
+            let input = ConsoleInputUtils.readInt(
+                "Enter the item number to remove:"
+            )
+            let index = input - 1
+            
+            if index >= 0 && index < cart.items.count {
+                return index
+            }
+            
+            print(
+                "Invalid selection. Please choose a number between 1 and \(cart.items.count)."
+            )
+        }
         
-        let selected = ConsoleInputUtils.readIntInRange(from: cart)
-        
-        return selected - 1
     }
     
-    func readAddToCartInput() -> (productId: Int, quantity: Int) {
+    func readAddToCartInput(from products: [Product]) -> (
+        productId: Int,
+        quantity: Int
+    ) {
 
-        let productId = ConsoleInputUtils.readInt(
-            "Enter product id:"
-        )
+        var productId: Int
 
-        let quantity = ConsoleInputUtils.readInt(
-            "Enter quantity:"
-        )
+        while true {
+            let input = ConsoleInputUtils.readInt("Enter product id:")
 
-        return (productId, quantity)
+            if products.contains(where: { $0.productId == input }) {
+                productId = input
+                break
+            }
+
+            print(
+                "Invalid product id. Please select from the listed products."
+            )
+        }
+
+        let quantity = ConsoleInputUtils.readUInt("Enter quantity:")
+
+        return (productId: productId, quantity: quantity)
     }
     
 }
 
 extension Date {
-    // CR: Reduce complexity.
+    
     func toISTString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"

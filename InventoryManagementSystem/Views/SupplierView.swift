@@ -1,10 +1,10 @@
-struct SupplierView {
+struct SupplierView: ConsoleView {
     
-    func showSupplierMenu(userName: String, supplierMenu: [SupplierMenu]) {
+    func showSupplierMenu(userName: String, menus: [SupplierMenu]) {
         print("\n--------------------------------------------")
         print("Welcome Supplier, \(userName)")
         
-        for (index,menu) in supplierMenu.enumerated() {
+        for (index,menu) in menus.enumerated() {
             print("\(index+1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
@@ -50,22 +50,18 @@ struct SupplierView {
         
     }
     
-    func readSupplierMenu(name: String,supplierMenu: [SupplierMenu]) -> SupplierMenu {
+    func readSupplierMenu(supplierMenu: [SupplierMenu]) -> SupplierMenu? {
         
-        while true {
-            showSupplierMenu(userName: name, supplierMenu: supplierMenu)
-            
-            let choice = ConsoleInputUtils.getMenuChoice()
-            
-            if let selected = MenuSelectionHelper.select(
-                userChoice: choice,
-                options: supplierMenu
-            ) {
-                return selected
-            }
-            
-            MessagePrinter.errorMessage("Invalid input , try again.")
+        let choice = ConsoleInputUtils.getMenuChoice()
+        
+        if let selected = MenuSelectionHelper.select(
+            userChoice: choice,
+            options: supplierMenu
+        ) {
+            return selected
         }
+        
+        return nil
         
     }
     
@@ -123,16 +119,16 @@ struct SupplierView {
     
     func readProductId(from products: [Product],prompt: String) -> Int {
         while true {
+            
             let id = ConsoleInputUtils.readInt(prompt)
             
             if products.contains(where: { $0.productId == id }) {
                 return id
             }
-                
-            MessagePrinter
-                .errorMessage(
-                    "Invalid ID. Please choose an ID from the list displayed above."
-                )
+            
+            print(
+                "Invalid ID. Please choose an ID from the list displayed above."
+            )
         }
     }
     

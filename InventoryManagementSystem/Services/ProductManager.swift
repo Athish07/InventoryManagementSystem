@@ -76,8 +76,8 @@ final class ProductManager: ProductService {
         productRepository.deleteProduct(productId)
 
     }
-
-    private func getProductById(productId: Int) -> Product? {
+    
+   func getProductById(productId: Int) -> Product? {
 
         productRepository.getProductById(productId)
     }

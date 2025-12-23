@@ -5,6 +5,8 @@ struct ProductSearchHelper {
         view: ProductSearchView
     ) -> [Product]? {
         let productCategories = ProductCategory.allCases
+        view.showCategoryMenu(categories: productCategories)
+        
         let category = view.readCategoryMenu(
             productCategories: productCategories
         )
@@ -14,7 +16,7 @@ struct ProductSearchHelper {
         )
 
         if products.isEmpty {
-            MessagePrinter.infoMessage("No products found.")
+            view.showMessage("No products found.")
             return nil
         }
         

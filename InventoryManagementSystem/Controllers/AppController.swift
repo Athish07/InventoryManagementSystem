@@ -43,12 +43,25 @@ final class AppController {
     private func handlePublicMenu() {
         let publicMenu = PublicMenu.allCases
         
-        let menu = view.readPublicMenuChoice(publicMenu: publicMenu)
+        var menu: PublicMenu?
         
-        switch menu {
+        while menu == nil {
+            view.showPublicMenu(publicMenu: publicMenu)
+            menu = view.readPublicMenuChoice(publicMenu: publicMenu)
+            if menu == nil {
+                view.showMessage("Invalid choice. Please try again.")
+            }
+        }
+        
+        guard let selectedMenu = menu else {
+            return
+        }
+        
+        switch selectedMenu {
         case .searchProducts: searchProduct()
         case .login: login()
         case .register: register()
+            
         }
     }
 
@@ -82,19 +95,27 @@ final class AppController {
     
     private func login() {
         let userRoles = UserRole.allCases
+        var role: UserRole?
         
-        let role = view.readLoginRole(userRoles: userRoles)
+        while role == nil {
+            view.showLoginRole(userRole: userRoles)
+            role = view.readLoginRole(userRoles: userRoles)
+            
+            if role == nil {
+                view.showMessage("Invalid choice. please try again.")
+            }
+        }
+        
         let input = view.readUserLogin()
-        
         do {
             currentUserId = try authenticationService
-                .login(email: input.email, password: input.password, role: role)
+                .login(email: input.email, password: input.password)
             currentRole = role
-            MessagePrinter.successMessage("Login successful.")
+            view.showMessage("Login successful.")
         } catch let error as LoginError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage("Unexpected error during login.")
+            view.showMessage("Unexpected error during login.")
         }
         
     }
@@ -102,7 +123,7 @@ final class AppController {
     private func logout() {
         currentUserId = nil
         currentRole = nil
-        MessagePrinter.successMessage("Logged out successfully.")
+        view.showMessage("Logged out successfully.")
     }
 
     private func searchProduct() {
@@ -118,9 +139,24 @@ final class AppController {
     private func register() {
 
         let registrationMenu = RegistrationMenu.allCases
-        let menu = view.readRegistrationMenu(registrationMenu: registrationMenu)
+       
+        var menu: RegistrationMenu?
         
-        switch menu {
+        while menu == nil {
+            view.showRegistrationMenu(registrationMenu: registrationMenu)
+            menu = view.readRegistrationMenu(registrationMenu: registrationMenu)
+            
+            if menu == nil {
+                view.showMessage("Invalid choice. Please try again.")
+            }
+            
+        }
+        
+        guard let selectedMenu = menu else {
+            return
+        }
+        
+        switch selectedMenu {
         case .customer: registerCustomer()
         case .supplier: registerSupplier()
         }
@@ -133,11 +169,11 @@ final class AppController {
         
         do {
             try authenticationService.registerCustomer(input: customer)
-            MessagePrinter.successMessage("Customer registered successfully.")
+            view.showMessage("Customer registered successfully.")
         } catch let error as RegistrationError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage("Registration failed.")
+            view.showMessage("Registration failed.")
         }
 
     }
@@ -147,11 +183,11 @@ final class AppController {
         
         do {
             try authenticationService.registerSupplier(input: supplier)
-            MessagePrinter.successMessage("Supplier registered successfully.")
+            view.showMessage("Supplier registered successfully.")
         } catch let error as RegistrationError {
-            MessagePrinter.errorMessage(error.displayMessage)
+            view.showMessage(error.displayMessage)
         } catch {
-            MessagePrinter.errorMessage("Registration failed.")
+            view.showMessage("Registration failed.")
         }
     }
     

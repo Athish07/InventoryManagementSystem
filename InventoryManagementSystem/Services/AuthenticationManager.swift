@@ -6,7 +6,7 @@ final class AuthenticationManager: AuthenticationService {
         self.userRepository = userRepository
     }
 
-    func login(email: String, password: String, role: UserRole) throws -> Int {
+    func login(email: String, password: String) throws -> Int {
 
         guard
             let user = userRepository.findByEmail(email),

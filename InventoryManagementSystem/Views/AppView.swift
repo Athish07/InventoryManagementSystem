@@ -1,6 +1,6 @@
 import Foundation
 
-struct AppView {
+struct AppView: ConsoleView {
     
     func showPublicMenu(publicMenu: [PublicMenu]) {
         print("Welocome to Inventory Management System")
@@ -39,69 +39,51 @@ struct AppView {
     func readUserLogin() -> (email:String, password: String) {
         let email = ConsoleInputUtils.readValidEmail()
         let password = ConsoleInputUtils.readValidPassword()
-        
+            
         return (email,password)
     }
-    
-    func readPublicMenuChoice(publicMenu: [PublicMenu]) -> PublicMenu {
         
-        while true {
-            
-            showPublicMenu(publicMenu: publicMenu)
-            
-            let choice = ConsoleInputUtils.getMenuChoice()
-            
-            if let selected = MenuSelectionHelper.select(
-                userChoice: choice,
-                options: publicMenu
-            ) {
-                return selected
-            }
-            
-            MessagePrinter.errorMessage("Invalid choice. Please try again.")
+    func readPublicMenuChoice(publicMenu: [PublicMenu]) -> PublicMenu? {
+        
+        let choice = ConsoleInputUtils.getMenuChoice()
+        
+        if let selected = MenuSelectionHelper.select(
+            userChoice: choice,
+            options: publicMenu
+        ) {
+            return selected
         }
-        
+        return nil
     }
     
-    func readLoginRole(userRoles: [UserRole]) -> UserRole {
+    func readLoginRole(userRoles: [UserRole]) -> UserRole? {
         
-        while true {
+        let choice = ConsoleInputUtils.getMenuChoice()
             
-            showLoginRole(userRole: userRoles)
+        if let selected = MenuSelectionHelper.select(
+            userChoice:choice,
+            options: userRoles
+        ) {
+            return selected
+        }
+        
+        return nil
+    }
+    
+    func readRegistrationMenu(registrationMenu: [RegistrationMenu]) -> RegistrationMenu? {
+        let choice = ConsoleInputUtils.getMenuChoice()
             
-            let choice = ConsoleInputUtils.getMenuChoice()
-            
-            if let selected = MenuSelectionHelper.select(
-                userChoice:choice,
-                options: userRoles
-            ) {
-                return selected
-            }
-            
-            MessagePrinter.errorMessage("Invalid choice. Please try again.")
+        if let selected = MenuSelectionHelper.select(
+            userChoice: choice,
+            options: registrationMenu
+        ) {
+            return selected
+        }
+        
+        return nil
+    }
+    
 
-        }
-    }
-    
-    func readRegistrationMenu(registrationMenu: [RegistrationMenu]) -> RegistrationMenu {
-        
-        while true {
-            
-            showRegistrationMenu(registrationMenu: registrationMenu)
-            
-            let choice = ConsoleInputUtils.getMenuChoice()
-            
-            if let selected = MenuSelectionHelper.select(
-                userChoice: choice,
-                options: registrationMenu
-            ) {
-                return selected
-            }
-            
-            MessagePrinter.errorMessage("Invalid choice. please try again.")
-        }
-    }
-    
     func readCustomerRegistration() -> AuthDTO.CustomerRegistration {
         print("\n--- Customer Registration ---")
 

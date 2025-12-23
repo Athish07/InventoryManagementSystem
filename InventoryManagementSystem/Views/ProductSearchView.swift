@@ -1,6 +1,5 @@
-struct ProductSearchView {
+struct ProductSearchView: ConsoleView {
     
-    //CR: Separate functionalities - show and read
     func showCategoryMenu(
         categories: [ProductCategory]
     ) {
@@ -27,21 +26,22 @@ struct ProductSearchView {
     }
     
     func readCategoryMenu(productCategories: [ProductCategory]) -> ProductCategory? {
-        while true {
-            
-            showCategoryMenu(categories: productCategories)
-            let choice = ConsoleInputUtils.getMenuChoice()
-            if let selected = MenuSelectionHelper.select(
-                userChoice: choice,
-                options: productCategories
-            ) {
-                return selected
-            } else if choice == productCategories.count + 1 {
-                return nil
-            }
-            
-            MessagePrinter.errorMessage("Invalid choice, try again.")
+        
+        let choice = ConsoleInputUtils.getMenuChoice()
+        
+        if let selected = MenuSelectionHelper.select(
+            userChoice: choice,
+            options: productCategories
+        ) {
+            return selected
+        } else if choice == productCategories.count + 1 {
+            return nil
         }
+        
+        MessagePrinter
+            .errorMessage("Invalid Choice(moving with all products option):")
+        return nil
+        
     }
 }
 
