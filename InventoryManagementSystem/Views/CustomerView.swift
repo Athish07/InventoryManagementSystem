@@ -17,7 +17,9 @@ struct CustomerView {
 
         var total = 0.0
         for (index, item) in cart.items.enumerated() {
-            print("\(index + 1). Qty: \(item.quantity) | Name: \(item.productName) | Price: \(item.unitPrice) | Total: \(item.itemTotal)")
+            print(
+                "\(index + 1). Qty: \(item.quantity) | Name: \(item.productName) | Price: \(item.unitPrice) | Total: \(item.itemTotal)"
+            )
             
             total += item.itemTotal
         }

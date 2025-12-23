@@ -3,7 +3,7 @@ import Foundation
 struct ConsoleInputUtils {
     
     static func getMenuChoice() -> Int {
-      return readInt("Enter a choice: ")
+        return readInt("Enter a choice: ")
     }
     
     static func readInt(_ prompt: String = "") -> Int {
@@ -43,7 +43,7 @@ struct ConsoleInputUtils {
             print(prompt, terminator: " ")
 
             if let input = readLine(),
-                !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+               !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 
                 return input
             }

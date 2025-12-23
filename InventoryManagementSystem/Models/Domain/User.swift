@@ -10,10 +10,10 @@ struct User {
     var supplierProfile: Supplier?
     
     var activeRoles: [UserRole] {
-            var roles: [UserRole] = []
-            if customerProfile != nil { roles.append(.customer) }
-            if supplierProfile != nil { roles.append(.supplier) }
-            return roles
-        }
+        var roles: [UserRole] = []
+        if customerProfile != nil { roles.append(.customer) }
+        if supplierProfile != nil { roles.append(.supplier) }
+        return roles
+    }
     
 }

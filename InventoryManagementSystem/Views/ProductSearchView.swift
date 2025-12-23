@@ -31,7 +31,10 @@ struct ProductSearchView {
             
             showCategoryMenu(categories: productCategories)
             let choice = ConsoleInputUtils.getMenuChoice()
-            if let selected = MenuSelectionHelper.select(userChoice: choice, options: productCategories) {
+            if let selected = MenuSelectionHelper.select(
+                userChoice: choice,
+                options: productCategories
+            ) {
                 return selected
             }
             

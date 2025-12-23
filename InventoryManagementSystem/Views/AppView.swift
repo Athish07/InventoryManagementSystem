@@ -51,8 +51,11 @@ struct AppView {
             
             let choice = ConsoleInputUtils.getMenuChoice()
             
-            if let selected = MenuSelectionHelper.select(userChoice: choice, options: publicMenu) {
-               return selected
+            if let selected = MenuSelectionHelper.select(
+                userChoice: choice,
+                options: publicMenu
+            ) {
+                return selected
             }
             
             MessagePrinter.errorMessage("Invalid choice. Please try again.")
@@ -68,7 +71,10 @@ struct AppView {
             
             let choice = ConsoleInputUtils.getMenuChoice()
             
-            if let selected = MenuSelectionHelper.select(userChoice:choice, options: userRoles) {
+            if let selected = MenuSelectionHelper.select(
+                userChoice:choice,
+                options: userRoles
+            ) {
                 return selected
             }
             
@@ -85,7 +91,10 @@ struct AppView {
             
             let choice = ConsoleInputUtils.getMenuChoice()
             
-            if let selected = MenuSelectionHelper.select(userChoice: choice, options: registrationMenu) {
+            if let selected = MenuSelectionHelper.select(
+                userChoice: choice,
+                options: registrationMenu
+            ) {
                 return selected
             }
             

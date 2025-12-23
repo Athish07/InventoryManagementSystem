@@ -5,7 +5,9 @@ struct ProductSearchHelper {
         view: ProductSearchView
     ) -> [Product]? {
         let productCategories = ProductCategory.allCases
-        let category = view.readCategoryMenu(productCategories: productCategories)
+        let category = view.readCategoryMenu(
+            productCategories: productCategories
+        )
         
         let products = productService.searchProductsByCategory(
             category: category

@@ -125,7 +125,10 @@ final class SupplierController {
             return
         }
         view.showMyProducts(products)
-        let productId = view.readProductId(from: products, prompt: "Select the product ID to delete: ")
+        let productId = view.readProductId(
+            from: products,
+            prompt: "Select the product ID to delete: "
+        )
         
         do {
             try productService

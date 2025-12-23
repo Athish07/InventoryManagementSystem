@@ -96,6 +96,7 @@ final class AppController {
         } catch {
             MessagePrinter.errorMessage("Unexpected error during login.")
         }
+        
     }
 
     private func logout() {
@@ -153,4 +154,5 @@ final class AppController {
             MessagePrinter.errorMessage("Registration failed.")
         }
     }
+    
 }
