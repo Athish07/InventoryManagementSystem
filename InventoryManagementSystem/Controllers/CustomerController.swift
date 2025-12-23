@@ -48,14 +48,28 @@ final class CustomerController {
     }
 
     private func searchProduct() {
-        ProductSearchHelper.search(
+        
+        guard let products = ProductSearchHelper.search(
             productService: productService,
             view: productSearchView
-        )
+        ) else {
+            return
+        }
+        productSearchView.showProducts(products)
+        
     }
 
     private func addItemToCart() {
-        searchProduct()
+        
+        guard let products = ProductSearchHelper.search(
+            productService: productService,
+            view: productSearchView
+        ) else {
+            return
+        }
+        
+        productSearchView.showProducts(products)
+        
         let input = view.readAddToCartInput()
         
         do {
@@ -83,7 +97,10 @@ final class CustomerController {
             )
             return
         }
-        let updatedCustomer = view.readUpdateCustomer(user: user, customer:customer)
+        let updatedCustomer = view.readUpdateCustomer(
+            user: user,
+            customer:customer
+        )
         userService.updateCustomer(userId: customerId, update: updatedCustomer)
         
     }
@@ -143,6 +160,11 @@ final class CustomerController {
 
     private func viewOrders() {
         let orders = orderService.viewOrders(customerId: customerId)
+        
+        if orders.isEmpty {
+            MessagePrinter.errorMessage("No order found.")
+        }
+        
         view.showOrders(orders)
 
     }

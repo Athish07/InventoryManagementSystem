@@ -38,7 +38,8 @@ final class OrderManager: OrderService {
         let item = CartItem(
             productId: productId,
             quantity: quantity,
-            unitPrice: product.unitPrice
+            unitPrice: product.unitPrice,
+            productName: product.name
         )
 
         cart.items.append(item)
@@ -93,6 +94,7 @@ final class OrderManager: OrderService {
                 orderItemId: orderItemRepository.getNextOrderItemId(),
                 orderId: orderId,
                 productId: cartItem.productId,
+                productName: product.name,
                 quantity: cartItem.quantity,
                 unitPrice: cartItem.unitPrice,
                 itemTotal: cartItem.itemTotal

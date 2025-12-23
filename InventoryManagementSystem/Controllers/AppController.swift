@@ -100,14 +100,18 @@ final class AppController {
 
     private func logout() {
         currentUserId = nil
+        currentRole = nil
         MessagePrinter.successMessage("Logged out successfully.")
     }
 
     private func searchProduct() {
-        ProductSearchHelper.search(
+        guard let products = ProductSearchHelper.search(
             productService: productService,
             view: productSearchView
-        )
+        ) else {
+            return
+        }
+        productSearchView.showProducts(products)
     }
 
     private func register() {
