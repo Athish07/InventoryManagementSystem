@@ -16,10 +16,5 @@ struct AuthDTO {
         let companyName: String
         let businessAddress: String
     }
-
-//    struct Login {
-//        let email: String
-//        let password: String
-//        let role: UserRole
-//    }
+    
 }

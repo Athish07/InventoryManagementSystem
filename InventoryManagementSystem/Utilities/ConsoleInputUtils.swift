@@ -3,8 +3,7 @@ import Foundation
 struct ConsoleInputUtils {
     
     static func getMenuChoice() -> Int {
-        print("Enter a choice:", terminator: " ")
-        return readInt()
+      return readInt("Enter a choice: ")
     }
     
     static func readInt(_ prompt: String = "") -> Int {
@@ -12,7 +11,7 @@ struct ConsoleInputUtils {
             if !prompt.isEmpty {
                 print(prompt, terminator: " ")
             }
-
+ 
             if let input = readLine(),
                let value = Int(input) {
                 return value
@@ -20,6 +19,7 @@ struct ConsoleInputUtils {
 
             MessagePrinter.infoMessage("Please enter a valid number.")
         }
+        
     }
     
     static func readDouble(_ prompt: String = "") -> Double {

@@ -8,7 +8,6 @@ struct SupplierView {
             print("\(index+1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
-        print("Enter a choice:")
     }
     
     func showMyProducts(_ products: [Product]) {
