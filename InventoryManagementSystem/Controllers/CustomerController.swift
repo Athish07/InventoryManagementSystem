@@ -158,8 +158,8 @@ final class CustomerController {
         do {
             let order = try orderService.checkout(customerId: customerId)
             view.showMessage(
-                    "Order placed successfully. Total: \(order.totalAmount)"
-                )
+                "Order placed successfully. Total: \(order.totalAmount)"
+            )
         } catch let error as OrderServiceError {
             view.showMessage(error.displayMessage)
         } catch {

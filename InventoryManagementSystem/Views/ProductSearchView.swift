@@ -38,8 +38,7 @@ struct ProductSearchView: ConsoleView {
             return nil
         }
         
-        MessagePrinter
-            .errorMessage("Invalid Choice(moving with all products option):")
+        print("Invalid Choice(moving with all products option):")
         return nil
         
     }
