@@ -42,7 +42,8 @@ final class SupplierController {
         guard let user = userService.getUser(by: supplierId),
               let supplier = user.supplierProfile
         else {
-            MessagePrinter.errorMessage("Unauthorized access.please login again.")
+            MessagePrinter
+                .errorMessage("Unauthorized access.please login again.")
             return
         }
         view.showSupplierProfile(user: user, supplier: supplier)
@@ -60,39 +61,50 @@ final class SupplierController {
         guard let user = userService.getUser(by: supplierId),
               let supplier = user.supplierProfile
         else {
-            MessagePrinter.errorMessage("Unauthorized access, please login again.")
+            MessagePrinter
+                .errorMessage("Unauthorized access, please login again.")
             return
         }
 
-        let updatedSupplier = view.readUpdateSupplierDetails(user: user, supplier: supplier)
+        let updatedSupplier = view.readUpdateSupplierDetails(
+            user: user,
+            supplier: supplier
+        )
         userService.updateSupplier(userId: supplierId, update: updatedSupplier)
     }
 
     private func viewMyProducts() {
 
-        let products = productService.searchProductsBySupplier(
+        guard let products = productService.searchProductsBySupplier(
             supplierId: supplierId
-        )
-
-        if products.isEmpty {
-            MessagePrinter.infoMessage("No products found.")
-        } else {
-            view.showMyProducts(products)
+        ) else {
+            MessagePrinter.errorMessage("No products found.")
+            return
         }
+        
+        view.showMyProducts(products)
     }
 
     private func updateProduct() {
-        viewMyProducts()
-        
-        let productId = view.readProductId(prompt: "Select the product to update")
-        
-        guard let product = productService.getProductById(productId: productId)
-        else {
-            MessagePrinter.infoMessage("No such product found.")
+      
+        guard let products = productService.searchProductsBySupplier(
+            supplierId: supplierId
+        ) else {
+            MessagePrinter.errorMessage("No products found.")
+            return
+        }
+        view.showMyProducts(products)
+        let productId = view.readProductId(
+            from: products,
+            prompt: "Select the product ID to update: "
+        )
+
+        guard let product = products.first(where: { $0.productId == productId }) else {
             return
         }
         
         let input = view.readUpdateProductDetails(currentProduct: product)
+        
         do {
             try productService
                 .updateProduct(update: input, supplierId: supplierId)
@@ -105,8 +117,16 @@ final class SupplierController {
     }
 
     private func deleteProduct() {
-        viewMyProducts()
-        let productId = view.readProductId(prompt: "Select the product to delete")
+        
+        guard let products = productService.searchProductsBySupplier(
+            supplierId: supplierId
+        ) else {
+            MessagePrinter.errorMessage("No products found.")
+            return
+        }
+        view.showMyProducts(products)
+        let productId = view.readProductId(from: products, prompt: "Select the product ID to delete: ")
+        
         do {
             try productService
                 .deleteProduct(productId: productId, supplierId: supplierId)

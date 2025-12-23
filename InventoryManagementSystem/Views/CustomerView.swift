@@ -95,12 +95,9 @@ struct CustomerView {
     func readRemoveItemInput(cart: Cart) -> Int {
         showCart(cart)
         
-        let selected = ConsoleInputUtils.readIntInRange(
-            min: 1,
-            max: cart.items.count
-        )
+        let selected = ConsoleInputUtils.readIntInRange(from: cart)
         
-        return selected
+        return selected - 1
     }
     
     func readAddToCartInput() -> (productId: Int, quantity: Int) {

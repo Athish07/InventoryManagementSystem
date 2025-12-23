@@ -28,7 +28,7 @@ final class ProductManager: ProductService {
         }
     }
 
-    func searchProductsBySupplier(supplierId: Int) -> [Product] {
+    func searchProductsBySupplier(supplierId: Int) -> [Product]? {
 
         return productRepository.getProductBySupplier(supplierId)
     }
@@ -77,7 +77,7 @@ final class ProductManager: ProductService {
 
     }
 
-    func getProductById(productId: Int) -> Product? {
+    private func getProductById(productId: Int) -> Product? {
 
         productRepository.getProductById(productId)
     }

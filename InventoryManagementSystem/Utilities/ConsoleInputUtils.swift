@@ -3,7 +3,7 @@ import Foundation
 struct ConsoleInputUtils {
     
     static func getMenuChoice() -> Int {
-        print("Enter a choice:", terminator: "")
+        print("Enter a choice:", terminator: " ")
         return readInt()
     }
     
@@ -42,7 +42,9 @@ struct ConsoleInputUtils {
         while true {
             print(prompt, terminator: " ")
 
-            if let input = readLine(), !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            if let input = readLine(),
+                !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                
                 return input
             }
             MessagePrinter.infoMessage("This field cannot be empty.")
@@ -95,12 +97,12 @@ struct ConsoleInputUtils {
         
     }
     
-    static func readIntInRange(min: Int , max: Int) -> Int {
+    static func readIntInRange(from cart: Cart) -> Int {
         while true {
             
             let choice = getMenuChoice()
             
-            if choice >= min && choice <= max {
+            if choice >= 1 && choice <= cart.items.count {
                 return choice
             }
             

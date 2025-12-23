@@ -125,7 +125,7 @@ final class CustomerController {
             return
         }
         let index = view.readRemoveItemInput(cart: cart)
-        let productId = cart.items[index - 1].productId
+        let productId = cart.items[index].productId
 
         do {
             try orderService.removeItemFromCart(

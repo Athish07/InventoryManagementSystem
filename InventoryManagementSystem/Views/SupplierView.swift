@@ -58,7 +58,10 @@ struct SupplierView {
             
             let choice = ConsoleInputUtils.getMenuChoice()
             
-            if let selected = MenuSelectionHelper.select(userChoice: choice, options: supplierMenu) {
+            if let selected = MenuSelectionHelper.select(
+                userChoice: choice,
+                options: supplierMenu
+            ) {
                 return selected
             }
             
@@ -74,9 +77,13 @@ struct SupplierView {
             "Name (\(user.name)):"
         )
 
-        let email = ConsoleInputUtils.readOptionalValidEmail(current: user.email)
+        let email = ConsoleInputUtils.readOptionalValidEmail(
+            current: user.email
+        )
 
-        let phone = ConsoleInputUtils.readOptionalValidPhone(current: user.phoneNumber)
+        let phone = ConsoleInputUtils.readOptionalValidPhone(
+            current: user.phoneNumber
+        )
 
         let companyName = ConsoleInputUtils.readOptionalString(
             "Company Name (\(supplier.companyName)):"
@@ -115,8 +122,19 @@ struct SupplierView {
         )
     }
     
-    func readProductId(prompt: String) -> Int {
-        return ConsoleInputUtils.readInt(prompt)
+    func readProductId(from products: [Product],prompt: String) -> Int {
+        while true {
+            let id = ConsoleInputUtils.readInt(prompt)
+            
+            if products.contains(where: { $0.productId == id }) {
+                return id
+            }
+                
+            MessagePrinter
+                .errorMessage(
+                    "Invalid ID. Please choose an ID from the list displayed above."
+                )
+        }
     }
     
     private func readProductCategory() -> ProductCategory {
@@ -132,8 +150,8 @@ struct SupplierView {
         
         guard let choice,
               let category = MenuSelectionHelper.select(
-                  userChoice: choice,
-                  options: categories
+                userChoice: choice,
+                options: categories
               ) else {
             return .other
         }
