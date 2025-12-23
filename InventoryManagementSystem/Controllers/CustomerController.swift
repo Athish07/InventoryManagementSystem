@@ -74,14 +74,16 @@ final class CustomerController {
     }
 
     private func updateProfile() {
-        guard let customer = userService.getUser(by: customerId) as? Customer
+        guard let user = userService.getUser(by: customerId),
+              let customer = user.customerProfile
+              
         else {
             MessagePrinter.errorMessage(
                 "Unauthorized access, please login again."
             )
             return
         }
-        let updatedCustomer = view.readUpdateCustomer(customer)
+        let updatedCustomer = view.readUpdateCustomer(user: user, customer:customer)
         userService.updateCustomer(userId: customerId, update: updatedCustomer)
         
     }
@@ -147,14 +149,16 @@ final class CustomerController {
 
     private func viewProfile() {
 
-        guard let customer = userService.getUser(by: customerId) as? Customer
+        guard let user = userService.getUser(by: customerId),
+              let customer = user.customerProfile
+              
         else {
             MessagePrinter.errorMessage(
                 "Unauthorized access, please login again."
             )
             return
         }
-        view.showCustomerProfile(customer)
+        view.showCustomerProfile(user: user,customer: customer)
 
     }
 }

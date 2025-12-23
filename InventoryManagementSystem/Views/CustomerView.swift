@@ -30,11 +30,11 @@ struct CustomerView {
         
     }
 
-    func showCustomerProfile(_ customer: Customer) {
+    func showCustomerProfile(user: User ,customer: Customer) {
         print("\n--------------------------------------------")
-        print("Name: \(customer.name)")
-        print("Email: \(customer.email)")
-        print("Phone: \(customer.phoneNumber)")
+        print("Name: \(user.name)")
+        print("Email: \(user.email)")
+        print("Phone: \(user.phoneNumber)")
         print("Shipping Address: \(customer.shippingAddress)")
         print("--------------------------------------------")
         
@@ -74,16 +74,16 @@ struct CustomerView {
         }
     }
     
-    func readUpdateCustomer(_ customer: Customer) -> UserDTO.CustomerUpdate {
+    func readUpdateCustomer(user: User, customer: Customer) -> UserDTO.CustomerUpdate {
        
         let name =  ConsoleInputUtils.readOptionalString(
-            "Name (\(customer.name)):"
+            "Name (\(user.name)):"
         )
         let email =  ConsoleInputUtils.readOptionalValidEmail(
-            current: customer.email
+            current: user.email
         )
         let phoneNumber = ConsoleInputUtils.readOptionalValidPhone(
-            current: customer.phoneNumber
+            current: user.phoneNumber
         )
         let shippingAddress = ConsoleInputUtils.readOptionalString(
             "Address (\(customer.shippingAddress)):"

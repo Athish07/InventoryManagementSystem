@@ -25,11 +25,11 @@ struct SupplierView {
         }
     }
     
-    func showSupplierProfile(_ supplier: Supplier) {
+    func showSupplierProfile(user: User, supplier: Supplier) {
         print("\n--------------------------------------------")
-        print("Name: \(supplier.name)")
-        print("Email: \(supplier.email)")
-        print("Phone: \(supplier.phoneNumber)")
+        print("Name: \(user.name)")
+        print("Email: \(user.email)")
+        print("Phone: \(user.phoneNumber)")
         print("Company: \(supplier.companyName)")
         print("Business Address: \(supplier.businessAddress)")
         print("--------------------------------------------")
@@ -68,15 +68,15 @@ struct SupplierView {
     }
     
     
-    func readUpdateSupplierDetails(supplier: Supplier) -> UserDTO.SupplierUpdate {
+    func readUpdateSupplierDetails(user: User, supplier: Supplier) -> UserDTO.SupplierUpdate {
         
         let name = ConsoleInputUtils.readOptionalString(
-            "Name (\(supplier.name)):"
+            "Name (\(user.name)):"
         )
 
-        let email = ConsoleInputUtils.readOptionalValidEmail(current: supplier.email)
+        let email = ConsoleInputUtils.readOptionalValidEmail(current: user.email)
 
-        let phone = ConsoleInputUtils.readOptionalValidPhone(current: supplier.phoneNumber)
+        let phone = ConsoleInputUtils.readOptionalValidPhone(current: user.phoneNumber)
 
         let companyName = ConsoleInputUtils.readOptionalString(
             "Company Name (\(supplier.companyName)):"

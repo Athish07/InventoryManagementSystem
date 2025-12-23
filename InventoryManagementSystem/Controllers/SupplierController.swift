@@ -39,12 +39,13 @@ final class SupplierController {
     }
 
     private func viewProfile() {
-        guard let customer = userService.getUser(by: supplierId) as? Supplier
+        guard let user = userService.getUser(by: supplierId),
+              let supplier = user.supplierProfile
         else {
             MessagePrinter.errorMessage("Unauthorized access.please login again.")
             return
         }
-        view.showSupplierProfile(customer)
+        view.showSupplierProfile(user: user, supplier: supplier)
     }
 
     private func addProduct() {
@@ -56,13 +57,14 @@ final class SupplierController {
     }
 
     private func updateProfile() {
-        guard let supplier = userService.getUser(by: supplierId) as? Supplier
+        guard let user = userService.getUser(by: supplierId),
+              let supplier = user.supplierProfile
         else {
             MessagePrinter.errorMessage("Unauthorized access, please login again.")
             return
         }
 
-        let updatedSupplier = view.readUpdateSupplierDetails(supplier: supplier)
+        let updatedSupplier = view.readUpdateSupplierDetails(user: user, supplier: supplier)
         userService.updateSupplier(userId: supplierId, update: updatedSupplier)
     }
 

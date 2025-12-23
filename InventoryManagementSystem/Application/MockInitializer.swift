@@ -13,38 +13,37 @@ final class MockInitializer {
     
     func initializeSampleData()
     {
-        let supplier = Supplier(
+        var user = User(
             userId: userRepository.getNextUserId(),
             name: "Athish",
             email: "athish@gmail.com",
             password: "athish",
             phoneNumber: "8148847642",
-            companyName: "zoho",
-            businessAddress: "chennai"
+            customerProfile: nil,
+            supplierProfile: nil
         )
         
-        let customer = Customer(
-            userId: userRepository.getNextUserId(),
-            name: "Athish",
-            email: "athish@gmail.com",
-            password: "athish",
-            phoneNumber: "8148847642",
-            shippingAddress: "chennai"
+        user.supplierProfile = Supplier(
+            companyName: "Zoho",
+            businessAddress: "Chennai"
         )
+        
+        user.customerProfile = Customer(
+            shippingAddress: "Chennai"
+        )
+        
+        userRepository.saveUser(user)
         
         let product = Product(
             productId: productRepository.getNextProductId(),
             name: "iphone 15",
-            supplierId: supplier.userId,
+            supplierId: user.userId,
             unitPrice: 1000,
             quantityInStock: 10,
             category: ProductCategory.phone
         )
         
         productRepository.addProduct(product)
-        userRepository.saveUser(supplier)
-        userRepository.saveUser(customer)
-        
     }
     
    

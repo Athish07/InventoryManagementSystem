@@ -9,57 +9,75 @@ final class AuthenticationManager: AuthenticationService {
     func login(email: String, password: String, role: UserRole) throws -> Int {
 
         guard
-            let user = userRepository.findByEmailAndRole(
-                email: email,
-                role: role
-            ),
+            let user = userRepository.findByEmail(email),
             user.password == password
         else {
             throw LoginError.invalidCredentials
         }
+        
         return user.userId
     }
 
     func registerCustomer(input: AuthDTO.CustomerRegistration) throws {
 
-        guard
-            userRepository
-                .findByEmailAndRole(email: input.email, role: .customer) == nil
-        else {
+        if let existingUser = userRepository.findByEmail(input.email),
+           existingUser.customerProfile != nil {
             throw RegistrationError.userAlreadyExists
         }
+        
+        let user: User
+        if let existingUser = userRepository.findByEmail(input.email) {
+            user = existingUser
+        } else {
+            user = User(
+                userId: userRepository.getNextUserId(),
+                name: input.name,
+                email: input.email,
+                password: input.password,
+                phoneNumber: input.phoneNumber,
+                customerProfile: nil,
+                supplierProfile: nil
+            )
+        }
 
-        let customer = Customer(
-            userId: userRepository.getNextUserId(),
-            name: input.name,
-            email: input.email,
-            password: input.password,
-            phoneNumber: input.phoneNumber,
+        var updatedUser = user
+        updatedUser.customerProfile = Customer(
             shippingAddress: input.shippingAddress
         )
-        userRepository.saveUser(customer)
+
+        userRepository.saveUser(updatedUser)
 
     }
 
     func registerSupplier(input: AuthDTO.SupplierRegistration) throws {
 
-        guard
-            userRepository
-                .findByEmailAndRole(email: input.email, role: .supplier) == nil
-        else {
+        if let existingUser = userRepository.findByEmail(input.email),
+           existingUser.supplierProfile != nil {
             throw RegistrationError.userAlreadyExists
         }
+        
+        let user: User
+        if let existingUser = userRepository.findByEmail(input.email) {
+            user = existingUser
+        } else {
+            user = User(
+                userId: userRepository.getNextUserId(),
+                name: input.name,
+                email: input.email,
+                password: input.password,
+                phoneNumber: input.phoneNumber,
+                customerProfile: nil,
+                supplierProfile: nil
+            )
+        }
 
-        let supplier = Supplier(
-            userId: userRepository.getNextUserId(),
-            name: input.name,
-            email: input.email,
-            password: input.password,
-            phoneNumber: input.phoneNumber,
+        var updatedUser = user
+        updatedUser.supplierProfile = Supplier(
             companyName: input.companyName,
             businessAddress: input.businessAddress
         )
-        userRepository.saveUser(supplier)
+
+        userRepository.saveUser(updatedUser)
     }
 
 }

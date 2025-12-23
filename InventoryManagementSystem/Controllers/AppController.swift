@@ -9,6 +9,7 @@ final class AppController {
     private let productService: ProductService
     private let userService: UserService
     private var currentUserId: Int?
+    private var currentRole: UserRole?
     private let appFactory: AppFactory
     
     init(
@@ -57,24 +58,25 @@ final class AppController {
             return
         }
 
-        if let customer = user as? Customer {
+        if currentRole == .customer && user.customerProfile != nil {
             appFactory
                 .makeCustomerController(
-                    customerId: customer.userId,
+                    customerId: user.userId,
+                    
                     onLogout: { [weak self] in self?.logout()
                     }
                 )
-                .handleMenu(for: customer.name)
+                .handleMenu(for: user.name)
 
-        } else if let supplier = user as? Supplier {
+        } else if currentRole == .supplier  && user.supplierProfile != nil {
             appFactory
                 .makeSupplierController(
-                    supplierId: supplier.userId,
+                    supplierId: user.userId,
                     onLogout: {
                         [weak self] in self?.logout()
                     }
                 )
-                .handleMenu(for: supplier.name)
+                .handleMenu(for: user.name)
         }
     }
     
@@ -87,6 +89,7 @@ final class AppController {
         do {
             currentUserId = try authenticationService
                 .login(email: input.email, password: input.password, role: role)
+            currentRole = role
             MessagePrinter.successMessage("Login successful.")
         } catch let error as LoginError {
             MessagePrinter.errorMessage(error.displayMessage)

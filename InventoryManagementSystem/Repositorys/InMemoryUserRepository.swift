@@ -1,5 +1,4 @@
 final class InMemoryUserRepository: UserRepository {
-    
     private var users: [Int: User] = [:]
     private var nextUserId: Int = 1
     
@@ -12,17 +11,11 @@ final class InMemoryUserRepository: UserRepository {
         return users[user.userId] = user
     }
     
-    func findByEmailAndRole(
-        email: String,
-        role: UserRole
-    ) -> User? {
-        users.values.first {
-            $0.email == email && $0.role == role
-        }
-    }
-
-    
     func findById(_ id: Int) -> User? {
         return users[id]
+    }
+    
+    func findByEmail(_ email: String) -> User? {
+        users.values.first { $0.email == email }
     }
 }
