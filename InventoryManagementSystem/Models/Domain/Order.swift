@@ -7,5 +7,3 @@ struct Order {
     let dateOfPurchase: Date
     let status: OrderStatus
 }
-
-

@@ -26,7 +26,7 @@ struct ProductSearchView {
         }
     }
     
-    func readCategoryMenu(productCategories: [ProductCategory]) -> ProductCategory {
+    func readCategoryMenu(productCategories: [ProductCategory]) -> ProductCategory? {
         while true {
             
             showCategoryMenu(categories: productCategories)
@@ -36,6 +36,8 @@ struct ProductSearchView {
                 options: productCategories
             ) {
                 return selected
+            } else if choice == productCategories.count + 1 {
+                return nil
             }
             
             MessagePrinter.errorMessage("Invalid choice, try again.")

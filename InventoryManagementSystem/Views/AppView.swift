@@ -10,7 +10,7 @@ struct AppView {
             print("\(index+1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
-      
+        
     }
     
     func showRegistrationMenu(registrationMenu: [RegistrationMenu]) {
