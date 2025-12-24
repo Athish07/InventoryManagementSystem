@@ -94,11 +94,11 @@ struct CustomerView: ConsoleView {
             let input = ConsoleInputUtils.readInt(
                 "Enter the item number to remove(ENTER -1 to move back):"
             )
-            
+
             if input == -1 {
                 return nil
             }
-            
+
             let index = input - 1
 
             if index >= 0 && index < cart.items.count {

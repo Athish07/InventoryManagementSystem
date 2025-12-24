@@ -27,7 +27,7 @@ final class CustomerController {
         self.customerId = customerId
         self.onLogout = onLogout
     }
-    
+
     func handleMenu() {
 
         let menus = CustomerMenu.allCases
@@ -81,7 +81,7 @@ final class CustomerController {
 
         view.showMessage("Profile updated successfully.")
     }
-    
+
     private func requireCustomer() -> (User, Customer)? {
 
         guard
@@ -98,7 +98,7 @@ final class CustomerController {
     private func getUserName() -> String {
         userService.getUser(by: customerId)?.name ?? "Customer"
     }
-    
+
     @discardableResult
     private func searchAndShowProducts() -> [Product]? {
         guard
@@ -111,7 +111,7 @@ final class CustomerController {
         productSearchView.showProducts(products)
         return products
     }
-    
+
     private func addItemToCart() {
 
         guard let products = searchAndShowProducts() else { return }
@@ -159,7 +159,7 @@ final class CustomerController {
             view.showMessage(error.localizedDescription)
         }
     }
-    
+
     private func viewCart() {
 
         let cart = orderService.viewCart(customerId: customerId)

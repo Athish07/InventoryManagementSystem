@@ -124,7 +124,7 @@ struct SupplierView: ConsoleView {
             if id == -1 {
                 return nil
             }
-            
+
             if products.contains(where: { $0.productId == id }) {
                 return id
             }
