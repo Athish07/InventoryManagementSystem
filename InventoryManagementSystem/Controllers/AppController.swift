@@ -2,7 +2,7 @@ import Foundation
 
 final class AppController {
 
-    private let view: AppView
+    private let appView: AppView
     private let productSearchView: ProductSearchView
     private let authenticationService: AuthenticationService
     private let orderService: OrderService
@@ -21,7 +21,7 @@ final class AppController {
         productSearchView: ProductSearchView,
         appFactory: AppFactory
     ) {
-        self.view = appView
+        self.appView = appView
         self.authenticationService = authenticationService
         self.orderService = orderService
         self.productService = productService
@@ -45,14 +45,14 @@ final class AppController {
 
         let menu: PublicMenu = ConsoleMenuHelper.readValidMenu(
             show: {
-                view.showPublicMenu(publicMenu: publicMenu)
+                appView.showPublicMenu(publicMenu: publicMenu)
             },
             read: {
-                view.readPublicMenuChoice(publicMenu: publicMenu)
+                appView.readPublicMenuChoice(publicMenu: publicMenu)
             },
-            onInvalid: { view.showMessage("Invalid choice. Please try again.") }
+            onInvalid: { appView.showMessage("Invalid choice. Please try again.") }
         )
-
+        
         switch menu {
         case .searchProducts: searchAndShowProducts()
         case .login: login()
@@ -73,7 +73,7 @@ final class AppController {
 
         case .customer:
             guard userService.getCustomer(userId: userId) != nil else {
-                view.showMessage("Customer role not found.")
+                appView.showMessage("Customer role not found.")
                 logout()
                 return
             }
@@ -87,7 +87,7 @@ final class AppController {
 
         case .supplier:
             guard userService.getSupplier(userId: userId) != nil else {
-                view.showMessage("Supplier role not found.")
+                appView.showMessage("Supplier role not found.")
                 logout()
                 return
             }
@@ -106,26 +106,26 @@ final class AppController {
 
         let role: UserRole = ConsoleMenuHelper.readValidMenu(
             show: {
-                view.showLoginRole(userRole: userRoles)
+                appView.showLoginRole(userRole: userRoles)
             },
-            read: { view.readLoginRole(userRoles: userRoles) },
+            read: { appView.readLoginRole(userRoles: userRoles) },
             onInvalid: {
-                view.showMessage("Invalid choice. please try again.")
+                appView.showMessage("Invalid choice. please try again.")
             }
         )
 
-        let input = view.readUserLogin()
+        let input = appView.readUserLogin()
 
         do {
             currentUserId =
                 try authenticationService
                 .login(email: input.email, password: input.password)
             currentRole = role
-            view.showMessage("Login successful.")
+            appView.showMessage("Login successful.")
         } catch let error as LoginError {
-            view.showMessage(error.displayMessage)
+            appView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage("Unexpected error during login.")
+            appView.showMessage("Unexpected error during login.")
         }
 
     }
@@ -133,7 +133,7 @@ final class AppController {
     private func logout() {
         currentUserId = nil
         currentRole = nil
-        view.showMessage("Logged out successfully.")
+        appView.showMessage("Logged out successfully.")
     }
 
     private func searchAndShowProducts() {
@@ -154,15 +154,15 @@ final class AppController {
 
         let menu: RegistrationMenu = ConsoleMenuHelper.readValidMenu(
             show: {
-                view.showRegistrationMenu(
+                appView.showRegistrationMenu(
                     registrationMenu: registrationMenu
                 )
             },
             read: {
-                view.readRegistrationMenu(registrationMenu: registrationMenu)
+                appView.readRegistrationMenu(registrationMenu: registrationMenu)
             },
             onInvalid: {
-                view.showMessage("Invalid choice. Please try again.")
+                appView.showMessage("Invalid choice. Please try again.")
             }
         )
 
@@ -175,30 +175,30 @@ final class AppController {
 
     private func registerCustomer() {
 
-        let customer = view.readCustomerRegistration()
+        let customer = appView.readCustomerRegistration()
 
         do {
             try authenticationService.registerCustomer(input: customer)
-            view.showMessage("Customer registered successfully.")
+            appView.showMessage("Customer registered successfully.")
         } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
+            appView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage("Registration failed.")
+            appView.showMessage("Registration failed.")
         }
 
     }
 
     private func registerSupplier() {
-        let supplier = view.readSupplierRegistration()
+        let supplier = appView.readSupplierRegistration()
 
         do {
             try authenticationService.registerSupplier(input: supplier)
-            view.showMessage("Supplier registered successfully.")
+            appView.showMessage("Supplier registered successfully.")
         } catch let error as RegistrationError {
-            view.showMessage(error.displayMessage)
+            appView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage("Registration failed.")
+            appView.showMessage("Registration failed.")
         }
     }
-
+    
 }

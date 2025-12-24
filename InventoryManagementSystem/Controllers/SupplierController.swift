@@ -2,7 +2,7 @@ import Foundation
 
 final class SupplierController {
 
-    private let view: SupplierView
+    private let supplierView: SupplierView
     private let productService: ProductService
     private let userService: UserService
     private let supplierId: Int
@@ -15,7 +15,7 @@ final class SupplierController {
         userService: UserService,
         onLogout: @escaping () -> Void
     ) {
-        self.view = view
+        self.supplierView = view
         self.productService = productService
         self.supplierId = supplierId
         self.userService = userService
@@ -28,13 +28,13 @@ final class SupplierController {
 
         let menu: SupplierMenu = ConsoleMenuHelper.readValidMenu(
             show: {
-                view.showSupplierMenu(userName: getUserName(), menus: menus)
+                supplierView.showSupplierMenu(userName: getUserName(), menus: menus)
             },
             read: {
-                view.readSupplierMenu(supplierMenu: menus)
+                supplierView.readSupplierMenu(supplierMenu: menus)
             },
             onInvalid: {
-                view.showMessage("Invalid choice. Please try again.")
+                supplierView.showMessage("Invalid choice. Please try again.")
             }
         )
 
@@ -51,14 +51,14 @@ final class SupplierController {
 
     private func viewProfile() {
         guard let (user, supplier) = requireSupplier() else { return }
-        view.showSupplierProfile(user: user, supplier: supplier)
+        supplierView.showSupplierProfile(user: user, supplier: supplier)
     }
 
     private func updateProfile() {
 
         guard let (user, supplier) = requireSupplier() else { return }
 
-        let input = view.readUpdateSupplierDetails(
+        let input = supplierView.readUpdateSupplierDetails(
             user: user,
             supplier: supplier
         )
@@ -66,7 +66,8 @@ final class SupplierController {
         userService.updateUser(
             userId: supplierId,
             name: input.name,
-            phone: input.phoneNumber
+            phone: input.phoneNumber,
+            email: input.email
         )
 
         userService.updateSupplier(
@@ -75,7 +76,7 @@ final class SupplierController {
             businessAddress: input.businessAddress
         )
 
-        view.showMessage("Profile updated successfully.")
+        supplierView.showMessage("Profile updated successfully.")
     }
 
     private func requireSupplier() -> (User, Supplier)? {
@@ -84,7 +85,7 @@ final class SupplierController {
             let user = userService.getUser(by: supplierId),
             let supplier = userService.getSupplier(userId: supplierId)
         else {
-            view.showMessage("Unauthorized access.")
+            supplierView.showMessage("Unauthorized access.")
             return nil
         }
 
@@ -97,9 +98,9 @@ final class SupplierController {
 
     private func addProduct() {
 
-        let input = view.readProductCreateInput()
+        let input = supplierView.readProductCreateInput()
         productService.addProduct(productDetails: input, supplierId: supplierId)
-        view.showMessage("Product added successfully.")
+        supplierView.showMessage("Product added successfully.")
     }
 
     @discardableResult
@@ -110,11 +111,11 @@ final class SupplierController {
                 supplierId: supplierId
             )
         else {
-            view.showMessage("No products found.")
+            supplierView.showMessage("No products found.")
             return nil
         }
 
-        view.showMyProducts(products)
+        supplierView.showMyProducts(products)
         return products
     }
 
@@ -123,7 +124,7 @@ final class SupplierController {
         guard let products = viewMyProducts() else { return }
 
         guard
-            let productId = view.readProductId(
+            let productId = supplierView.readProductId(
                 from: products,
                 prompt:
                     "Select the product ID to update(ENTER -1 to move back):"
@@ -137,18 +138,18 @@ final class SupplierController {
             return
         }
 
-        let input = view.readUpdateProductDetails(currentProduct: product)
+        let input = supplierView.readUpdateProductDetails(currentProduct: product)
 
         do {
             try productService.updateProduct(
                 update: input,
                 supplierId: supplierId
             )
-            view.showMessage("Product updated successfully.")
+            supplierView.showMessage("Product updated successfully.")
         } catch let error as ProductServiceError {
-            view.showMessage(error.displayMessage)
+            supplierView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            supplierView.showMessage(error.localizedDescription)
         }
     }
 
@@ -157,7 +158,7 @@ final class SupplierController {
         guard let products = viewMyProducts() else { return }
 
         guard
-            let productId = view.readProductId(
+            let productId = supplierView.readProductId(
                 from: products,
                 prompt:
                     "Select the product ID to delete(ENTER -1 to move back):"
@@ -171,11 +172,11 @@ final class SupplierController {
                 productId: productId,
                 supplierId: supplierId
             )
-            view.showMessage("Product deleted successfully.")
+            supplierView.showMessage("Product deleted successfully.")
         } catch let error as ProductServiceError {
-            view.showMessage(error.displayMessage)
+            supplierView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            supplierView.showMessage(error.localizedDescription)
         }
     }
 }

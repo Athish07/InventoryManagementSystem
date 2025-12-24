@@ -62,9 +62,18 @@ final class MockInitializer {
             category: .laptop
 
         )
+        let product3 = Product(
+            productId: productRepository.getNextProductId(),
+            name: "T-Shirt",
+            supplierId: user.userId,
+            unitPrice: 10000,
+            quantityInStock: 10,
+            category: .clothing
 
+        )
         productRepository.addProduct(product1)
         productRepository.addProduct(product2)
+        productRepository.addProduct(product3)
 
     }
 

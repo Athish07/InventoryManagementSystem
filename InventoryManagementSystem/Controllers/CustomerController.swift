@@ -2,7 +2,7 @@ import Foundation
 
 final class CustomerController {
 
-    private let view: CustomerView
+    private let customerView: CustomerView
     private let productSearchView: ProductSearchView
     private let orderService: OrderService
     private let productService: ProductService
@@ -19,7 +19,7 @@ final class CustomerController {
         customerId: Int,
         onLogout: @escaping () -> Void
     ) {
-        self.view = view
+        self.customerView = view
         self.productSearchView = productSearchView
         self.orderService = orderService
         self.productService = productService
@@ -34,13 +34,13 @@ final class CustomerController {
 
         let menu: CustomerMenu = ConsoleMenuHelper.readValidMenu(
             show: {
-                view.showCustomerMenu(userName: getUserName(), menus: menus)
+                customerView.showCustomerMenu(userName: getUserName(), menus: menus)
             },
             read: {
-                view.readCustomerMenu(customerMenu: menus)
+                customerView.readCustomerMenu(customerMenu: menus)
             },
             onInvalid: {
-                view.showMessage("Invalid choice. Please try again.")
+                customerView.showMessage("Invalid choice. Please try again.")
             }
         )
 
@@ -59,19 +59,20 @@ final class CustomerController {
 
     private func viewProfile() {
         guard let (user, customer) = requireCustomer() else { return }
-        view.showCustomerProfile(user: user, customer: customer)
+        customerView.showCustomerProfile(user: user, customer: customer)
     }
 
     private func updateProfile() {
 
         guard let (user, customer) = requireCustomer() else { return }
 
-        let input = view.readUpdateCustomer(user: user, customer: customer)
+        let input = customerView.readUpdateCustomer(user: user, customer: customer)
 
         userService.updateUser(
             userId: customerId,
             name: input.name,
-            phone: input.phoneNumber
+            phone: input.phoneNumber,
+            email: input.email
         )
 
         userService.updateCustomer(
@@ -79,7 +80,7 @@ final class CustomerController {
             shippingAddress: input.shippingAddress
         )
 
-        view.showMessage("Profile updated successfully.")
+        customerView.showMessage("Profile updated successfully.")
     }
 
     private func requireCustomer() -> (User, Customer)? {
@@ -88,7 +89,7 @@ final class CustomerController {
             let user = userService.getUser(by: customerId),
             let customer = userService.getCustomer(userId: customerId)
         else {
-            view.showMessage("Unauthorized access.")
+            customerView.showMessage("Unauthorized access.")
             return nil
         }
 
@@ -116,7 +117,7 @@ final class CustomerController {
 
         guard let products = searchAndShowProducts() else { return }
 
-        let input = view.readAddToCartInput(from: products)
+        let input = customerView.readAddToCartInput(from: products)
 
         do {
             try orderService.addItemToCart(
@@ -124,11 +125,11 @@ final class CustomerController {
                 productId: input.productId,
                 quantity: input.quantity
             )
-            view.showMessage("Item added to cart.")
+            customerView.showMessage("Item added to cart.")
         } catch let error as OrderServiceError {
-            view.showMessage(error.displayMessage)
+            customerView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            customerView.showMessage(error.localizedDescription)
         }
     }
 
@@ -137,12 +138,12 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
 
         guard !cart.items.isEmpty else {
-            view.showMessage("Your cart is empty.")
+            customerView.showMessage("Your cart is empty.")
             return
         }
-
-        view.showCart(cart)
-        guard let index = view.readRemoveItemInput(cart: cart) else {
+        
+        customerView.showCart(cart)
+        guard let index = customerView.readRemoveItemInput(cart: cart) else {
             return
         }
         let productId = cart.items[index].productId
@@ -152,12 +153,13 @@ final class CustomerController {
                 customerId: customerId,
                 productId: productId
             )
-            view.showMessage("Item removed from cart.")
+            customerView.showMessage("Item removed from cart.")
         } catch let error as OrderServiceError {
-            view.showMessage(error.displayMessage)
+            customerView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            customerView.showMessage(error.localizedDescription)
         }
+        
     }
 
     private func viewCart() {
@@ -165,24 +167,24 @@ final class CustomerController {
         let cart = orderService.viewCart(customerId: customerId)
 
         guard !cart.items.isEmpty else {
-            view.showMessage("Your cart is empty.")
+            customerView.showMessage("Your cart is empty.")
             return
         }
 
-        view.showCart(cart)
+        customerView.showCart(cart)
     }
 
     private func checkout() {
 
         do {
             let order = try orderService.checkout(customerId: customerId)
-            view.showMessage(
+            customerView.showMessage(
                 "Order placed successfully. Total: \(order.totalAmount)"
             )
         } catch let error as OrderServiceError {
-            view.showMessage(error.displayMessage)
+            customerView.showMessage(error.displayMessage)
         } catch {
-            view.showMessage(error.localizedDescription)
+            customerView.showMessage(error.localizedDescription)
         }
     }
 
@@ -191,9 +193,9 @@ final class CustomerController {
         let orders = orderService.viewOrders(customerId: customerId)
 
         if orders.isEmpty {
-            view.showMessage("No orders found.")
+            customerView.showMessage("No orders found.")
         }
 
-        view.showOrders(orders)
+        customerView.showOrders(orders)
     }
 }

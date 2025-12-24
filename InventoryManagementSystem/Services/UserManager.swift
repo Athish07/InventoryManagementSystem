@@ -26,11 +26,17 @@ final class UserManager: UserService {
         supplierRepository.find(userId: userId)
     }
 
-    func updateUser(userId: Int, name: String?, phone: String?) {
+    func updateUser(
+        userId: Int,
+        name: String?,
+        phone: String?,
+        email: String?
+    ) {
         guard var user = userRepository.findById(userId) else { return }
 
         if let name { user.name = name }
         if let phone { user.phoneNumber = phone }
+        if let email { user.email = email }
 
         userRepository.save(user)
     }
