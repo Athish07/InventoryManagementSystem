@@ -15,4 +15,18 @@ struct MenuSelectionHelper {
         
     }
     
+    static func readValidMenu<T>(
+        show: () -> Void,
+        read: () -> T?,
+        onInvalid: () -> Void
+    ) -> T {
+        while true {
+            show()
+            if let value = read() {
+                return value
+            }
+            onInvalid()
+        }
+    }
+    
 }
