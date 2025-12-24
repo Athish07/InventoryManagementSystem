@@ -2,7 +2,7 @@ import Foundation
 
 struct ConsoleMenuHelper {
     
-    static  func select<T>(
+     static  func select<T>(
         userChoice: Int,
         options: [T]
     ) -> T? {
@@ -11,6 +11,7 @@ struct ConsoleMenuHelper {
         guard index >= 0 , index < options.count else {
             return nil
         }
+        
         return options[index]
         
     }
@@ -29,8 +30,4 @@ struct ConsoleMenuHelper {
         }
     }
     
-    static func readMenuSelection<T>(_ options: [T]) -> T? {
-       select(userChoice: ConsoleInputUtils.getMenuChoice(),options: options)
-    }
-
 }

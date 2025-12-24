@@ -1,50 +1,71 @@
 final class MockInitializer {
-    
+
     private let userRepository: UserRepository
+    private let customerRepository: CustomerRepository
+    private let supplierRepository: SupplierRepository
     private let productRepository: ProductRepository
-    
+
     init(
         userRepository: UserRepository,
+        customerRepository: CustomerRepository,
+        supplierRepository: SupplierRepository,
         productRepository: ProductRepository
+
     ) {
         self.userRepository = userRepository
+        self.customerRepository = customerRepository
+        self.supplierRepository = supplierRepository
         self.productRepository = productRepository
     }
-    
-    func initializeSampleData()
-    {
-        var user = User(
+
+    func initializeSampleData() {
+
+        let user = User(
             userId: userRepository.getNextUserId(),
-            name: "Athish",
             email: "athish@gmail.com",
+            name: "Athish",
             password: "athish",
-            phoneNumber: "8148847642",
-            customerProfile: nil,
-            supplierProfile: nil
+            phoneNumber: "8148847642"
         )
-        
-        user.supplierProfile = Supplier(
+
+        userRepository.save(user)
+
+        let supplier = Supplier(
+            userId: user.userId,
             companyName: "Zoho",
             businessAddress: "Chennai"
         )
-        
-        user.customerProfile = Customer(
+
+        supplierRepository.save(supplier)
+
+        let customer = Customer(
+            userId: user.userId,
             shippingAddress: "Chennai"
         )
-        
-        userRepository.saveUser(user)
-        
-        let product = Product(
+
+        customerRepository.save(customer)
+
+        let product1 = Product(
             productId: productRepository.getNextProductId(),
-            name: "iphone 15",
+            name: "iPhone 15",
             supplierId: user.userId,
             unitPrice: 1000,
             quantityInStock: 10,
-            category: ProductCategory.phone
+            category: .phone
         )
-        
-        productRepository.addProduct(product)
+        let product2 = Product(
+            productId: productRepository.getNextProductId(),
+            name: "MacBook Pro m4",
+            supplierId: user.userId,
+            unitPrice: 10000,
+            quantityInStock: 10,
+            category: .laptop
+
+        )
+
+        productRepository.addProduct(product1)
+        productRepository.addProduct(product2)
+
     }
-    
-   
+
 }

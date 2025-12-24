@@ -51,11 +51,13 @@ struct SupplierView: ConsoleView {
     }
     
     func readSupplierMenu(supplierMenu: [SupplierMenu]) -> SupplierMenu? {
-        return ConsoleMenuHelper.readMenuSelection(supplierMenu)
+        let choice = ConsoleInputUtils.getMenuChoice()
+        return ConsoleMenuHelper.select(userChoice: choice, options: supplierMenu)
     }
     
     
     func readUpdateSupplierDetails(user: User, supplier: Supplier) -> UserDTO.SupplierUpdate {
+        print("Press ENTER to keep the same data")
         
         let name = ConsoleInputUtils.readOptionalString(
             "Name (\(user.name)):"
@@ -87,6 +89,7 @@ struct SupplierView: ConsoleView {
     }
     
     func readUpdateProductDetails( currentProduct: Product) -> ProductDTO.Update {
+        print("Press ENTER to keep the same data")
         
         let name = ConsoleInputUtils.readOptionalString(
             "Product Name (\(currentProduct.name)):"

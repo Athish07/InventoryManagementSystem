@@ -1,76 +1,58 @@
 final class UserManager: UserService {
 
     private let userRepository: UserRepository
+    private let customerRepository: CustomerRepository
+    private let supplierRepository: SupplierRepository
 
-    init(userRepository: UserRepository) {
+    init(
+        userRepository: UserRepository,
+        customerRepository: CustomerRepository,
+        supplierRepository: SupplierRepository
+    ) {
         self.userRepository = userRepository
+        self.customerRepository = customerRepository
+        self.supplierRepository = supplierRepository
     }
 
     func getUser(by id: Int) -> User? {
         userRepository.findById(id)
     }
-    
-    func updateCustomer(userId: Int, update: UserDTO.CustomerUpdate) {
 
-        guard
-            var user = userRepository.findById(userId),
-            var customer = user.customerProfile
-        else {
-            return
-        }
-        
-        if let name = update.name {
-            user.name = name
-        }
-
-        if let email = update.email {
-            user.email = email
-        }
-
-        if let phoneNumber = update.phoneNumber {
-            user.phoneNumber = phoneNumber
-        }
-        
-        if let shippingAddress = update.shippingAddress {
-            customer.shippingAddress = shippingAddress
-        }
-
-        user.customerProfile = customer
-        userRepository.saveUser(user)
+    func getCustomer(userId: Int) -> Customer? {
+        customerRepository.find(userId: userId)
     }
-    
-    func updateSupplier(userId: Int, update: UserDTO.SupplierUpdate) {
 
-        guard
-            var user = userRepository.findById(userId),
-            var supplier = user.supplierProfile
-        else {
+    func getSupplier(userId: Int) -> Supplier? {
+        supplierRepository.find(userId: userId)
+    }
+
+    func updateUser(userId: Int, name: String?, phone: String?) {
+        guard var user = userRepository.findById(userId) else { return }
+
+        if let name { user.name = name }
+        if let phone { user.phoneNumber = phone }
+
+        userRepository.save(user)
+    }
+
+    func updateCustomer(userId: Int, shippingAddress: String?) {
+        guard var customer = customerRepository.find(userId: userId) else {
             return
         }
+        if let shippingAddress { customer.shippingAddress = shippingAddress }
+        customerRepository.save(customer)
+    }
 
-       
-        if let name = update.name {
-            user.name = name
+    func updateSupplier(
+        userId: Int,
+        companyName: String?,
+        businessAddress: String?
+    ) {
+        guard var supplier = supplierRepository.find(userId: userId) else {
+            return
         }
-
-        if let email = update.email {
-            user.email = email
-        }
-
-        if let phoneNumber = update.phoneNumber {
-            user.phoneNumber = phoneNumber
-        }
-        
-        if let companyName = update.companyName {
-            supplier.companyName = companyName
-        }
-
-        if let businessAddress = update.businessAddress {
-            supplier.businessAddress = businessAddress
-        }
-
-        user.supplierProfile = supplier
-        userRepository.saveUser(user)
+        if let companyName { supplier.companyName = companyName }
+        if let businessAddress { supplier.businessAddress = businessAddress }
+        supplierRepository.save(supplier)
     }
 }
-

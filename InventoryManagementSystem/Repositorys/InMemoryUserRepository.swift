@@ -7,7 +7,7 @@ final class InMemoryUserRepository: UserRepository {
         return nextUserId
     }
     
-    func saveUser(_ user: User) {
+    func save(_ user: User) {
         return users[user.userId] = user
     }
     

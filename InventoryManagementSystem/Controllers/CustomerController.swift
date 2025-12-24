@@ -28,18 +28,22 @@ final class CustomerController {
         self.onLogout = onLogout
     }
 
-    func handleMenu(for name: String) {
+    func handleMenu() {
 
-        let customerMenu = CustomerMenu.allCases
-        
+        let menus = CustomerMenu.allCases
+
         let menu: CustomerMenu = ConsoleMenuHelper.readValidMenu(
-            show: { view.showCustomerMenu(userName: name, menus: customerMenu)
+            show: {
+                view.showCustomerMenu(userName: getUserName(), menus: menus)
             },
-            read: { view.readCustomerMenu(customerMenu: customerMenu) },
+            read: {
+                view.readCustomerMenu(customerMenu: menus)
+            },
             onInvalid: {
                 view.showMessage("Invalid choice. Please try again.")
-            })
-        
+            }
+        )
+
         switch menu {
         case .searchProduct: searchAndShowProducts()
         case .addItemToCart: addItemToCart()
@@ -52,29 +56,70 @@ final class CustomerController {
         case .onLogout: onLogout()
         }
     }
-    
-    @discardableResult
-    private func searchAndShowProducts() -> [Product]? {
-        guard let products = ProductSearchHelper.search(
-            productService: productService,
-            view: productSearchView
-        ) else {
+
+    // MARK: - Profile
+
+    private func viewProfile() {
+        guard let (user, customer) = requireCustomer() else { return }
+        view.showCustomerProfile(user: user, customer: customer)
+    }
+
+    private func updateProfile() {
+
+        guard let (user, customer) = requireCustomer() else { return }
+
+        let input = view.readUpdateCustomer(user: user, customer: customer)
+
+        userService.updateUser(
+            userId: customerId,
+            name: input.name,
+            phone: input.phoneNumber
+        )
+
+        userService.updateCustomer(
+            userId: customerId,
+            shippingAddress: input.shippingAddress
+        )
+
+        view.showMessage("Profile updated successfully.")
+    }
+
+    private func requireCustomer() -> (User, Customer)? {
+
+        guard
+            let user = userService.getUser(by: customerId),
+            let customer = userService.getCustomer(userId: customerId)
+        else {
+            view.showMessage("Unauthorized access.")
             return nil
         }
+
+        return (user, customer)
+    }
+
+    private func getUserName() -> String {
+        userService.getUser(by: customerId)?.name ?? "Customer"
+    }
+
+    @discardableResult
+    private func searchAndShowProducts() -> [Product]? {
+        guard
+            let products = ProductSearchHelper.search(
+                productService: productService,
+                view: productSearchView
+            )
+        else { return nil }
 
         productSearchView.showProducts(products)
         return products
     }
 
-
     private func addItemToCart() {
-        
-        guard let products = searchAndShowProducts() else {
-            return
-        }
+
+        guard let products = searchAndShowProducts() else { return }
 
         let input = view.readAddToCartInput(from: products)
-        
+
         do {
             try orderService.addItemToCart(
                 customerId: customerId,
@@ -87,42 +132,17 @@ final class CustomerController {
         } catch {
             view.showMessage(error.localizedDescription)
         }
-        
-    }
-
-    private func updateProfile() {
-        
-        guard let (user, customer) = requireCustomer() else {
-            return
-        }
-        
-        let updatedCustomer = view.readUpdateCustomer(
-            user: user,
-            customer:customer
-        )
-        userService.updateCustomer(userId: customerId, update: updatedCustomer)
-        
-    }
-
-    private func viewCart() {
-        let cart = orderService.viewCart(customerId: customerId)
-
-        if cart.items.isEmpty {
-            view.showMessage("Your cart is empty.")
-            return
-        } else {
-            view.showCart(cart)
-        }
-
     }
 
     private func removeItemFromCart() {
+
         let cart = orderService.viewCart(customerId: customerId)
 
         guard !cart.items.isEmpty else {
             view.showMessage("Your cart is empty.")
             return
         }
+
         view.showCart(cart)
         let index = view.readRemoveItemInput(cart: cart)
         let productId = cart.items[index].productId
@@ -132,14 +152,24 @@ final class CustomerController {
                 customerId: customerId,
                 productId: productId
             )
+            view.showMessage("Item removed from cart.")
         } catch let error as OrderServiceError {
             view.showMessage(error.displayMessage)
         } catch {
             view.showMessage(error.localizedDescription)
         }
+    }
 
-        view.showMessage("Item removed from cart.")
+    private func viewCart() {
 
+        let cart = orderService.viewCart(customerId: customerId)
+
+        guard !cart.items.isEmpty else {
+            view.showMessage("Your cart is empty.")
+            return
+        }
+
+        view.showCart(cart)
     }
 
     private func checkout() {
@@ -154,36 +184,16 @@ final class CustomerController {
         } catch {
             view.showMessage(error.localizedDescription)
         }
-
     }
 
     private func viewOrders() {
+
         let orders = orderService.viewOrders(customerId: customerId)
-        
+
         if orders.isEmpty {
-            view.showMessage("No order found.")
+            view.showMessage("No orders found.")
         }
-        
+
         view.showOrders(orders)
-
-    }
-    
-    private func requireCustomer() -> (User, Customer)? {
-        guard let user = userService.getUser(by: customerId),
-              let customer = user.customerProfile else {
-            view.showMessage("Unauthorized access.")
-            return nil
-        }
-        return (user, customer)
-    }
-
-
-    private func viewProfile() {
-
-        guard let (user, customer) = requireCustomer() else {
-            return
-        }
-        view.showCustomerProfile(user: user,customer: customer)
-
     }
 }

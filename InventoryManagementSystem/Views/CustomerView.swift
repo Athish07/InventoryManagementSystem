@@ -54,11 +54,13 @@ struct CustomerView: ConsoleView {
     }
     
     func readCustomerMenu(customerMenu: [CustomerMenu]) -> CustomerMenu? {
-        return ConsoleMenuHelper.readMenuSelection(customerMenu)
+        let choice = ConsoleInputUtils.getMenuChoice()
+        return ConsoleMenuHelper.select(userChoice: choice, options: customerMenu)
     }
     
     func readUpdateCustomer(user: User, customer: Customer) -> UserDTO.CustomerUpdate {
-       
+        print("Press ENTER to keep the same data \n")
+        
         let name =  ConsoleInputUtils.readOptionalString(
             "Name (\(user.name)):"
         )

@@ -7,6 +7,8 @@ final class AppFactory {
     private let itemRepository = InMemoryOrderItemRepository()
     private let productRepository = InMemoryProductRepository()
     private let cartRepository = InMemoryCartRepository()
+    private let customerRepository = InMemoryCustomerRepository()
+    private let supplierRepository = InMemorySupplierRepository()
     private let orderService: OrderService
     private let authenticationService: AuthenticationService
     private let userService: UserService
@@ -15,9 +17,8 @@ final class AppFactory {
     private let customerView = CustomerView()
     private let supplierView = SupplierView()
     private let productSearchView = ProductSearchView()
-    
-    init()
-    {
+
+    init() {
         self.orderService = OrderManager(
             cartRepository: cartRepository,
             orderRepository: orderRepository,
@@ -25,20 +26,28 @@ final class AppFactory {
             productRepository: productRepository
         )
         self.authenticationService = AuthenticationManager(
-            userRepository: userRepository
+            userRepository: userRepository,
+            customerRepository: customerRepository,
+            supplierRepository: supplierRepository
         )
-        self.userService = UserManager(userRepository: userRepository)
+        self.userService = UserManager(
+            userRepository: userRepository,
+            customerRepository: customerRepository,
+            supplierRepository: supplierRepository
+        )
         self.productService = ProductManager(
             productRepository: productRepository
         )
-        
+
         let mockInitializer = MockInitializer(
             userRepository: userRepository,
+            customerRepository: customerRepository,
+            supplierRepository: supplierRepository,
             productRepository: productRepository
         )
         mockInitializer.initializeSampleData()
     }
-    
+
     func createAppController() -> AppController {
         AppController(
             appView: appView,
@@ -50,8 +59,10 @@ final class AppFactory {
             appFactory: self
         )
     }
-    
-    func makeCustomerController(customerId: Int,onLogout: @escaping () -> Void) -> CustomerController {
+
+    func makeCustomerController(customerId: Int, onLogout: @escaping () -> Void)
+        -> CustomerController
+    {
         CustomerController(
             view: customerView,
             productSearchView: productSearchView,
@@ -63,7 +74,9 @@ final class AppFactory {
         )
     }
 
-    func makeSupplierController(supplierId: Int,onLogout: @escaping () -> Void) -> SupplierController {
+    func makeSupplierController(supplierId: Int, onLogout: @escaping () -> Void)
+        -> SupplierController
+    {
         SupplierController(
             view: supplierView,
             productService: productService,
@@ -72,6 +85,5 @@ final class AppFactory {
             onLogout: onLogout
         )
     }
-    
-}
 
+}
