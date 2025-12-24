@@ -9,9 +9,9 @@ struct CustomerView: ConsoleView {
             print("\(index + 1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
-        
+
     }
-    
+
     func showCart(_ cart: Cart) {
         print("\n---------------- CART ----------------")
 
@@ -20,28 +20,28 @@ struct CustomerView: ConsoleView {
             print(
                 "\(index + 1). Qty: \(item.quantity) | Name: \(item.productName) | Price: \(item.unitPrice) | Total: \(item.itemTotal)"
             )
-            
+
             total += item.itemTotal
         }
 
         print("--------------------------------------")
         print("Cart Total: \(total)")
         print("--------------------------------------")
-        
+
     }
 
-    func showCustomerProfile(user: User ,customer: Customer) {
+    func showCustomerProfile(user: User, customer: Customer) {
         print("\n--------------------------------------------")
         print("Name: \(user.name)")
         print("Email: \(user.email)")
         print("Phone: \(user.phoneNumber)")
         print("Shipping Address: \(customer.shippingAddress)")
         print("--------------------------------------------")
-        
+
     }
 
     func showOrders(_ orders: [Order]) {
-        
+
         for order in orders {
             print("\n--------------------------------------------")
             print("Order ID: \(order.orderId)")
@@ -50,21 +50,26 @@ struct CustomerView: ConsoleView {
             print("Total Amount: \(order.totalAmount)")
             print("--------------------------------------------")
         }
-        
+
     }
-    
+
     func readCustomerMenu(customerMenu: [CustomerMenu]) -> CustomerMenu? {
         let choice = ConsoleInputUtils.getMenuChoice()
-        return ConsoleMenuHelper.select(userChoice: choice, options: customerMenu)
+        return ConsoleMenuHelper.select(
+            userChoice: choice,
+            options: customerMenu
+        )
     }
-    
-    func readUpdateCustomer(user: User, customer: Customer) -> UserDTO.CustomerUpdate {
+
+    func readUpdateCustomer(user: User, customer: Customer)
+        -> UserDTO.CustomerUpdate
+    {
         print("Press ENTER to keep the same data \n")
-        
-        let name =  ConsoleInputUtils.readOptionalString(
+
+        let name = ConsoleInputUtils.readOptionalString(
             "Name (\(user.name)):"
         )
-        let email =  ConsoleInputUtils.readOptionalValidEmail(
+        let email = ConsoleInputUtils.readOptionalValidEmail(
             current: user.email
         )
         let phoneNumber = ConsoleInputUtils.readOptionalValidPhone(
@@ -73,35 +78,40 @@ struct CustomerView: ConsoleView {
         let shippingAddress = ConsoleInputUtils.readOptionalString(
             "Address (\(customer.shippingAddress)):"
         )
-        
+
         return UserDTO.CustomerUpdate(
             name: name,
             email: email,
             phoneNumber: phoneNumber,
             shippingAddress: shippingAddress
         )
-        
+
     }
-    
-    func readRemoveItemInput(cart: Cart) -> Int {
+
+    func readRemoveItemInput(cart: Cart) -> Int? {
         while true {
-            
+
             let input = ConsoleInputUtils.readInt(
-                "Enter the item number to remove:"
+                "Enter the item number to remove(ENTER -1 to move back):"
             )
-            let index = input - 1
             
+            if input == -1 {
+                return nil
+            }
+            
+            let index = input - 1
+
             if index >= 0 && index < cart.items.count {
                 return index
             }
-            
+
             print(
-                "Invalid selection. Please choose a number between 1 and \(cart.items.count)."
+                "Invalid selection. Please choose a number within the given options."
             )
         }
-        
+
     }
-    
+
     func readAddToCartInput(from products: [Product]) -> (
         productId: Int,
         quantity: Int
@@ -126,17 +136,17 @@ struct CustomerView: ConsoleView {
 
         return (productId: productId, quantity: quantity)
     }
-    
+
 }
 
 extension Date {
-    
+
     func toISTString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         formatter.timeZone = TimeZone(identifier: "Asia/Kolkata")
-        
+
         return formatter.string(from: self)
-        
+
     }
 }

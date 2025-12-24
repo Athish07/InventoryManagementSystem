@@ -13,6 +13,5 @@ final class InMemorySupplierRepository: SupplierRepository {
     func find(userId: Int) -> Supplier? {
         suppliers[userId]
     }
-    
-}
 
+}

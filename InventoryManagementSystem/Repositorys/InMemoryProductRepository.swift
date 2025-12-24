@@ -1,13 +1,13 @@
 final class InMemoryProductRepository: ProductRepository {
-  
+
     private var products: [Int: Product] = [:]
     private var nextProductId: Int = 1
-    
+
     func getNextProductId() -> Int {
         defer { nextProductId += 1 }
         return nextProductId
     }
-    
+
     func addProduct(_ product: Product) {
         products[product.productId] = product
     }
@@ -27,15 +27,13 @@ final class InMemoryProductRepository: ProductRepository {
     func getProductByCategory(_ category: ProductCategory) -> [Product] {
         products.values.filter { $0.category == category }
     }
-    
+
     func getProductById(_ id: Int) -> Product? {
         products[id]
     }
-    
+
     func deleteProduct(_ id: Int) {
         products.removeValue(forKey: id)
     }
-    
+
 }
-
-

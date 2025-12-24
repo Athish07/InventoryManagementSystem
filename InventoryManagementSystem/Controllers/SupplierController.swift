@@ -49,8 +49,6 @@ final class SupplierController {
         }
     }
 
-    // MARK: - Profile
-
     private func viewProfile() {
         guard let (user, supplier) = requireSupplier() else { return }
         view.showSupplierProfile(user: user, supplier: supplier)
@@ -65,14 +63,12 @@ final class SupplierController {
             supplier: supplier
         )
 
-        // 1️⃣ Update common user fields
         userService.updateUser(
             userId: supplierId,
             name: input.name,
             phone: input.phoneNumber
         )
 
-        // 2️⃣ Update supplier-specific fields
         userService.updateSupplier(
             userId: supplierId,
             companyName: input.companyName,
@@ -98,7 +94,7 @@ final class SupplierController {
     private func getUserName() -> String {
         userService.getUser(by: supplierId)?.name ?? "Supplier"
     }
-    
+
     private func addProduct() {
 
         let input = view.readProductCreateInput()
@@ -109,9 +105,11 @@ final class SupplierController {
     @discardableResult
     private func viewMyProducts() -> [Product]? {
 
-        guard let products = productService.searchProductsBySupplier(
-            supplierId: supplierId
-        ) else {
+        guard
+            let products = productService.searchProductsBySupplier(
+                supplierId: supplierId
+            )
+        else {
             view.showMessage("No products found.")
             return nil
         }
@@ -124,12 +122,18 @@ final class SupplierController {
 
         guard let products = viewMyProducts() else { return }
 
-        let productId = view.readProductId(
-            from: products,
-            prompt: "Select the product ID to update:"
-        )
+        guard
+            let productId = view.readProductId(
+                from: products,
+                prompt:
+                    "Select the product ID to update(ENTER -1 to move back):"
+            )
+        else {
+            return
+        }
 
-        guard let product = products.first(where: { $0.productId == productId }) else {
+        guard let product = products.first(where: { $0.productId == productId })
+        else {
             return
         }
 
@@ -152,10 +156,15 @@ final class SupplierController {
 
         guard let products = viewMyProducts() else { return }
 
-        let productId = view.readProductId(
-            from: products,
-            prompt: "Select the product ID to delete:"
-        )
+        guard
+            let productId = view.readProductId(
+                from: products,
+                prompt:
+                    "Select the product ID to delete(ENTER -1 to move back):"
+            )
+        else {
+            return
+        }
 
         do {
             try productService.deleteProduct(

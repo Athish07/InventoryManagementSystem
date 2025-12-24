@@ -1,29 +1,31 @@
 struct SupplierView: ConsoleView {
-    
+
     func showSupplierMenu(userName: String, menus: [SupplierMenu]) {
         print("\n--------------------------------------------")
         print("Welcome Supplier, \(userName)")
-        
-        for (index,menu) in menus.enumerated() {
+
+        for (index, menu) in menus.enumerated() {
             print("\(index+1). \(menu.rawValue)")
         }
         print("--------------------------------------------")
     }
-    
+
     func showMyProducts(_ products: [Product]) {
         for product in products {
-            print("""
-            -----------------------------------
-            ID: \(product.productId)
-            Name: \(product.name)
-            Price: \(product.unitPrice)
-            Stock: \(product.quantityInStock)
-            Category: \(product.category.rawValue)
-            -----------------------------------
-            """)
+            print(
+                """
+                -----------------------------------
+                ID: \(product.productId)
+                Name: \(product.name)
+                Price: \(product.unitPrice)
+                Stock: \(product.quantityInStock)
+                Category: \(product.category.rawValue)
+                -----------------------------------
+                """
+            )
         }
     }
-    
+
     func showSupplierProfile(user: User, supplier: Supplier) {
         print("\n--------------------------------------------")
         print("Name: \(user.name)")
@@ -33,32 +35,36 @@ struct SupplierView: ConsoleView {
         print("Business Address: \(supplier.businessAddress)")
         print("--------------------------------------------")
     }
-    
+
     func readProductCreateInput() -> ProductDTO.Create {
-        
+
         let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
         let category = readProductCategory()
         let unitPrice = ConsoleInputUtils.readDouble("Enter unit price:")
         let quantity = ConsoleInputUtils.readInt("Enter quantity:")
-        
+
         return ProductDTO.Create(
             name: name,
             category: category,
             unitPrice: unitPrice,
             quantity: quantity
         )
-        
+
     }
-    
+
     func readSupplierMenu(supplierMenu: [SupplierMenu]) -> SupplierMenu? {
         let choice = ConsoleInputUtils.getMenuChoice()
-        return ConsoleMenuHelper.select(userChoice: choice, options: supplierMenu)
+        return ConsoleMenuHelper.select(
+            userChoice: choice,
+            options: supplierMenu
+        )
     }
-    
-    
-    func readUpdateSupplierDetails(user: User, supplier: Supplier) -> UserDTO.SupplierUpdate {
+
+    func readUpdateSupplierDetails(user: User, supplier: Supplier)
+        -> UserDTO.SupplierUpdate
+    {
         print("Press ENTER to keep the same data")
-        
+
         let name = ConsoleInputUtils.readOptionalString(
             "Name (\(user.name)):"
         )
@@ -87,10 +93,11 @@ struct SupplierView: ConsoleView {
             businessAddress: businessAddress
         )
     }
-    
-    func readUpdateProductDetails( currentProduct: Product) -> ProductDTO.Update {
+
+    func readUpdateProductDetails(currentProduct: Product) -> ProductDTO.Update
+    {
         print("Press ENTER to keep the same data")
-        
+
         let name = ConsoleInputUtils.readOptionalString(
             "Product Name (\(currentProduct.name)):"
         )
@@ -100,7 +107,7 @@ struct SupplierView: ConsoleView {
         let quantity = ConsoleInputUtils.readOptionalInt(
             "Product quantity (\(currentProduct.quantityInStock)):"
         )
-        
+
         return ProductDTO.Update(
             productId: currentProduct.productId,
             name: name,
@@ -108,22 +115,26 @@ struct SupplierView: ConsoleView {
             quantity: quantity,
         )
     }
-    
-    func readProductId(from products: [Product],prompt: String) -> Int {
+
+    func readProductId(from products: [Product], prompt: String) -> Int? {
         while true {
-            
+
             let id = ConsoleInputUtils.readInt(prompt)
+
+            if id == -1 {
+                return nil
+            }
             
             if products.contains(where: { $0.productId == id }) {
                 return id
             }
-            
+
             print(
                 "Invalid ID. Please choose an ID from the list displayed above."
             )
         }
     }
-    
+
     private func readProductCategory() -> ProductCategory {
         let categories = ProductCategory.allCases
 
@@ -134,16 +145,17 @@ struct SupplierView: ConsoleView {
         print("Press ENTER to select default: Other")
 
         let choice = ConsoleInputUtils.readOptionalInt("Enter choice:")
-        
+
         guard let choice,
-              let category = ConsoleMenuHelper.select(
+            let category = ConsoleMenuHelper.select(
                 userChoice: choice,
                 options: categories
-              ) else {
+            )
+        else {
             return .other
         }
 
         return category
     }
-    
+
 }

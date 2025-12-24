@@ -7,7 +7,7 @@ final class InMemoryOrderRepository: OrderRepository {
         defer { nextOrderId += 1 }
         return nextOrderId
     }
-    
+
     func save(_ order: Order) {
         orders[order.orderId] = order
     }
@@ -16,4 +16,3 @@ final class InMemoryOrderRepository: OrderRepository {
         orders.values.filter { $0.customerId == customerId }
     }
 }
-

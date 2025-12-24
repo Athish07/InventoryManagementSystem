@@ -27,7 +27,7 @@ final class CustomerController {
         self.customerId = customerId
         self.onLogout = onLogout
     }
-
+    
     func handleMenu() {
 
         let menus = CustomerMenu.allCases
@@ -57,8 +57,6 @@ final class CustomerController {
         }
     }
 
-    // MARK: - Profile
-
     private func viewProfile() {
         guard let (user, customer) = requireCustomer() else { return }
         view.showCustomerProfile(user: user, customer: customer)
@@ -83,7 +81,7 @@ final class CustomerController {
 
         view.showMessage("Profile updated successfully.")
     }
-
+    
     private func requireCustomer() -> (User, Customer)? {
 
         guard
@@ -100,7 +98,7 @@ final class CustomerController {
     private func getUserName() -> String {
         userService.getUser(by: customerId)?.name ?? "Customer"
     }
-
+    
     @discardableResult
     private func searchAndShowProducts() -> [Product]? {
         guard
@@ -113,7 +111,7 @@ final class CustomerController {
         productSearchView.showProducts(products)
         return products
     }
-
+    
     private func addItemToCart() {
 
         guard let products = searchAndShowProducts() else { return }
@@ -144,7 +142,9 @@ final class CustomerController {
         }
 
         view.showCart(cart)
-        let index = view.readRemoveItemInput(cart: cart)
+        guard let index = view.readRemoveItemInput(cart: cart) else {
+            return
+        }
         let productId = cart.items[index].productId
 
         do {
@@ -159,7 +159,7 @@ final class CustomerController {
             view.showMessage(error.localizedDescription)
         }
     }
-
+    
     private func viewCart() {
 
         let cart = orderService.viewCart(customerId: customerId)

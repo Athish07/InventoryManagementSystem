@@ -6,11 +6,11 @@ struct ProductSearchHelper {
     ) -> [Product]? {
         let productCategories = ProductCategory.allCases
         view.showCategoryMenu(categories: productCategories)
-        
+
         let category = view.readCategoryMenu(
             productCategories: productCategories
         )
-        
+
         let products = productService.searchProductsByCategory(
             category: category
         )
@@ -19,8 +19,7 @@ struct ProductSearchHelper {
             view.showMessage("No products found.")
             return nil
         }
-        
+
         return products
     }
 }
-
