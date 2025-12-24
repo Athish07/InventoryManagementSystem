@@ -1,8 +1,8 @@
 import Foundation
 
-struct MenuSelectionHelper {
+struct ConsoleMenuHelper {
     
-    static func select<T>(
+    static  func select<T>(
         userChoice: Int,
         options: [T]
     ) -> T? {
@@ -29,4 +29,8 @@ struct MenuSelectionHelper {
         }
     }
     
+    static func readMenuSelection<T>(_ options: [T]) -> T? {
+       select(userChoice: ConsoleInputUtils.getMenuChoice(),options: options)
+    }
+
 }

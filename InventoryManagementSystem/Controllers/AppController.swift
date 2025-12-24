@@ -1,7 +1,7 @@
 import Foundation
 
 final class AppController {
-
+    
     private let view: AppView
     private let productSearchView: ProductSearchView
     private let authenticationService: AuthenticationService
@@ -43,24 +43,20 @@ final class AppController {
     private func handlePublicMenu() {
         let publicMenu = PublicMenu.allCases
         
-        var menu: PublicMenu?
+        let menu: PublicMenu = ConsoleMenuHelper.readValidMenu(
+            show: { view.showPublicMenu(publicMenu: publicMenu)
+            },
+            read: {
+                view.readPublicMenuChoice(publicMenu: publicMenu)
+            },
+            onInvalid: { view.showMessage("Invalid choice. Please try again.") }
+        )
         
-        while menu == nil {
-            view.showPublicMenu(publicMenu: publicMenu)
-            menu = view.readPublicMenuChoice(publicMenu: publicMenu)
-            if menu == nil {
-                view.showMessage("Invalid choice. Please try again.")
-            }
-        }
-        
-        guard let selectedMenu = menu else {
-            return
-        }
-        
-        switch selectedMenu {
-        case .searchProducts: searchProduct()
+        switch menu {
+        case .searchProducts: searchAndShowProducts()
         case .login: login()
         case .register: register()
+        case .exit: exit(0)
             
         }
     }
@@ -90,23 +86,27 @@ final class AppController {
                     }
                 )
                 .handleMenu(for: user.name)
+        } else {
+            view.showMessage("Invalid role access. Logging out.")
+            logout()
         }
+        
     }
     
     private func login() {
         let userRoles = UserRole.allCases
-        var role: UserRole?
         
-        while role == nil {
-            view.showLoginRole(userRole: userRoles)
-            role = view.readLoginRole(userRoles: userRoles)
-            
-            if role == nil {
+        let role: UserRole = ConsoleMenuHelper.readValidMenu(
+            show: {
+                view.showLoginRole(userRole: userRoles)
+            },
+            read: { view.readLoginRole(userRoles: userRoles) },
+            onInvalid: {
                 view.showMessage("Invalid choice. please try again.")
-            }
-        }
+            })
         
         let input = view.readUserLogin()
+       
         do {
             currentUserId = try authenticationService
                 .login(email: input.email, password: input.password)
@@ -126,7 +126,7 @@ final class AppController {
         view.showMessage("Logged out successfully.")
     }
 
-    private func searchProduct() {
+    private func searchAndShowProducts() {
         guard let products = ProductSearchHelper.search(
             productService: productService,
             view: productSearchView
@@ -139,24 +139,21 @@ final class AppController {
     private func register() {
 
         let registrationMenu = RegistrationMenu.allCases
-       
-        var menu: RegistrationMenu?
         
-        while menu == nil {
-            view.showRegistrationMenu(registrationMenu: registrationMenu)
-            menu = view.readRegistrationMenu(registrationMenu: registrationMenu)
-            
-            if menu == nil {
+        let menu: RegistrationMenu = ConsoleMenuHelper.readValidMenu(
+            show: { view.showRegistrationMenu(
+                registrationMenu: registrationMenu
+            )
+            },
+            read: {
+                view.readRegistrationMenu(registrationMenu: registrationMenu)
+            },
+            onInvalid: {
                 view.showMessage("Invalid choice. Please try again.")
-            }
-            
-        }
+            })
+   
         
-        guard let selectedMenu = menu else {
-            return
-        }
-        
-        switch selectedMenu {
+        switch menu {
         case .customer: registerCustomer()
         case .supplier: registerSupplier()
         }

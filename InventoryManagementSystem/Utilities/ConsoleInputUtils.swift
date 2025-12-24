@@ -22,7 +22,7 @@ struct ConsoleInputUtils {
         
     }
     
-    static func readUInt(_ prompt: String) -> Int {
+    static func readNonZeroInt(_ prompt: String) -> Int {
         while true {
             let value = readInt(prompt)
             if value > 0 {
@@ -104,20 +104,6 @@ struct ConsoleInputUtils {
             return nil
         }
         return Double(trimmed)
-        
-    }
-    
-    static func readIntInRange(from cart: Cart) -> Int {
-        while true {
-            
-            let choice = getMenuChoice()
-            
-            if choice >= 1 && choice <= cart.items.count {
-                return choice
-            }
-            
-            print("Invalid Input, try again.")
-        }
         
     }
     

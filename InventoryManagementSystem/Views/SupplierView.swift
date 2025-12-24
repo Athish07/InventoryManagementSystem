@@ -51,18 +51,7 @@ struct SupplierView: ConsoleView {
     }
     
     func readSupplierMenu(supplierMenu: [SupplierMenu]) -> SupplierMenu? {
-        
-        let choice = ConsoleInputUtils.getMenuChoice()
-        
-        if let selected = MenuSelectionHelper.select(
-            userChoice: choice,
-            options: supplierMenu
-        ) {
-            return selected
-        }
-        
-        return nil
-        
+        return ConsoleMenuHelper.readMenuSelection(supplierMenu)
     }
     
     
@@ -144,7 +133,7 @@ struct SupplierView: ConsoleView {
         let choice = ConsoleInputUtils.readOptionalInt("Enter choice:")
         
         guard let choice,
-              let category = MenuSelectionHelper.select(
+              let category = ConsoleMenuHelper.select(
                 userChoice: choice,
                 options: categories
               ) else {

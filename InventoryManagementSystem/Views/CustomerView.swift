@@ -54,16 +54,7 @@ struct CustomerView: ConsoleView {
     }
     
     func readCustomerMenu(customerMenu: [CustomerMenu]) -> CustomerMenu? {
-        
-        let choice = ConsoleInputUtils.getMenuChoice()
-            
-        if let selected = MenuSelectionHelper.select(
-            userChoice: choice,
-            options: customerMenu
-        ) {
-            return selected
-        }
-        return nil
+        return ConsoleMenuHelper.readMenuSelection(customerMenu)
     }
     
     func readUpdateCustomer(user: User, customer: Customer) -> UserDTO.CustomerUpdate {
@@ -129,7 +120,7 @@ struct CustomerView: ConsoleView {
             )
         }
 
-        let quantity = ConsoleInputUtils.readUInt("Enter quantity:")
+        let quantity = ConsoleInputUtils.readNonZeroInt("Enter quantity:")
 
         return (productId: productId, quantity: quantity)
     }

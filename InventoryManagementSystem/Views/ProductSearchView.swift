@@ -29,7 +29,7 @@ struct ProductSearchView: ConsoleView {
         
         let choice = ConsoleInputUtils.getMenuChoice()
         
-        if let selected = MenuSelectionHelper.select(
+        if let selected = ConsoleMenuHelper.select(
             userChoice: choice,
             options: productCategories
         ) {

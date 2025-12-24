@@ -45,42 +45,15 @@ struct AppView: ConsoleView {
         
     func readPublicMenuChoice(publicMenu: [PublicMenu]) -> PublicMenu? {
         
-        let choice = ConsoleInputUtils.getMenuChoice()
-        
-        if let selected = MenuSelectionHelper.select(
-            userChoice: choice,
-            options: publicMenu
-        ) {
-            return selected
-        }
-        return nil
+        return ConsoleMenuHelper.readMenuSelection(publicMenu)
     }
     
     func readLoginRole(userRoles: [UserRole]) -> UserRole? {
-        
-        let choice = ConsoleInputUtils.getMenuChoice()
-            
-        if let selected = MenuSelectionHelper.select(
-            userChoice:choice,
-            options: userRoles
-        ) {
-            return selected
-        }
-        
-        return nil
+        return ConsoleMenuHelper.readMenuSelection(userRoles)
     }
     
     func readRegistrationMenu(registrationMenu: [RegistrationMenu]) -> RegistrationMenu? {
-        let choice = ConsoleInputUtils.getMenuChoice()
-            
-        if let selected = MenuSelectionHelper.select(
-            userChoice: choice,
-            options: registrationMenu
-        ) {
-            return selected
-        }
-        
-        return nil
+        return ConsoleMenuHelper.readMenuSelection(registrationMenu)
     }
     
 

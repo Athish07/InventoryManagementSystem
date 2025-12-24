@@ -32,22 +32,15 @@ final class CustomerController {
 
         let customerMenu = CustomerMenu.allCases
         
-        var menu: CustomerMenu?
-        
-        while menu == nil {
-            
-            view.showCustomerMenu(userName: name, menus: customerMenu)
-            menu = view.readCustomerMenu(customerMenu: customerMenu)
-            if menu == nil {
+        let menu: CustomerMenu = ConsoleMenuHelper.readValidMenu(
+            show: { view.showCustomerMenu(userName: name, menus: customerMenu)
+            },
+            read: { view.readCustomerMenu(customerMenu: customerMenu) },
+            onInvalid: {
                 view.showMessage("Invalid choice. Please try again.")
-            }
-        }
+            })
         
-        guard let selectedMenu = menu else {
-            return
-        }
-
-        switch selectedMenu {
+        switch menu {
         case .searchProduct: searchAndShowProducts()
         case .addItemToCart: addItemToCart()
         case .removeItemFromCart: removeItemFromCart()
@@ -98,15 +91,11 @@ final class CustomerController {
     }
 
     private func updateProfile() {
-        guard let user = userService.getUser(by: customerId),
-              let customer = user.customerProfile
-              
-        else {
-            view.showMessage(
-                "Unauthorized access, please login again."
-            )
+        
+        guard let (user, customer) = requireCustomer() else {
             return
         }
+        
         let updatedCustomer = view.readUpdateCustomer(
             user: user,
             customer:customer
@@ -178,16 +167,20 @@ final class CustomerController {
         view.showOrders(orders)
 
     }
+    
+    private func requireCustomer() -> (User, Customer)? {
+        guard let user = userService.getUser(by: customerId),
+              let customer = user.customerProfile else {
+            view.showMessage("Unauthorized access.")
+            return nil
+        }
+        return (user, customer)
+    }
+
 
     private func viewProfile() {
 
-        guard let user = userService.getUser(by: customerId),
-              let customer = user.customerProfile
-              
-        else {
-            view.showMessage(
-                "Unauthorized access, please login again."
-            )
+        guard let (user, customer) = requireCustomer() else {
             return
         }
         view.showCustomerProfile(user: user,customer: customer)

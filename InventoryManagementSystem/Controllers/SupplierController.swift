@@ -26,23 +26,16 @@ final class SupplierController {
 
         let supplierMenu = SupplierMenu.allCases
         
-        var menu: SupplierMenu?
-        
-        while menu == nil {
-            
-            view.showSupplierMenu(userName: name, menus: supplierMenu)
-            menu = view.readSupplierMenu(supplierMenu: supplierMenu)
-            
-            if menu == nil {
+        let menu: SupplierMenu = ConsoleMenuHelper.readValidMenu(
+            show: { view.showSupplierMenu(userName: name, menus: supplierMenu)
+            },
+            read: { view.readSupplierMenu(supplierMenu: supplierMenu) },
+            onInvalid: {
                 view.showMessage("Invalid choice. Please try again.")
-            }
-        }
+            })
         
-        guard let selectedMenu = menu else {
-            return
-        }
         
-        switch selectedMenu {
+        switch menu {
         case .addProduct: addProduct()
         case .viewMyProducts: viewMyProducts()
         case .updateProduct: updateProduct()
@@ -54,12 +47,11 @@ final class SupplierController {
     }
 
     private func viewProfile() {
-        guard let user = userService.getUser(by: supplierId),
-              let supplier = user.supplierProfile
-        else {
-            view.showMessage("Unauthorized access.please login again.")
+        
+        guard let (user, supplier) = requireSupplier() else {
             return
         }
+        
         view.showSupplierProfile(user: user, supplier: supplier)
     }
 
@@ -72,13 +64,10 @@ final class SupplierController {
     }
 
     private func updateProfile() {
-        guard let user = userService.getUser(by: supplierId),
-              let supplier = user.supplierProfile
-        else {
-            view.showMessage("Unauthorized access, please login again.")
+        guard let (user, supplier) = requireSupplier() else {
             return
         }
-
+        
         let updatedSupplier = view.readUpdateSupplierDetails(
             user: user,
             supplier: supplier
@@ -127,7 +116,16 @@ final class SupplierController {
             view.showMessage(error.localizedDescription)
         }
     }
-
+    
+    private func requireSupplier() -> (User, Supplier)? {
+        guard let user = userService.getUser(by: supplierId),
+              let supplier = user.supplierProfile else {
+            view.showMessage("Unauthorized access. Please login again.")
+            return nil
+        }
+        return (user, supplier)
+    }
+    
     private func deleteProduct() {
         
         guard let products = productService.searchProductsBySupplier(
