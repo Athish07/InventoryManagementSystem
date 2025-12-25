@@ -132,7 +132,7 @@ struct CustomerView: ConsoleView {
             )
         }
 
-        let quantity = ConsoleInputUtils.readNonZeroInt("Enter quantity:")
+        let quantity = ConsoleInputUtils.readPositiveInt("Enter quantity:")
 
         return (productId: productId, quantity: quantity)
     }

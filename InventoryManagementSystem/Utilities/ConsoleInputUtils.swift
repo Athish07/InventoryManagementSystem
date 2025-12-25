@@ -23,7 +23,7 @@ struct ConsoleInputUtils {
 
     }
 
-    static func readNonZeroInt(_ prompt: String) -> Int {
+    static func readPositiveInt(_ prompt: String) -> Int {
         while true {
             let value = readInt(prompt)
             if value > 0 {

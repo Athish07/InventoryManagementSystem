@@ -97,7 +97,7 @@ final class SupplierController {
     }
 
     private func addProduct() {
-
+        
         let input = supplierView.readProductCreateInput()
         productService.addProduct(productDetails: input, supplierId: supplierId)
         supplierView.showMessage("Product added successfully.")
@@ -180,3 +180,4 @@ final class SupplierController {
         }
     }
 }
+

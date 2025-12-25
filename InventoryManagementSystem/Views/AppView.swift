@@ -59,9 +59,10 @@ struct AppView: ConsoleView {
     {
         let choice = ConsoleInputUtils.getMenuChoice()
 
-        return
-            ConsoleMenuHelper
-            .select(userChoice: choice, options: registrationMenu)
+        return ConsoleMenuHelper.select(
+            userChoice: choice,
+            options: registrationMenu
+        )
     }
 
     func readCustomerRegistration() -> AuthDTO.CustomerRegistration {

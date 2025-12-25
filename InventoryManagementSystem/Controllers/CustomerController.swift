@@ -43,7 +43,7 @@ final class CustomerController {
                 customerView.showMessage("Invalid choice. Please try again.")
             }
         )
-
+        
         switch menu {
         case .searchProduct: searchAndShowProducts()
         case .addItemToCart: addItemToCart()
