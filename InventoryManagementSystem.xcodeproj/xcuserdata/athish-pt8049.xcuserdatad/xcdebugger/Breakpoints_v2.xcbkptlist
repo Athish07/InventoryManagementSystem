@@ -55,22 +55,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FFBD85ED-B7B3-4DD3-8B4B-18DAD9944F03"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "InventoryManagementSystem/Controllers/SupplierController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "addProduct()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "F3477B0B-A0AB-4D6B-BDAE-866A0719C5A8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -78,9 +62,9 @@
             filePath = "InventoryManagementSystem/Controllers/SupplierController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
-            landmarkName = "viewMyProducts()"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "addProduct()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

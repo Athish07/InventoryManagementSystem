@@ -5,6 +5,7 @@ final class SupplierController {
     private let supplierView: SupplierView
     private let productService: ProductService
     private let userService: UserService
+    private let productSearchView: ProductSearchView
     private let supplierId: Int
     private let onLogout: () -> Void
 
@@ -13,12 +14,14 @@ final class SupplierController {
         productService: ProductService,
         supplierId: Int,
         userService: UserService,
+        productSearchView: ProductSearchView,
         onLogout: @escaping () -> Void
     ) {
         self.supplierView = view
         self.productService = productService
         self.supplierId = supplierId
         self.userService = userService
+        self.productSearchView = productSearchView
         self.onLogout = onLogout
     }
 
@@ -28,7 +31,10 @@ final class SupplierController {
 
         let menu: SupplierMenu = ConsoleMenuHelper.readValidMenu(
             show: {
-                supplierView.showSupplierMenu(userName: getUserName(), menus: menus)
+                supplierView.showSupplierMenu(
+                    userName: getUserName(),
+                    menus: menus
+                )
             },
             read: {
                 supplierView.readSupplierMenu(supplierMenu: menus)
@@ -97,10 +103,23 @@ final class SupplierController {
     }
 
     private func addProduct() {
+
+        let categories = ProductCategory.allCases
+        productSearchView.showCategoryMenu(categories: categories)
         
-        let input = supplierView.readProductCreateInput()
-        productService.addProduct(productDetails: input, supplierId: supplierId)
+        let category = productSearchView.readSingleCategory(
+            categories: categories,
+            defaultCategory: .other
+        )
+
+        let input = supplierView.readProductCreateInput(category: category)
+
+        productService.addProduct(
+            productDetails: input,
+            supplierId: supplierId
+        )
         supplierView.showMessage("Product added successfully.")
+
     }
 
     @discardableResult
@@ -138,7 +157,9 @@ final class SupplierController {
             return
         }
 
-        let input = supplierView.readUpdateProductDetails(currentProduct: product)
+        let input = supplierView.readUpdateProductDetails(
+            currentProduct: product
+        )
 
         do {
             try productService.updateProduct(
@@ -180,4 +201,3 @@ final class SupplierController {
         }
     }
 }
-

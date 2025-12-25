@@ -29,5 +29,5 @@ struct ConsoleMenuHelper {
             onInvalid()
         }
     }
-
+    
 }

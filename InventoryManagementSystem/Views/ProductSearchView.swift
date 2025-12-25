@@ -46,4 +46,28 @@ struct ProductSearchView: ConsoleView {
         return nil
 
     }
+    
+    func readSingleCategory(
+            categories: [ProductCategory],
+            defaultCategory: ProductCategory
+        ) -> ProductCategory {
+
+            
+
+            let choice = ConsoleInputUtils.readOptionalInt(
+                "Enter choice (Press ENTER for \(defaultCategory.rawValue)):"
+            )
+
+            guard let choice,
+                  let selected = ConsoleMenuHelper.select(
+                      userChoice: choice,
+                      options: categories
+                  )
+            else {
+                return defaultCategory
+            }
+
+            return selected
+        }
+    
 }

@@ -82,6 +82,7 @@ final class AppFactory {
             productService: productService,
             supplierId: supplierId,
             userService: userService,
+            productSearchView: productSearchView,
             onLogout: onLogout
         )
     }

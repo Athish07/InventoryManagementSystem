@@ -36,10 +36,11 @@ struct SupplierView: ConsoleView {
         print("--------------------------------------------")
     }
 
-    func readProductCreateInput() -> ProductDTO.Create {
+    func readProductCreateInput(
+        category: ProductCategory
+    ) -> ProductDTO.Create {
 
         let name = ConsoleInputUtils.readNonEmptyString("Enter product name:")
-        let category = readProductCategory()
         let unitPrice = ConsoleInputUtils.readDouble("Enter unit price:")
         let quantity = ConsoleInputUtils.readInt("Enter quantity:")
 
@@ -49,8 +50,8 @@ struct SupplierView: ConsoleView {
             unitPrice: unitPrice,
             quantity: quantity
         )
-
     }
+
 
     func readSupplierMenu(supplierMenu: [SupplierMenu]) -> SupplierMenu? {
         let choice = ConsoleInputUtils.getMenuChoice()
@@ -134,28 +135,5 @@ struct SupplierView: ConsoleView {
             )
         }
     }
-
-    private func readProductCategory() -> ProductCategory {
-        let categories = ProductCategory.allCases
-
-        print("\nSelect Category:")
-        for (index, category) in categories.enumerated() {
-            print("\(index + 1). \(category.rawValue)")
-        }
-        print("Press ENTER to select default: Other")
-
-        let choice = ConsoleInputUtils.readOptionalInt("Enter choice:")
-
-        guard let choice,
-            let category = ConsoleMenuHelper.select(
-                userChoice: choice,
-                options: categories
-            )
-        else {
-            return .other
-        }
-
-        return category
-    }
-
+    
 }
